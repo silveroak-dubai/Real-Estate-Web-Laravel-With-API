@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('blogs', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->text('except');
+            $table->longText('description');
+            $table->string('image');
+            $table->enum('status',['1','2'])->default('1')->comment('1 = Active, 2 = Inactive');
+            $table->enum('is_comment',['1','2'])->default('1')->comment('1 = Enabled, 2 = Disabled');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('blogs');
+    }
+};

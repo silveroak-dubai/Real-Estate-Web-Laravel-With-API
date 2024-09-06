@@ -1,0 +1,123 @@
+.required::after{
+    content: '*';
+    color: red;
+}
+/* checkbox */
+.form-checkbox input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.form-checkbox label {
+    position: relative;
+    cursor: pointer;
+}
+
+.form-checkbox label:before {
+    content:'';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 1px solid #cbcbcb;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 6px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.form-checkbox input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    width: 6px;
+    height: 12px;
+    border: solid #00a1ff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+table td{
+    vertical-align: middle !important;
+}
+
+/* datatable */
+.dataTables_wrapper .row:first-child {
+    margin-bottom: 10px;
+}
+.dataTables_wrapper .row:last-child{
+    align-items: center;
+    padding: 10px 0;
+}
+.dataTables_wrapper ul.pagination{
+    justify-content: end;
+}
+.dataTables_wrapper ul.pagination .paginate_button a {
+    padding: 3px 8px;
+    border-radius: 0;
+}
+.dataTables_paginate .pagination{
+    margin-bottom: 0 !important;
+}
+.dataTables_length label div select {
+    border-radius: 0;
+    width: 100px;
+}
+.dataTables_length label div select:focus{
+    box-shadow: none !important;
+}
+
+/* button style */
+.btn-style {
+    width: 25px;
+    height: 25px;
+    border: 0;
+    transition: .3s ease-in-out;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    line-height: 25px;
+}
+.btn-style:hover{
+    color: #fff;
+}
+.btn-style-danger{
+    background: rgb(255 24 0 / 81%);;
+}
+.btn-style-warning{
+    background: #ffd43b;
+}
+.btn-style-view{
+    background: rgba(26, 188, 156,1.0);
+}
+.btn-style-edit{
+    background: rgba(52, 152, 219,1.0);
+}
+
+/* Sweetalert */
+div:where(.swal2-container) div:where(.swal2-popup) {
+    width: 25em !important;
+}
+.swal2-actions button {
+    font-size: 1em !important;
+    padding: .4em 1.1em !important;
+    border-radius: 0 !important;
+}
+.swal2-modal .swal2-title {
+    font-size: 1.5em !important;
+    line-height: 1.3 !important;
+}
+.swal2-actions button:focus{
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+.dataTables_empty{
+    text-align: center;
+}
