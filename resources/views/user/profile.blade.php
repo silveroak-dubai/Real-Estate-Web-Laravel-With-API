@@ -25,7 +25,7 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <form id="profile-form" class="mt-3" enctype="multipart/form-data">
+                        <form id="profile_form" class="mt-3" enctype="multipart/form-data">
                             @csrf
                             <x-form.inputbox labelName="Full Name" name="name" required="required" placeholder="Enter full name" value="{{ $user->name ?? '' }}"/>
                             <x-form.inputbox type="email" labelName="Email" name="email" required="required" placeholder="Enter email" value="{{ $user->email ?? '' }}"/>
@@ -40,18 +40,18 @@
                             <input type="hidden" name="old_image" id="old_image" value="{{ $user->image ?? '' }}">
                         </form>
                         <div class="text-end">
-                            <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="save_form('profile-form')" id="save-btn"><span></span> Save Changes</button>
+                            <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="save_form('profile_form')" id="save_btn"><span></span> Save Changes</button>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
-                        <form id="password-form" class="mt-3">
+                        <form id="password_form" class="mt-3">
                             @csrf
                             <x-form.inputbox type="password" labelName="Current Password" name="current_password" required="required" placeholder="Enter password"/>
                             <x-form.inputbox type="password" labelName="New Password" name="password" required="required" placeholder="Enter password"/>
                             <x-form.inputbox type="password" labelName="Confirm Password" name="password_confirmation" required="required" placeholder="Enter confirm password"/>
                         </form>
                         <div class="text-end">
-                            <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="save_form('password-form')" id="save-btn"><span></span> Save Changes</button>
+                            <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="save_form('password_form')" id="save_btn"><span></span> Save Changes</button>
                         </div>
                     </div>
                 </div>
@@ -67,9 +67,9 @@
             var form = document.getElementById(form_id);
             var formData = new FormData(form);
             var url;
-            if(form_id == 'profile-form'){
+            if(form_id == 'profile_form'){
                 url = "{{ route('app.profile.update') }}";
-            }else if(form_id == 'password-form'){
+            }else if(form_id == 'password_form'){
                 url = "{{ route('app.password.update') }}";
             }
 
@@ -82,10 +82,10 @@
                 processData: false,
                 cache: false,
                 beforeSend: function(){
-                    $('#'+form_id+' #save-btn span').addClass('spinner-border spinner-border-sm text-light');
+                    $('#'+form_id+' #save_btn span').addClass('spinner-border spinner-border-sm text-light');
                 },
                 complete: function(){
-                    $('#'+form_id+' #save-btn span').removeClass('spinner-border spinner-border-sm text-light');
+                    $('#'+form_id+' #save_btn span').removeClass('spinner-border spinner-border-sm text-light');
                 },
                 success: function (response) {
                     $('#'+form_id).find('.error').remove();
@@ -100,7 +100,7 @@
                         if (response.status == 'success') {
                             setInterval(() => {
                                 window.location.reload();
-                            }, 1000);
+                            }, 1500);
                         }
                     }
                 }
