@@ -3,6 +3,7 @@
 define('USER_AVATAR_PATH','user/');
 define('LOGO_PATH','logo/');
 define('BLOG_PATH','blog/');
+define('OUR_BANKS_PATH','our-banks/');
 define('GENDER',[1=>'Male',2=>'Female']);
 define('ENABLED_DISABLED',[1=>'Enabled',2=>'Disabled']);
 define('STATUS',[1=>'Active',2=>'Inactive']);
@@ -39,7 +40,7 @@ if (!function_exists('table_image')) {
         : "<img src='".asset('/')."img/default.svg' alt='Default Image' style='width:40px;'/>";
     }
 }
- 
+
 if (!function_exists('user_image')) {
     function user_image($gender,$path,$image,$name,$class=null,$style=null){
         if ($image){

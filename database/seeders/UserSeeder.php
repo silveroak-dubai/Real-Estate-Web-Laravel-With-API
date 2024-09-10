@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $permissions = Permission::all();
 
         // Super Admin with Permission
-        User::updateOrCreate([
+        User::updateOrCreate(['email'=>'super@gmail.com'],[
             'name'     => 'Sujon Mia',
             'email'    => 'super@gmail.com',
             'password' => Hash::make('12345678'),
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             ->sync($permissions->pluck('id'));
 
         // Admin User
-        User::updateOrCreate([
+        User::updateOrCreate(['email'=>'admin@gmail.com'],[
             'name'     => 'Admin',
             'email'    => 'admin@gmail.com',
             'password' => Hash::make('12345678'),

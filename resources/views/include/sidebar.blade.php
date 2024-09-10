@@ -40,7 +40,17 @@
                 </a>
             </li>
             @endif
-            
+
+            @if (permission('our-banks-access'))
+            <li class="{{ request()->is('our-banks*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.our-banks.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Our Banks</div>
+                </a>
+            </li>
+            @endif
+
             {{-- <li class="mm-active">
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="material-icons-outlined">widgets</i>
