@@ -41,6 +41,16 @@
                     <div class="menu-title">Blogs</div>
                 </a>
             </li>
+            @endif
+
+            @permission('our-bank-access')
+            <li class="{{ request()->is('our-banks*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.our-banks.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Our Banks</div>
+                </a>
+            </li>
             @endpermission
 
             {{-- <li class="mm-active">

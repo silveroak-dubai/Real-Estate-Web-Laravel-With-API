@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OurBankController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,14 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('delete',[BlogController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[BlogController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[BlogController::class,'statusChange'])->name('status-change');
+    });
+
+    // Our Banks Routes
+    Route::resource('our-banks',OurBankController::class)->except('destroy','update');
+    Route::name('our-banks.')->prefix('our-banks')->group(function(){
+        Route::post('delete',[OurBankController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[OurBankController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[OurBankController::class,'statusChange'])->name('status-change');
     });
 
 });
