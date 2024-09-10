@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OurBankController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OurBankController;
+use App\Http\Controllers\ProfileController;
 
 
 Auth::routes([
@@ -49,6 +50,14 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('delete',[OurBankController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[OurBankController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[OurBankController::class,'statusChange'])->name('status-change');
+    });
+
+    // Faq Routes
+    Route::resource('faqs',FaqController::class)->except('destroy','update');
+    Route::name('faqs.')->prefix('faqs')->group(function(){
+        Route::post('delete',[FaqController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[FaqController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[FaqController::class,'statusChange'])->name('status-change');
     });
 
 });

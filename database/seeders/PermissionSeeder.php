@@ -47,5 +47,15 @@ class PermissionSeeder extends Seeder
         Permission::updateOrInsert(['slug'=>'our-banks-delete'],['module_id'=>$ourBanksModule->id,'name'=>'Delete','slug'=>'our-banks-delete']);
         Permission::updateOrInsert(['slug'=>'our-banks-bulk-delete'],['module_id'=>$ourBanksModule->id,'name'=>'Bulk Delete','slug'=>'our-banks-bulk-delete']);
         Permission::updateOrInsert(['slug'=>'our-banks-view'],['module_id'=>$ourBanksModule->id,'name'=>'View','slug'=>'our-banks-view']);
+
+        // Faq Module
+        $faqModule = Module::updateOrCreate(['name'=>'Faq Permission'],['name'=>'Faq Permission']);
+        Permission::updateOrInsert(['slug'=>'faq-access'],['module_id'=>$faqModule->id,'name'=>'Access','slug'=>'faq-access']);
+        Permission::updateOrInsert(['slug'=>'faq-create'],['module_id'=>$faqModule->id,'name'=>'Create','slug'=>'faq-create']);
+        Permission::updateOrInsert(['slug'=>'faq-edit'],['module_id'=>$faqModule->id,'name'=>'Edit/Update','slug'=>'faq-edit']);
+        Permission::updateOrInsert(['slug'=>'faq-active'],['module_id'=>$faqModule->id,'name'=>'Is Active','slug'=>'faq-active']);
+        Permission::updateOrInsert(['slug'=>'faq-delete'],['module_id'=>$faqModule->id,'name'=>'Delete','slug'=>'faq-delete']);
+        Permission::updateOrInsert(['slug'=>'faq-bulk-delete'],['module_id'=>$faqModule->id,'name'=>'Bulk Delete','slug'=>'faq-bulk-delete']);
+        Permission::updateOrInsert(['slug'=>'faq-view'],['module_id'=>$faqModule->id,'name'=>'View','slug'=>'faq-view']);
     }
 }

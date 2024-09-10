@@ -51,6 +51,16 @@
             </li>
             @endif
 
+            @if (permission('faq-access'))
+            <li class="{{ request()->is('faqs*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.faqs.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Faqs</div>
+                </a>
+            </li>
+            @endif
+
             {{-- <li class="mm-active">
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="material-icons-outlined">widgets</i>
