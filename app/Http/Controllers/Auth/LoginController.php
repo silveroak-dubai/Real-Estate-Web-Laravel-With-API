@@ -177,7 +177,6 @@ class LoginController extends Controller
             });
 
             $permission = [];
-
             if(!empty($permissions->get()))
             {
                 foreach ($permissions->get() as $value) {

@@ -11,31 +11,31 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
-                        @if(permission('user-create'))
+                        @permission('user-create')
                         <a href="{{ route('app.users.create') }}" class="btn btn-sm btn-primary rounded-1">Add User</a>
-                        @endif
+                        @endpermission
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table-sm table-striped table-bordered table table-hover mb-0" id="user_table">
                             <thead>
-                                @if(permission('user-bulk-delete'))
+                                @permission('user-bulk-delete')
                                 <th>
                                     <div class="form-checkbox">
                                         <input type="checkbox" class="form-check-input" id="select_all" onclick="select_all()">
                                         <label class="form-check-label" for="select_all"></label>
                                     </div>
                                 </th>
-                                @endif
+                                @endpermission
                                 <th>SL</th>
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Mobile Number</th>
                                 <th>Gender</th>
-                                @if(permission('user-active'))
+                                @permission('user-active')
                                 <th>Is Active</th>
-                                @endif
+                                @endpermission
                                 <th>Created By</th>
                                 <th>Created At</th>
                                 @if(permission('user-delete') || permission('user-view') || permission('user-edit'))
@@ -76,17 +76,17 @@
             },
         },
         columns: [
-            @if(permission('user-bulk-delete'))
+            @permission('user-bulk-delete')
             {data: 'bulk_check'},
-            @endif
+            @endpermission
             {data: 'DT_RowIndex'},
             {data: 'image'},
             {data: 'name_data'},
             {data: 'mobile_no'},
             {data: 'gender'},
-            @if(permission('user-active'))
+            @permission('user-active')
             {data: 'status'},
-            @endif
+            @endpermission
             {data: 'created_by'},
             {data: 'created_at'},
             @if(permission('user-delete') || permission('user-view') || permission('user-edit'))
@@ -112,7 +112,7 @@
         }
     });
 
-    @if(permission('user-delete'))
+    @permission('user-delete')
     // single delete
     $(document).on('click', '.delete_data', function () {
         let id   = $(this).data('id');
@@ -121,9 +121,9 @@
         let url  = "{{ route('app.users.delete') }}";
         delete_data(id,url,row,name);
     });
-    @endif
+    @endpermission
 
-    @if (permission('user-bulk-delete'))
+    @permission('user-bulk-delete')
     // multi delete
     function multi_delete(){
         let ids = [];
@@ -145,9 +145,9 @@
             bulk_delete(ids,url,rows);
         }
     }
-    @endif
+    @endpermission
 
-    @if(permission('user-active'))
+    @permission('user-active')
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');
@@ -156,7 +156,7 @@
         var url = "{{ route('app.users.status-change') }}"
         change_status(id,status,name,url);
     });
-    @endif
+    @endpermission
 </script>
 @endpush
 

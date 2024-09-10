@@ -13,6 +13,7 @@
     <div class="sidebar-nav" data-simplebar="true">
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
+            @permission('dashboard-access')
             <li class="{{ request()->is('dashboard') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.dashboard') }}">
                     <div class="parent-icon"><i class="material-icons-outlined">home</i>
@@ -20,8 +21,9 @@
                     <div class="menu-title">Dashboard</div>
                 </a>
             </li>
+            @endpermission
 
-            @if(permission('user-access'))
+            @permission('user-access')
             <li class="{{ request()->is('users*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.users.index') }}">
                     <div class="parent-icon"><i class="material-icons-outlined">group</i>
@@ -29,9 +31,9 @@
                     <div class="menu-title">Users</div>
                 </a>
             </li>
-            @endif
+            @endpermission
 
-            @if (permission('blog-access'))
+            @permission('blog-access')
             <li class="{{ request()->is('blogs*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.blogs.index') }}">
                     <div class="parent-icon"><i class="material-icons-outlined">group</i>
@@ -39,8 +41,8 @@
                     <div class="menu-title">Blogs</div>
                 </a>
             </li>
-            @endif
-            
+            @endpermission
+
             {{-- <li class="mm-active">
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="material-icons-outlined">widgets</i>

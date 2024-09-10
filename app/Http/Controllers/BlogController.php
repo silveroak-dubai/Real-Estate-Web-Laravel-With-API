@@ -36,7 +36,7 @@ class BlogController extends Controller
                         return dateFormat($row->created_at);
                     })
                     ->addColumn('status', function($row){
-                        if(permission('blog-active')){
+                        if(permission('blog-status')){
                             return change_status($row->id,$row->is_active,$row->name);
                         }
                     })
@@ -48,13 +48,13 @@ class BlogController extends Controller
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
                         if(permission('blog-view')){
-                        $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                            $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
                         }
                         if(permission('blog-edit')){
-                        $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                            $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
                         }
                         if(permission('blog-delete')){
-                        $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
+                            $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
                         }
                         $action .= '</div>';
 
@@ -90,10 +90,10 @@ class BlogController extends Controller
                     $created_by = $updated_by = auth()->user()->name;
                     $image = $request->old_image;
                     if($request->hasFile('image')){
-                        $image = $this->upload_file($request->file('image'),BLOG_PATH);
                         if(!empty($request->old_image)){
                             $this->delete_file($request->old_image,BLOG_PATH);
                         }
+                        $image = $this->upload_file($request->file('image'),BLOG_PATH);
                     }
 
                     if($request->update_id){
@@ -118,7 +118,6 @@ class BlogController extends Controller
     public function edit(int $id){
         if(permission('blog-edit')){
             $data['edit'] = Blog::with('permissions')->findOrFail($id);
-            $data['modules'] = Module::with('permissions')->orderBy('id','asc')->get();
             $this->set_page_data('Edit User','Edit User');
             return view('user.edit',$data);
         }else{
@@ -129,7 +128,6 @@ class BlogController extends Controller
     public function show(int $id){
         if(permission('blog-view')){
             $data['view'] = Blog::with('permissions')->findOrFail($id);
-            $data['modules'] = Module::with('permissions')->orderBy('id','asc')->get();
             $this->set_page_data('View User','View User ('.$data['view']->name.')');
             return view('user.view',$data);
         }else{
@@ -148,6 +146,9 @@ class BlogController extends Controller
             if(permission('blog-delete')){
                 $result = Blog::find($request->id);
                 if($result){
+                    if(!empty($result->image)){
+                        $this->delete_file($result->image,BLOG_PATH);
+                    }
                     $result->delete();
                     return $this->delete_message($result);
                 }else{
@@ -170,8 +171,13 @@ class BlogController extends Controller
     public function bulkDelete(Request $request){
         if ($request->ajax()) {
             if(permission('blog-bulk-delete')){
-                $result = Blog::destroy($request->ids);
+                $result = Blog::whereIn($request->ids)->get('image');
                 if($result){
+                    foreach($result as $value){
+                        if(!empty($value->image)){
+                            $this->delete_file($value->image,BLOG_PATH);
+                        }
+                    }
                     return $this->bulk_delete_message($result);
                 }else{
                     return $this->response_json('error','Data Cannot Delete',null,204);
@@ -192,10 +198,10 @@ class BlogController extends Controller
      */
     public function statusChange(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-active')){
+            if(permission('blog-status')){
                 $result = Blog::find($request->id);
                 if ($result) {
-                    $result->update(['is_active'=>$request->status]);
+                    $result->update(['status'=>$request->status]);
                     return $this->status_message($result);
                 }else{
                     return $this->response_json('error','Failed to change status',null,204);

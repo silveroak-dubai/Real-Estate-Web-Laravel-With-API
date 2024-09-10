@@ -21,7 +21,7 @@ class Module extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name','ordering'];
 
     public function permissions(){
         return $this->hasMany(Permission::class,'module_id','id');

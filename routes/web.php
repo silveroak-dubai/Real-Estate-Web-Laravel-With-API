@@ -34,7 +34,7 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     // Password Update Route
     Route::post('password-change',[ProfileController::class,'passwordUpdate'])->name('password.update');
 
-    // User Routes
+    // Blog Routes
     Route::resource('blogs',BlogController::class)->except('destroy','update');
     Route::name('blogs.')->prefix('blogs')->group(function(){
         Route::post('delete',[BlogController::class,'delete'])->name('delete');

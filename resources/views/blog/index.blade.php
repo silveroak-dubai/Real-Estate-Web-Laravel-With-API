@@ -11,30 +11,30 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
-                        @if(permission('blog-create'))
+                        @permission('blog-create')
                         <a href="{{ route('app.blogs.create') }}" class="btn btn-sm btn-primary rounded-1">Add Blog</a>
-                        @endif
+                        @endpermission
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table-sm table-striped table-bordered table table-hover mb-0" id="blog_table">
                             <thead>
-                                @if(permission('blog-bulk-delete'))
+                                @permission('blog-bulk-delete')
                                 <th>
                                     <div class="form-checkbox">
                                         <input type="checkbox" class="form-check-input" id="select_all" onclick="select_all()">
                                         <label class="form-check-label" for="select_all"></label>
                                     </div>
                                 </th>
-                                @endif
+                                @endpermission
                                 <th>SL</th>
                                 <th>Image</th>
                                 <th>Title</th>
                                 <th>Gender</th>
-                                @if(permission('blog-active'))
+                                @permission('blog-status')
                                 <th>Is Active</th>
-                                @endif
+                                @endpermission
                                 <th>Created By</th>
                                 <th>Created At</th>
                                 @if(permission('blog-delete') || permission('blog-view') || permission('blog-edit'))
@@ -75,16 +75,16 @@
             },
         },
         columns: [
-            @if(permission('blog-bulk-delete'))
+            @permission('blog-bulk-delete')
             {data: 'bulk_check'},
-            @endif
+            @endpermission
             {data: 'DT_RowIndex'},
             {data: 'image'},
             {data: 'title'},
             {data: 'gender'},
-            @if(permission('blog-active'))
+            @permission('blog-status')
             {data: 'status'},
-            @endif
+            @endpermission
             {data: 'created_by'},
             {data: 'created_at'},
             @if(permission('blog-delete') || permission('blog-view') || permission('blog-edit'))
@@ -110,7 +110,7 @@
         }
     });
 
-    @if(permission('blog-delete'))
+    @permission('blog-delete')
     // single delete
     $(document).on('click', '.delete_data', function () {
         let id   = $(this).data('id');
@@ -119,9 +119,9 @@
         let url  = "{{ route('app.blogs.delete') }}";
         delete_data(id,url,row,name);
     });
-    @endif
+    @endpermission
 
-    @if (permission('blog-bulk-delete'))
+    @permission('blog-bulk-delete')
     // multi delete
     function multi_delete(){
         let ids = [];
@@ -143,9 +143,9 @@
             bulk_delete(ids,url,rows);
         }
     }
-    @endif
+    @endpermission
 
-    @if(permission('blog-active'))
+    @permission('blog-active')
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');
@@ -154,7 +154,7 @@
         var url = "{{ route('app.blogs.status-change') }}"
         change_status(id,status,name,url);
     });
-    @endif
+    @endpermission
 </script>
 @endpush
 
