@@ -33,7 +33,7 @@
                                 <th>Name</th>
                                 <th>Mobile Number</th>
                                 <th>Gender</th>
-                                @permission('user-active')
+                                @permission('user-status')
                                 <th>Is Active</th>
                                 @endpermission
                                 <th>Created By</th>
@@ -84,7 +84,7 @@
             {data: 'name_data'},
             {data: 'mobile_no'},
             {data: 'gender'},
-            @permission('user-active')
+            @permission('user-status')
             {data: 'status'},
             @endpermission
             {data: 'created_by'},
@@ -94,7 +94,7 @@
             @endif
         ],
         language: {
-            processing: '<img src="{{ asset("img/table-loading.svg") }}">',
+            processing: '<div class="text-center"><img src="{{ asset("img/table-loading.svg") }}"></div>',
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
             zeroRecords: '<strong class="text-danger">No Data Found</strong>',
@@ -147,7 +147,7 @@
     }
     @endpermission
 
-    @permission('user-active')
+    @permission('user-status')
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');

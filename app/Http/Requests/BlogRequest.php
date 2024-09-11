@@ -22,17 +22,20 @@ class BlogRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'title'      => ['required','string','max:190'],
-            'slug'       => ['required','string','unique:blogs,slug'],
-            'except'     => ['required','max:180'],
-            'is_comment' => ['required','in:1,2'],
-            'status'     => ['required','in:1,2'],
-            'content'    => ['required','string'],
-            'image'      => ['required','image','mimes:png,jpg']
+            'title'             => ['required','string','max:190'],
+            'slug'              => ['required','string','max:190','unique:blogs,slug'],
+            'is_comment'        => ['required','in:1,2'],
+            'status'            => ['required','in:1,2'],
+            'short_description' => ['required','string','max:150'],
+            'description'       => ['required','string'],
+            'published_date'    => ['required','date'],
+            'image'             => ['required','image','mimes:png,jpg','max:512'],
+            'meta_title'        => ['nullable','string','max:80'],
+            'meta_description'  => ['nullable','string','max:170']
         ];
 
         if(request()->update_id){
-            $rules['slug'][2]   = 'unique:blog,slug,'.request()->update_id;
+            $rules['slug'][3]   = 'unique:blogs,slug,'.request()->update_id;
             $rules['image'][0]  = 'nullable';
         }
 

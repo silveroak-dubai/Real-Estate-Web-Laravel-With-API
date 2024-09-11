@@ -80,7 +80,7 @@
             {data: 'DT_RowIndex'},
             {data: 'image'},
             {data: 'alt_text'},
-            @permission('our-bank-active')
+            @permission('our-bank-status')
             {data: 'status'},
             @endpermission
             {data: 'created_by'},
@@ -90,7 +90,7 @@
             @endif
         ],
         language: {
-            processing: '<img src="{{ asset("img/table-loading.svg") }}">',
+            processing: '<div class="text-center"><img src="{{ asset("img/table-loading.svg") }}"></div>',
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
             zeroRecords: '<strong class="text-danger">No Data Found</strong>',
@@ -143,7 +143,7 @@
     }
     @endpermission
 
-    @permission('our-bank-active')
+    @permission('our-bank-status')
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');

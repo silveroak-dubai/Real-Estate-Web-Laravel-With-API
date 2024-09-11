@@ -16,16 +16,13 @@
                     <form method="POST" id="form_data">
                         @csrf
                         <input type="hidden" name="update_id" id="update_id">
-
+                        <x-form.inputbox type="file" labelName="Image" name="image" required="required"/>
                         <x-form.inputbox labelName="Alt Text" name="alt_text" required="required" placeholder="Enter Alt Text"/>
-
                         <x-form.selectbox labelName="Status" name="status" required="required">
                             @foreach (STATUS as $key=>$value)
                             <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                         </x-form.selectbox>
-
-                        <x-form.inputbox type="file" labelName="Image" name="image" required="required"/>
                     </form>
 
                     <div class="text-end mt-3">

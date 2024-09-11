@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Blog;
 use App\Traits\UploadAble;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Traits\ResponseMessage;
 use App\Http\Requests\BlogRequest;
@@ -30,14 +31,17 @@ class BlogController extends Controller
                         }
                     })
                     ->addColumn('image', function($row){
-                        return table_image(USER_AVATAR_PATH,$row->avatar,$row->name);
+                        return table_image(BLOG_PATH,$row->image,$row->slug);
                     })
                     ->addColumn('created_at', function($row){
                         return dateFormat($row->created_at);
                     })
+                    ->addColumn('published_date', function($row){
+                        return dateFormat($row->published_date);
+                    })
                     ->addColumn('status', function($row){
                         if(permission('blog-status')){
-                            return change_status($row->id,$row->is_active,$row->name);
+                            return change_status($row->id,$row->status,$row->name);
                         }
                     })
                     ->addColumn('bulk_check', function($row){
@@ -48,10 +52,10 @@ class BlogController extends Controller
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
                         if(permission('blog-view')){
-                            $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                            $action .= '<a href="'.route('app.blogs.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
                         }
                         if(permission('blog-edit')){
-                            $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                            $action .= '<a href="'.route('app.blogs.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
                         }
                         if(permission('blog-delete')){
                             $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
@@ -85,7 +89,8 @@ class BlogController extends Controller
             if ($request->ajax()) {
                 DB::beginTransaction();
                 try {
-                    $collection = collect($request->validated());
+                    $collection = collect($request->validated())->except('slug');
+                    $slug       = str()->slug($request->slug,'-');
                     $created_at = $updated_at = Carbon::now();
                     $created_by = $updated_by = auth()->user()->name;
                     $image = $request->old_image;
@@ -97,14 +102,14 @@ class BlogController extends Controller
                     }
 
                     if($request->update_id){
-                        $collection = $collection->merge(compact('image','updated_by','updated_at'));
+                        $collection = $collection->merge(compact('slug','image','updated_by','updated_at'));
                     }else{
-                        $collection = $collection->merge(compact('image','created_by','created_at'));
+                        $collection = $collection->merge(compact('slug','image','created_by','created_at'));
                     }
 
-                    Blog::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    $result = Blog::updateOrCreate(['id'=>$request->update_id],$collection->all());
                     DB::commit();
-                    return $this->response_json('success','Blog has been saved succesfull.');
+                    return $this->store_message($result,$request->update_id);
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return $this->response_json('error',$e->getMessage());
@@ -117,9 +122,9 @@ class BlogController extends Controller
 
     public function edit(int $id){
         if(permission('blog-edit')){
-            $data['edit'] = Blog::with('permissions')->findOrFail($id);
+            $data['edit'] = Blog::findOrFail($id);
             $this->set_page_data('Edit User','Edit User');
-            return view('user.edit',$data);
+            return view('blog.edit',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -127,9 +132,9 @@ class BlogController extends Controller
 
     public function show(int $id){
         if(permission('blog-view')){
-            $data['view'] = Blog::with('permissions')->findOrFail($id);
-            $this->set_page_data('View User','View User ('.$data['view']->name.')');
-            return view('user.view',$data);
+            $data['view'] = Blog::findOrFail($id);
+            $this->set_page_data('View User','View User');
+            return view('blog.view',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -171,13 +176,14 @@ class BlogController extends Controller
     public function bulkDelete(Request $request){
         if ($request->ajax()) {
             if(permission('blog-bulk-delete')){
-                $result = Blog::whereIn($request->ids)->get('image');
+                $result = Blog::whereIn('id',$request->ids)->get('image');
                 if($result){
                     foreach($result as $value){
                         if(!empty($value->image)){
                             $this->delete_file($value->image,BLOG_PATH);
                         }
                     }
+                    Blog::destroy($request->ids);
                     return $this->bulk_delete_message($result);
                 }else{
                     return $this->response_json('error','Data Cannot Delete',null,204);

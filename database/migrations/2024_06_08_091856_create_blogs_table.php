@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title');
+            $table->text('title');
             $table->string('slug')->unique();
-            $table->text('except');
+            $table->text('short_description');
             $table->longText('description');
             $table->string('image');
             $table->enum('status',['1','2'])->default('1')->comment('1 = Active, 2 = Inactive');
             $table->enum('is_comment',['1','2'])->default('1')->comment('1 = Enabled, 2 = Disabled');
             $table->string('meta_title')->nullable();
+            $table->timestamp('published_date');
             $table->string('meta_description')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

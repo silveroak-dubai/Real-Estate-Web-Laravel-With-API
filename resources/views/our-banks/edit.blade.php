@@ -2,89 +2,7 @@
 
 @section('title',$siteTitle)
 @push('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css">
-    <style>
-        #permission.tree, #permission.tree ul {
-            margin:0 !important;
-            padding:0 !important;
-            list-style:none !important;
-        }
-        #permission.tree ul {
-            margin-left:0.5em !important;
-            position:relative;
-        }
-        #permission.tree ul ul {
-            margin-left:.5em;
-        }
-        #permission.tree ul:before {
-            content:"";
-            display:block;
-            width:0;
-            position:absolute;
-            top:0;
-            bottom:0;
-            left:0;
-            border-left:1px solid;
-            z-index: 1;
-        }
-        #permission.tree li {
-            margin:0 0 10px 0;
-            padding: .5rem 0 .5rem .5em;
-            line-height:2em;
-            font-weight:700;
-            position:relative;
-            border-left: 2px solid #038fde;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            background: #212529;
-        }
-        #permission.tree li:hover{
-            cursor: move;
-        }
-        #permission.tree li li{
-            margin:0;
-            padding: 0 0 0 1em;
-            line-height:2em;
-            font-weight:700;
-            position:relative;
-            border-left: 0;
-            box-shadow: none !important;
-        }
-        #permission.tree ul li:before {
-            content:"";
-            display:block;
-            width:10px;
-            height:0;
-            border-top:1px solid;
-            margin-top:-1px;
-            position:absolute;
-            top:1em;
-            left:0
-        }
-        .indicator {
-            margin-right:5px;
-        }
 
-        #permission.tree li .indicator{
-            position: absolute;
-            top: 12px;
-            right: 20px;
-            color: #ffffff;
-            font-size: 18px;
-            float: right;
-            line-height: 25px;
-            cursor: pointer;
-        }
-        #permission.tree li li .indicator{
-            position: absolute;
-            top: 0;
-            right: 20px;
-            color: #ffffff;
-            font-size: 18px;
-            float: right;
-            line-height: 30px;
-            cursor: pointer;
-        }
-    </style>
 @endpush
 
 @section('content')
@@ -98,19 +16,15 @@
                     <form method="POST" id="form_data">
                         @csrf
                         <input type="hidden" name="update_id" id="update_id" value="{{ $edit->id }}">
-
+                        <x-form.inputbox type="file" labelName="Image" name="image"/>
+                        <input type="hidden" name="old_image" value="{{ $edit->image ?? '' }}">
                         <x-form.inputbox labelName="Alt Text" name="alt_text" value="{{ $edit->alt_text ?? '' }}" required="required" placeholder="Enter Alt Text"/>
-
                         <x-form.selectbox labelName="Status" name="status" required="required">
                             <option value="">Select Status</option>
                             @foreach (STATUS as $key=>$value)
                             <option value="{{ $key }}" {{ $edit->status == $key ? 'selected' : '' }}>{{ $value }}</option>
                             @endforeach
                         </x-form.selectbox>
-                        <x-form.inputbox type="file" labelName="Image" name="image"/>
-                        <input type="hidden" name="old_image" value="{{ $edit->image ?? '' }}">
-
-
                     </form>
 
                     <div class="text-end mt-3">

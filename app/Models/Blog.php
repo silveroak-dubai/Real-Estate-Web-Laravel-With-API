@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Blog extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The table associated with the model.
@@ -25,11 +25,12 @@ class Blog extends Model
     protected $fillable = [
         'title',
         'slug',
-        'except',
-        'content',
+        'short_description',
+        'description',
         'image',
         'status',
         'is_comment',
+        'published_date',
         'meta_title',
         'meta_description',
         'created_by',

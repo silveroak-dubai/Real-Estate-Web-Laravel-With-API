@@ -1,8 +1,7 @@
 @extends('layouts.app')
-
 @section('title',$siteTitle)
 @push('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css">
+
 @endpush
 
 @section('content')
@@ -19,26 +18,22 @@
 
                         <x-form.inputbox labelName="Title" name="title" required="required" placeholder="Enter title"/>
                         <x-form.inputbox labelName="Slug" name="slug" required="required" placeholder="Enter slug"/>
-                        <x-form.textarea labelName="Except" name="except" required="required" placeholder="Enter content"></x-form.textarea>
+                        <x-form.textarea labelName="Short Description" name="short_description" required="required" placeholder="Enter Short Description"></x-form.textarea>
                         <x-form.selectbox labelName="Is Comment" name="is_comment" required="required">
                             @foreach (ENABLED_DISABLED as $key=>$value)
                             <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                         </x-form.selectbox>
-
                         <x-form.selectbox labelName="Status" name="status" required="required">
                             @foreach (STATUS as $key=>$value)
                             <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                         </x-form.selectbox>
-
-                        <x-form.textarea labelName="Content" name="content" required="required" placeholder="Enter content"></x-form.textarea>
-
+                        <x-form.textarea labelName="Description" name="description" required="required" placeholder="Enter Description"></x-form.textarea>
+                        <x-form.inputbox labelName="Published Date" name="published_date" required="required" placeholder="YYYY-MM-DD"/>
                         <x-form.inputbox type="file" labelName="Image" name="image" required="required"/>
-
-                        <x-form.inputbox labelName="Meta Title" name="meta_title" required="required" optional="" placeholder="Enter title"/>
-                        <x-form.textarea labelName="Meta Description" name="meta_description" required="required" placeholder="Enter description"></x-form.textarea>
-
+                        <x-form.inputbox labelName="Meta Title" name="meta_title" placeholder="Enter title"/>
+                        <x-form.textarea labelName="Meta Description" name="meta_description" placeholder="Enter description"></x-form.textarea>
                     </form>
 
                     <div class="text-end mt-3">
@@ -55,7 +50,10 @@
     $(document).on('keyup keypress','#title',function(){
         var input_value = $(this).val();
         var value = input_value.toLowerCase().trim();
-        var str = value.replace(/ +(?= )/g,'');
+        // Remove extra spaces and special characters, allow only alphanumeric and spaces
+        var str = value.replace(/[^a-z0-9 ]/g, '').replace(/ +(?= )/g, '');
+
+        // Replace spaces with hyphens
         var name = str.split(' ').join('-');
         $('#slug').val(name);
     });
@@ -84,7 +82,7 @@
                 if (response.status == false) {
                     $.each(response.errors,function(key,value){
                         $('#blog_form #'+key).addClass('is-invalid');
-                        $('#blog_form #'+key).parent().append('<span class="text-danger error">'+value+'</span>');
+                        $('#blog_form #'+key).parent().append('<small class="text-danger d-block error">'+value+'</small>');
                     });
                 }else{
                     notification(response.status,response.message);

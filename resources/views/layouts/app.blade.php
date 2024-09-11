@@ -30,6 +30,54 @@
     <link href="{{ asset('css') }}/bordered-theme.css" rel="stylesheet">
     <link href="{{ asset('css') }}/custom.css" rel="stylesheet">
     <link href="{{ asset('css') }}/responsive.css" rel="stylesheet">
+    <style>
+        table.table{
+            width: 100% !important;
+        }
+        input::placeholder,
+        textarea::placeholder {
+            color: #999;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        input::-webkit-input-placeholder,
+        textarea::-webkit-input-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        input::-moz-placeholder,
+        textarea::-moz-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        input:-ms-input-placeholder,
+        textarea:-ms-input-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        input::-ms-input-placeholder,
+        textarea::-ms-input-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        input:-o-input-placeholder,
+        textarea:-o-input-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+
+    </style>
     @stack('styles')
 </head>
 

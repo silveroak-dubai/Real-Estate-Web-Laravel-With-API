@@ -18,7 +18,6 @@ class OurBankController extends Controller
     public function index(Request $request){
         if (permission('our-bank-access')) {
             if($request->ajax()){
-
                 $getData = OurBank::orderBy('id','desc');
                 return DataTables::eloquent($getData)
                     ->addIndexColumn()
@@ -57,7 +56,7 @@ class OurBankController extends Controller
 
                         return $action;
                     })
-                    ->rawColumns(['bulk_check','status','action','image','status'])
+                    ->rawColumns(['bulk_check','status','action','image'])
                     ->make(true);
             }
 
@@ -191,7 +190,7 @@ class OurBankController extends Controller
      */
     public function statusChange(Request $request){
         if ($request->ajax()) {
-            if(permission('our-bank-active')){
+            if(permission('our-bank-status')){
                 $result = OurBank::find($request->id);
                 if ($result) {
                     $result->update(['status'=>$request->status]);

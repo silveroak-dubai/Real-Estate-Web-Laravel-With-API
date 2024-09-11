@@ -31,12 +31,14 @@
                                 <th>SL</th>
                                 <th>Image</th>
                                 <th>Title</th>
-                                <th>Gender</th>
+                                <th>Slug</th>
+                                <th>Is Comment</th>
                                 @permission('blog-status')
                                 <th>Is Active</th>
                                 @endpermission
+                                <th>Published Date</th>
                                 <th>Created By</th>
-                                <th>Created At</th>
+                                <th>Created Date</th>
                                 @if(permission('blog-delete') || permission('blog-view') || permission('blog-edit'))
                                 <th class="text-end">Action</th>
                                 @endif
@@ -81,10 +83,12 @@
             {data: 'DT_RowIndex'},
             {data: 'image'},
             {data: 'title'},
-            {data: 'gender'},
+            {data: 'slug'},
+            {data: 'is_comment'},
             @permission('blog-status')
             {data: 'status'},
             @endpermission
+            {data: 'published_date'},
             {data: 'created_by'},
             {data: 'created_at'},
             @if(permission('blog-delete') || permission('blog-view') || permission('blog-edit'))
@@ -92,7 +96,7 @@
             @endif
         ],
         language: {
-            processing: '<img src="{{ asset("img/table-loading.svg") }}">',
+            processing: '<div class="text-center"><img src="{{ asset("img/table-loading.svg") }}"></div>',
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
             zeroRecords: '<strong class="text-danger">No Data Found</strong>',
@@ -145,7 +149,7 @@
     }
     @endpermission
 
-    @permission('blog-active')
+    @permission('blog-status')
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');
