@@ -11,34 +11,33 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
-                        @permission('user-create')
-                        <a href="{{ route('app.users.create') }}" class="btn btn-sm btn-primary rounded-1">Add User</a>
-                        @endpermission
+                        @if(permission('our-team-create'))
+                        <a href="{{ route('app.our-teams.create') }}" class="btn btn-sm btn-primary rounded-1">Add Our Team</a>
+                        @endif
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table-sm table-striped table-bordered table table-hover mb-0" id="user_table">
+                        <table class="table-sm table-striped table-bordered table table-hover mb-0" id="blog_table">
                             <thead>
-                                @permission('user-bulk-delete')
+                                @if(permission('our-team-bulk-delete'))
                                 <th>
                                     <div class="form-checkbox">
                                         <input type="checkbox" class="form-check-input" id="select_all" onclick="select_all()">
                                         <label class="form-check-label" for="select_all"></label>
                                     </div>
                                 </th>
-                                @endpermission
+                                @endif
                                 <th>SL</th>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Mobile Number</th>
-                                <th>Gender</th>
-                                @permission('user-active')
-                                <th>Is Active</th>
-                                @endpermission
+                                <th>Full Name</th>
+                                <th>Position</th>
+                                <th>Experience</th>
+                                @if(permission('our-team-status'))
+                                <th>Status</th>
+                                @endif
                                 <th>Created By</th>
                                 <th>Created At</th>
-                                @if(permission('user-delete') || permission('user-view') || permission('user-edit'))
+                                @if(permission('our-team-delete') || permission('our-team-view') || permission('our-team-edit'))
                                 <th class="text-end">Action</th>
                                 @endif
                             </thead>
@@ -53,7 +52,7 @@
 
 @push('scripts')
 <script>
-    table = $('#user_table').DataTable({
+    table = $('#blog_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
@@ -67,7 +66,7 @@
         ],
         pageLength: "{{ TABLE_PAGE_LENGTH }}", //number of data show per page
         ajax: {
-            url: "{{ route('app.users.index') }}",
+            url: "{{ route('app.our-teams.index') }}",
             type: "GET",
             dataType: "JSON",
             data: function(d) {
@@ -76,20 +75,19 @@
             },
         },
         columns: [
-            @permission('user-bulk-delete')
+            @if(permission('our-team-bulk-delete'))
             {data: 'bulk_check'},
-            @endpermission
+            @endif
             {data: 'DT_RowIndex'},
-            {data: 'image'},
-            {data: 'name_data'},
-            {data: 'mobile_no'},
-            {data: 'gender'},
-            @permission('user-active')
+            {data: 'full_name'},
+            {data: 'position'},
+            {data: 'experience'},
+            @if(permission('our-team-status'))
             {data: 'status'},
-            @endpermission
+            @endif
             {data: 'created_by'},
             {data: 'created_at'},
-            @if(permission('user-delete') || permission('user-view') || permission('user-edit'))
+            @if(permission('our-team-delete') || permission('our-team-view') || permission('our-team-edit'))
             {data: 'action'}
             @endif
         ],
@@ -112,18 +110,18 @@
         }
     });
 
-    @permission('user-delete')
+    @if(permission('our-team-delete'))
     // single delete
     $(document).on('click', '.delete_data', function () {
         let id   = $(this).data('id');
         let name = $(this).data('name');
         let row  = table.row($(this).parent('tr'));
-        let url  = "{{ route('app.users.delete') }}";
+        let url  = "{{ route('app.our-teams.delete') }}";
         delete_data(id,url,row,name);
     });
-    @endpermission
+    @endif
 
-    @permission('user-bulk-delete')
+    @if (permission('our-team-bulk-delete'))
     // multi delete
     function multi_delete(){
         let ids = [];
@@ -141,22 +139,22 @@
                 icon: 'warning',
             });
         }else{
-            let url = "{{ route('app.users.bulk-delete') }}";
+            let url = "{{ route('app.our-teams.bulk-delete') }}";
             bulk_delete(ids,url,rows);
         }
     }
-    @endpermission
+    @endif
 
-    @permission('user-active')
+    @if(permission('our-team-status'))
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');
         var name = $(this).data('name');
         var status = $(this).data('status');
-        var url = "{{ route('app.users.status-change') }}"
+        var url = "{{ route('app.our-teams.status-change') }}"
         change_status(id,status,name,url);
     });
-    @endpermission
+    @endif
 </script>
 @endpush
 

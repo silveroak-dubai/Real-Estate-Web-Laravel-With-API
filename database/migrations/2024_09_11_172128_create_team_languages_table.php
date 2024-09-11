@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('team_languages', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->integer('ordering')->default(0);
+            $table->string('name');
+            $table->enum('status',['1','2'])->default('1')->comment('1 = Active, 2 = Inactive');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('team_languages');
     }
 };

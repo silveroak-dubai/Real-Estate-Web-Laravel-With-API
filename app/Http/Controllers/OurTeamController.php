@@ -3,23 +3,26 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Blog;
 use App\Traits\UploadAble;
+use App\Models\TeamLanguage;
 use Illuminate\Http\Request;
+use App\Models\TeamSpecialized;
 use App\Traits\ResponseMessage;
-use App\Http\Requests\BlogRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\OurTeamRequest;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\TeamLanguageRequest;
+use App\Models\OurTeam;
 
-class BlogController extends Controller
+class OurTeamController extends Controller
 {
     use UploadAble, ResponseMessage;
 
     public function index(Request $request){
-        if (permission('blog-access')) {
+        if (permission('our-team-access')) {
             if($request->ajax()){
 
-                $getData = Blog::orderBy('id','desc');
+                $getData = OurTeam::orderBy('id','desc');
                 return DataTables::eloquent($getData)
                     ->addIndexColumn()
                     ->filter(function ($query) use ($request) {
@@ -29,32 +32,32 @@ class BlogController extends Controller
                                 ->orWhere('mobile_no', 'LIKE', "%$request->search%");
                         }
                     })
-                    ->addColumn('image', function($row){
-                        return table_image(USER_AVATAR_PATH,$row->avatar,$row->name);
-                    })
                     ->addColumn('created_at', function($row){
                         return dateFormat($row->created_at);
                     })
+                    ->addColumn('image', function($row){
+                        return table_image(OUR_TEAM_LANGUAGE_PATH,$row->image,$row->name);
+                    })
                     ->addColumn('status', function($row){
-                        if(permission('blog-status')){
-                            return change_status($row->id,$row->is_active,$row->name);
+                        if(permission('our-team-status')){
+                            return change_status($row->id,$row->status,$row->name);
                         }
                     })
                     ->addColumn('bulk_check', function($row){
-                        if(permission('blog-bulk-delete')){
+                        if(permission('our-team-bulk-delete')){
                             return table_checkbox($row->id);
                         }
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        if(permission('blog-view')){
-                            $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                        // if(permission('our-team-view')){
+                        // $action .= '<a href="'.route('app.our-team.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                        // }
+                        if(permission('our-team-edit')){
+                        $action .= '<a href="'.route('app.our-teams.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
                         }
-                        if(permission('blog-edit')){
-                            $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
-                        }
-                        if(permission('blog-delete')){
-                            $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
+                        if(permission('our-team-delete')){
+                        $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
                         }
                         $action .= '</div>';
 
@@ -64,47 +67,45 @@ class BlogController extends Controller
                     ->make(true);
             }
 
-            $this->set_page_data('Blog List','Blog List');
-            return view('blog.index');
+            $this->set_page_data('Our Team List','Our Team List');
+            return view('our-team.index');
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
     public function create(){
-        if(permission('blog-create')){
-            $this->set_page_data('New Blog','New Blog');
-            return view('blog.create');
+        if(permission('our-team-create')){
+            $this->set_page_data('New Our Team','New Our Team');
+            $languages = TeamLanguage::where('status',1)->pluck('name','id');
+            $specializations = TeamSpecialized::where('status',1)->pluck('name','id');
+            return view('our-team.create',compact('languages','specializations'));
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
-    public function store(BlogRequest $request){
-        if(permission('blog-create') || permission('blog-edit')){
+    public function store(OurTeamRequest $request){
+        if(permission('our-team-create') || permission('our-team-edit')){
             if ($request->ajax()) {
                 DB::beginTransaction();
                 try {
                     $collection = collect($request->validated());
                     $created_at = $updated_at = Carbon::now();
                     $created_by = $updated_by = auth()->user()->name;
-                    $image = $request->old_image;
-                    if($request->hasFile('image')){
-                        if(!empty($request->old_image)){
-                            $this->delete_file($request->old_image,BLOG_PATH);
-                        }
-                        $image = $this->upload_file($request->file('image'),BLOG_PATH);
-                    }
+
+                    $language_ids = json_encode($request->language_ids) ?? [];
+                    $specialization_ids = json_encode($request->specialization_ids) ?? [];
 
                     if($request->update_id){
-                        $collection = $collection->merge(compact('image','updated_by','updated_at'));
+                        $collection = $collection->merge(compact('language_ids','specialization_ids','updated_by','updated_at'));
                     }else{
-                        $collection = $collection->merge(compact('image','created_by','created_at'));
+                        $collection = $collection->merge(compact('language_ids','specialization_ids','created_by','created_at'));
                     }
 
-                    Blog::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    OurTeam::updateOrCreate(['id'=>$request->update_id],$collection->all());
                     DB::commit();
-                    return $this->response_json('success','Blog has been saved succesfull.');
+                    return $this->response_json('success','Our Team has been saved succesfull.');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return $this->response_json('error',$e->getMessage());
@@ -116,39 +117,42 @@ class BlogController extends Controller
     }
 
     public function edit(int $id){
-        if(permission('blog-edit')){
-            $data['edit'] = Blog::with('permissions')->findOrFail($id);
-            $this->set_page_data('Edit User','Edit User');
-            return view('user.edit',$data);
+        if(permission('our-team-edit')){
+            $data['edit'] = OurTeam::findOrFail($id);
+            $this->set_page_data('Edit Our Team','Edit Our Team');
+            $data['languages'] = TeamLanguage::where('status',1)->pluck('name','id');
+            $data['specializations'] = TeamSpecialized::where('status',1)->pluck('name','id');
+            return view('our-team.edit',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
     public function show(int $id){
-        if(permission('blog-view')){
-            $data['view'] = Blog::with('permissions')->findOrFail($id);
-            $this->set_page_data('View User','View User ('.$data['view']->name.')');
-            return view('user.view',$data);
+        if(permission('our-team-view')){
+            $data['view'] = OurTeam::findOrFail($id);
+            $this->set_page_data('View Our Team','View Our Team ('.$data['view']->name.')');
+            return view('our-team.view',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
     /**
-     * spacified user delete resource
+     * spacified delete resource
      *
      * @return \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-delete')){
-                $result = Blog::find($request->id);
+            if(permission('our-team-delete')){
+                $result = OurTeam::find($request->id);
                 if($result){
-                    if(!empty($result->image)){
-                        $this->delete_file($result->image,BLOG_PATH);
+                    if ($result->image) {
+                        $this->delete_file($result->image,OUR_TEAM_LANGUAGE_PATH);
                     }
+
                     $result->delete();
                     return $this->delete_message($result);
                 }else{
@@ -163,21 +167,16 @@ class BlogController extends Controller
     }
 
     /**
-     * multiple user destroy resource
+     * multiple destroy resource
      *
      * @return \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function bulkDelete(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-bulk-delete')){
-                $result = Blog::whereIn($request->ids)->get('image');
+            if(permission('our-team-bulk-delete')){
+                $result = OurTeam::destroy($request->ids);
                 if($result){
-                    foreach($result as $value){
-                        if(!empty($value->image)){
-                            $this->delete_file($value->image,BLOG_PATH);
-                        }
-                    }
                     return $this->bulk_delete_message($result);
                 }else{
                     return $this->response_json('error','Data Cannot Delete',null,204);
@@ -191,15 +190,15 @@ class BlogController extends Controller
     }
 
     /**
-     * spacified user status update
+     * spacified status update
      *
      * @return \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function statusChange(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-status')){
-                $result = Blog::find($request->id);
+            if(permission('our-team-status')){
+                $result = OurTeam::find($request->id);
                 if ($result) {
                     $result->update(['status'=>$request->status]);
                     return $this->status_message($result);
@@ -212,3 +211,4 @@ class BlogController extends Controller
         }
     }
 }
+

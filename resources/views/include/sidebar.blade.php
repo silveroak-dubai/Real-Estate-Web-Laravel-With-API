@@ -13,6 +13,7 @@
     <div class="sidebar-nav" data-simplebar="true">
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
+            @permission('dashboard-access')
             <li class="{{ request()->is('dashboard') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.dashboard') }}">
                     <div class="parent-icon"><i class="material-icons-outlined">home</i>
@@ -20,8 +21,9 @@
                     <div class="menu-title">Dashboard</div>
                 </a>
             </li>
+            @endpermission
 
-            @if(permission('user-access'))
+            @permission('user-access')
             <li class="{{ request()->is('users*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.users.index') }}">
                     <div class="parent-icon"><i class="material-icons-outlined">group</i>
@@ -29,9 +31,9 @@
                     <div class="menu-title">Users</div>
                 </a>
             </li>
-            @endif
+            @endpermission
 
-            @if (permission('blog-access'))
+            @permission('blog-access')
             <li class="{{ request()->is('blogs*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.blogs.index') }}">
                     <div class="parent-icon"><i class="material-icons-outlined">group</i>
@@ -57,6 +59,56 @@
                     <div class="parent-icon"><i class="material-icons-outlined">group</i>
                     </div>
                     <div class="menu-title">Faqs</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('achievement-access'))
+            <li class="{{ request()->is('achievements*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.achievements.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Achievements</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('our-partner-access'))
+            <li class="{{ request()->is('our-partners*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.our-partners.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Our Parners</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('team-language-access'))
+            <li class="{{ request()->is('team-languages*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.team-languages.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Team Languages</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('team-specialized-access'))
+            <li class="{{ request()->is('team-specializeds*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.team-specializeds.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Team Specialized</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('our-team-access'))
+            <li class="{{ request()->is('our-teams*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.our-teams.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Our Team</div>
                 </a>
             </li>
             @endif

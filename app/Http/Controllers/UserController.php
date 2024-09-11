@@ -46,7 +46,7 @@ class UserController extends Controller
                         return dateFormat($row->created_at);
                     })
                     ->addColumn('status', function($row){
-                        if(permission('user-active')){
+                        if(permission('user-status')){
                             return change_status($row->id,$row->is_active,$row->name);
                         }
                     })
@@ -58,13 +58,13 @@ class UserController extends Controller
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
                         if(permission('user-view')){
-                        $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                            $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
                         }
                         if(permission('user-edit')){
-                        $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                            $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
                         }
                         if(permission('user-delete')){
-                        $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
+                            $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
                         }
                         $action .= '</div>';
 
@@ -102,10 +102,10 @@ class UserController extends Controller
                     $password   = $request->password;
                     $image = $request->old_image;
                     if($request->hasFile('image')){
-                        $image = $this->upload_file($request->file('image'),USER_AVATAR_PATH);
                         if(!empty($request->old_image)){
                             $this->delete_file($request->old_image,USER_AVATAR_PATH);
                         }
+                        $image = $this->upload_file($request->file('image'),USER_AVATAR_PATH);
                     }
 
                     if($request->update_id){
@@ -205,7 +205,7 @@ class UserController extends Controller
      */
     public function statusChange(Request $request){
         if ($request->ajax()) {
-            if(permission('user-active')){
+            if(permission('user-status')){
                 $result = User::find($request->id);
                 if ($result) {
                     $result->update(['is_active'=>$request->status]);

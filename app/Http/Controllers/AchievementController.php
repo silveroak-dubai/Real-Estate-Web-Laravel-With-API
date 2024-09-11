@@ -3,23 +3,27 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Blog;
+use App\Models\Faq;
+use App\Models\OurBank;
 use App\Traits\UploadAble;
+use App\Models\Achievement;
 use Illuminate\Http\Request;
 use App\Traits\ResponseMessage;
-use App\Http\Requests\BlogRequest;
+use App\Http\Requests\FaqRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\OurBankRequest;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\AchievementRequest;
 
-class BlogController extends Controller
+class AchievementController extends Controller
 {
     use UploadAble, ResponseMessage;
 
     public function index(Request $request){
-        if (permission('blog-access')) {
+        if (permission('achievement-access')) {
             if($request->ajax()){
 
-                $getData = Blog::orderBy('id','desc');
+                $getData = Achievement::orderBy('id','desc');
                 return DataTables::eloquent($getData)
                     ->addIndexColumn()
                     ->filter(function ($query) use ($request) {
@@ -29,32 +33,32 @@ class BlogController extends Controller
                                 ->orWhere('mobile_no', 'LIKE', "%$request->search%");
                         }
                     })
-                    ->addColumn('image', function($row){
-                        return table_image(USER_AVATAR_PATH,$row->avatar,$row->name);
-                    })
                     ->addColumn('created_at', function($row){
                         return dateFormat($row->created_at);
                     })
+                    ->addColumn('image', function($row){
+                        return table_image(OUR_ACHIEVEMENT_PATH,$row->image,$row->name);
+                    })
                     ->addColumn('status', function($row){
-                        if(permission('blog-status')){
-                            return change_status($row->id,$row->is_active,$row->name);
+                        if(permission('achievement-status')){
+                            return change_status($row->id,$row->status,$row->name);
                         }
                     })
                     ->addColumn('bulk_check', function($row){
-                        if(permission('blog-bulk-delete')){
+                        if(permission('achievement-bulk-delete')){
                             return table_checkbox($row->id);
                         }
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        if(permission('blog-view')){
-                            $action .= '<a href="'.route('app.users.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                        // if(permission('achievement-view')){
+                        // $action .= '<a href="'.route('app.achievement.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                        // }
+                        if(permission('achievement-edit')){
+                        $action .= '<a href="'.route('app.achievements.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
                         }
-                        if(permission('blog-edit')){
-                            $action .= '<a href="'.route('app.users.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
-                        }
-                        if(permission('blog-delete')){
-                            $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
+                        if(permission('achievement-delete')){
+                        $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
                         }
                         $action .= '</div>';
 
@@ -64,24 +68,24 @@ class BlogController extends Controller
                     ->make(true);
             }
 
-            $this->set_page_data('Blog List','Blog List');
-            return view('blog.index');
+            $this->set_page_data('Achievement List','Achievement List');
+            return view('achievement.index');
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
     public function create(){
-        if(permission('blog-create')){
-            $this->set_page_data('New Blog','New Blog');
-            return view('blog.create');
+        if(permission('achievement-create')){
+            $this->set_page_data('New Achievement','New Achievement');
+            return view('achievement.create');
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
-    public function store(BlogRequest $request){
-        if(permission('blog-create') || permission('blog-edit')){
+    public function store(AchievementRequest $request){
+        if(permission('achievement-create') || permission('achievement-edit')){
             if ($request->ajax()) {
                 DB::beginTransaction();
                 try {
@@ -90,10 +94,10 @@ class BlogController extends Controller
                     $created_by = $updated_by = auth()->user()->name;
                     $image = $request->old_image;
                     if($request->hasFile('image')){
+                        $image = $this->upload_file($request->file('image'),OUR_ACHIEVEMENT_PATH);
                         if(!empty($request->old_image)){
-                            $this->delete_file($request->old_image,BLOG_PATH);
+                            $this->delete_file($request->old_image,OUR_ACHIEVEMENT_PATH);
                         }
-                        $image = $this->upload_file($request->file('image'),BLOG_PATH);
                     }
 
                     if($request->update_id){
@@ -102,9 +106,9 @@ class BlogController extends Controller
                         $collection = $collection->merge(compact('image','created_by','created_at'));
                     }
 
-                    Blog::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    Achievement::updateOrCreate(['id'=>$request->update_id],$collection->all());
                     DB::commit();
-                    return $this->response_json('success','Blog has been saved succesfull.');
+                    return $this->response_json('success','Achievement has been saved succesfull.');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return $this->response_json('error',$e->getMessage());
@@ -116,39 +120,40 @@ class BlogController extends Controller
     }
 
     public function edit(int $id){
-        if(permission('blog-edit')){
-            $data['edit'] = Blog::with('permissions')->findOrFail($id);
-            $this->set_page_data('Edit User','Edit User');
-            return view('user.edit',$data);
+        if(permission('achievement-edit')){
+            $data['edit'] = Achievement::findOrFail($id);
+            $this->set_page_data('Edit Achievement','Edit Achievement');
+            return view('achievement.edit',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
     public function show(int $id){
-        if(permission('blog-view')){
-            $data['view'] = Blog::with('permissions')->findOrFail($id);
-            $this->set_page_data('View User','View User ('.$data['view']->name.')');
-            return view('user.view',$data);
+        if(permission('achievement-view')){
+            $data['view'] = Achievement::findOrFail($id);
+            $this->set_page_data('View Achievement','View Achievement ('.$data['view']->name.')');
+            return view('achievement.view',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
     /**
-     * spacified user delete resource
+     * spacified delete resource
      *
      * @return \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-delete')){
-                $result = Blog::find($request->id);
+            if(permission('achievement-delete')){
+                $result = Achievement::find($request->id);
                 if($result){
-                    if(!empty($result->image)){
-                        $this->delete_file($result->image,BLOG_PATH);
+                    if ($result->image) {
+                        $this->delete_file($result->image,OUR_ACHIEVEMENT_PATH);
                     }
+
                     $result->delete();
                     return $this->delete_message($result);
                 }else{
@@ -163,21 +168,16 @@ class BlogController extends Controller
     }
 
     /**
-     * multiple user destroy resource
+     * multiple destroy resource
      *
      * @return \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function bulkDelete(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-bulk-delete')){
-                $result = Blog::whereIn($request->ids)->get('image');
+            if(permission('achievement-bulk-delete')){
+                $result = Achievement::destroy($request->ids);
                 if($result){
-                    foreach($result as $value){
-                        if(!empty($value->image)){
-                            $this->delete_file($value->image,BLOG_PATH);
-                        }
-                    }
                     return $this->bulk_delete_message($result);
                 }else{
                     return $this->response_json('error','Data Cannot Delete',null,204);
@@ -191,15 +191,15 @@ class BlogController extends Controller
     }
 
     /**
-     * spacified user status update
+     * spacified status update
      *
      * @return \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function statusChange(Request $request){
         if ($request->ajax()) {
-            if(permission('blog-status')){
-                $result = Blog::find($request->id);
+            if(permission('achievement-status')){
+                $result = Achievement::find($request->id);
                 if ($result) {
                     $result->update(['status'=>$request->status]);
                     return $this->status_message($result);
@@ -212,3 +212,4 @@ class BlogController extends Controller
         }
     }
 }
+

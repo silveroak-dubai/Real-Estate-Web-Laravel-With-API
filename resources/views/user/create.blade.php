@@ -121,7 +121,7 @@
                         <div class="permission-box">
                             <ul id="permission">
                                 <li>
-                                    <input type="checkbox" class="all_checkbox" id="all" />
+                                    <input type="checkbox" class="all_checkbox" onclick="select_all()" id="all" />
                                     <label for="all">Select All</label>
                                 </li>
                                 @foreach ($modules as $module)
@@ -155,17 +155,17 @@
 <script>
     $('#permission').treed(); //intialized tree js
 
-    $(document).on('click', 'input#all', function () {
+    function select_all(){
         if (this.checked) {
             $(':checkbox').each(function () {
                 this.checked = true;
-            })
+            });
         } else {
             $(':checkbox').each(function () {
                 this.checked = false;
-            })
+            });
         }
-    });
+    }
 
     function module_check(module_id) {
         if ($('.module-all-' + module_id).is(':checked')) {

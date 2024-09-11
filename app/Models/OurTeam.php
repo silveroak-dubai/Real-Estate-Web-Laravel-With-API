@@ -4,26 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Module extends Model
+class OurTeam extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'modules';
+    protected $table = 'our_teams';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name','ordering'];
-
-    public function permissions(){
-        return $this->hasMany(Permission::class,'module_id','id');
-    }
+    protected $fillable = ['full_name', 'position','status','experience','language_ids','specialization_ids','created_by','updated_by'];
 }
