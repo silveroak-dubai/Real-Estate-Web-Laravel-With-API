@@ -1,12 +1,18 @@
 <?php
 
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OurBankController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OurBankController;
+use App\Http\Controllers\OurTeamController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OurPartnerController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\TeamLanguageController;
+use App\Http\Controllers\TeamSpecializedController;
 
 
 Auth::routes([
@@ -49,6 +55,54 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('delete',[OurBankController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[OurBankController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[OurBankController::class,'statusChange'])->name('status-change');
+    });
+
+    // Faq Routes
+    Route::resource('faqs',FaqController::class)->except('destroy','update');
+    Route::name('faqs.')->prefix('faqs')->group(function(){
+        Route::post('delete',[FaqController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[FaqController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[FaqController::class,'statusChange'])->name('status-change');
+    });
+
+    // Achievement Routes
+    Route::resource('achievements',AchievementController::class)->except('destroy','update');
+    Route::name('achievements.')->prefix('achievements')->group(function(){
+        Route::post('delete',[AchievementController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[AchievementController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[AchievementController::class,'statusChange'])->name('status-change');
+    });
+
+    // Our Partners Routes
+    Route::resource('our-partners',OurPartnerController::class)->except('destroy','update');
+    Route::name('our-partners.')->prefix('our-partners')->group(function(){
+        Route::post('delete',[OurPartnerController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[OurPartnerController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[OurPartnerController::class,'statusChange'])->name('status-change');
+    });
+
+    // Team Language Routes
+    Route::resource('team-languages',TeamLanguageController::class)->except('destroy','update');
+    Route::name('team-languages.')->prefix('team-languages')->group(function(){
+        Route::post('delete',[TeamLanguageController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[TeamLanguageController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[TeamLanguageController::class,'statusChange'])->name('status-change');
+    });
+
+    // Team Specilization Routes
+    Route::resource('team-specializeds',TeamSpecializedController::class)->except('destroy','update');
+    Route::name('team-specializeds.')->prefix('team-specializeds')->group(function(){
+        Route::post('delete',[TeamSpecializedController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[TeamSpecializedController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[TeamSpecializedController::class,'statusChange'])->name('status-change');
+    });
+
+    // Our Team Routes
+    Route::resource('our-teams',OurTeamController::class)->except('destroy','update');
+    Route::name('our-teams.')->prefix('our-teams')->group(function(){
+        Route::post('delete',[OurTeamController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[OurTeamController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[OurTeamController::class,'statusChange'])->name('status-change');
     });
 
 });

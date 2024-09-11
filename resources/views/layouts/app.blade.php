@@ -14,6 +14,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/simplebar.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('css') }}/font-awesome.min.css">
+
+    {{-- Select 2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!--bootstrap css-->
     <link href="{{ asset('css') }}/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&amp;display=swap"
@@ -76,7 +80,17 @@
             font-weight: normal;
         }
 
+        .btn{
+            border-radius: 0 !important;
+        }
 
+        .select2-results__option {
+            color: #333;
+        }
+        
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+            color: #333;
+        }
     </style>
     @stack('styles')
 </head>
@@ -138,6 +152,8 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
+    {{-- Select 2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!--plugins-->
     <script src="{{ asset('js') }}/perfect-scrollbar.js"></script>
     <script src="{{ asset('js') }}/metisMenu.min.js"></script>
@@ -188,6 +204,10 @@
         @elseif (Session::get('warning'))
             notification('warning',"{{ Session::get('warning') }}")
         @endif
+
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
     </script>
 
     @stack('scripts')

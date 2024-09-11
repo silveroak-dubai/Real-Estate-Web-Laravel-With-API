@@ -53,27 +53,65 @@
             </li>
             @endpermission
 
-            {{-- <li class="mm-active">
+            @if (permission('faq-access'))
+            <li class="{{ request()->is('faqs*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.faqs.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Faqs</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('achievement-access'))
+            <li class="{{ request()->is('achievements*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.achievements.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Achievements</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('our-partner-access'))
+            <li class="{{ request()->is('our-partners*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.our-partners.index') }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    </div>
+                    <div class="menu-title">Our Parners</div>
+                </a>
+            </li>
+            @endif
+
+            @if (permission('team-language-access') || permission('team-specialized-access') || permission('our-team-access'))
+            <li class="{{ request()->is('team-languages*') || request()->is('team-specializeds*') || request()->is('our-teams*') ? 'mm-active' : '' }}">
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="material-icons-outlined">widgets</i>
                     </div>
-                    <div class="menu-title">Widgets</div>
+                    <div class="menu-title">Our Team</div>
                 </a>
-                <ul class="mm-collapse mm-show">
-                    <li class="mm-active"><a href="widgets-data.html"><i class="material-icons-outlined">arrow_right</i>Data</a>
+                <ul class="mm-collapse {{ request()->is('team-languages*') || request()->is('team-specializeds*') || request()->is('our-teams*') ? 'mm-show' : '' }}">
+                    @permission('team-language-access')
+                    <li class="{{ request()->is('team-languages*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.team-languages.index') }}"><i class="material-icons-outlined">arrow_right</i>Team Language</a>
                     </li>
-                    <li><a href="widgets-advance.html"><i class="material-icons-outlined">arrow_right</i>Advance</a>
+                    @endpermission
+                    @permission('team-specialized-access')
+                    <li class="{{ request()->is('team-specializeds*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.team-specializeds.index') }}"><i class="material-icons-outlined">arrow_right</i>Team Specialized</a>
                     </li>
+                    @endpermission
+                    @permission('our-team-access')
+                    <li class="{{ request()->is('our-teams*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.our-teams.index') }}"><i class="material-icons-outlined">arrow_right</i>Team Member</a>
+                    </li>
+                    @endpermission
                 </ul>
-            </li> --}}
-            <li class="menu-label">UI Elements</li>
-            <li>
-                <a href="javascrpt:;">
-                    <div class="parent-icon"><i class="material-icons-outlined">support</i>
-                    </div>
-                    <div class="menu-title">Support</div>
-                </a>
             </li>
+            @endif
+
+            <li class="menu-label">UI Elements</li>
+
         </ul>
         <!--end navigation-->
     </div>

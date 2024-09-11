@@ -109,7 +109,7 @@ class PermissionSeeder extends Seeder
         Permission::updateOrInsert(['slug'=>'blog-view'],['module_id'=>$blogModule->id,'name'=>'View','slug'=>'blog-view']);
 
         // Our Banks Module
-        $ourBanksModule = Module::updateOrCreate(['name'=>'Our Banks Permission'],['name'=>'Our Banks Permission']);
+        $ourBanksModule = Module::updateOrCreate(['name'=>'Our Banks Permission'],['name'=>'Our Banks Permission','ordering'=>11]);
         Permission::updateOrInsert(['slug'=>'our-banks-access'],['module_id'=>$ourBanksModule->id,'name'=>'Access','slug'=>'our-banks-access']);
         Permission::updateOrInsert(['slug'=>'our-banks-create'],['module_id'=>$ourBanksModule->id,'name'=>'Create','slug'=>'our-banks-create']);
         Permission::updateOrInsert(['slug'=>'our-banks-edit'],['module_id'=>$ourBanksModule->id,'name'=>'Edit/Update','slug'=>'our-banks-edit']);
