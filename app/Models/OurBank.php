@@ -29,4 +29,26 @@ class OurBank extends Model
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Scope a query to only include
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status','1');
+    }
+
+    /**
+     * Scope a query to only include
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrder($query,$column)
+    {
+        return $query->orderBy($column,'DESC');
+    }
 }

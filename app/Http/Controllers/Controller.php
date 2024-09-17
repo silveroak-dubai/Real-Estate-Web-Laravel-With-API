@@ -21,7 +21,7 @@ class Controller extends BaseController
             'message'       => $message,
             'data'          => $data,
             'response_code' => $response_code
-        ]);
+        ],$response_code);
     }
 
     protected function unauthorized_access_blocked()
