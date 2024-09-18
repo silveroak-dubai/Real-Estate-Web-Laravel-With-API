@@ -7,6 +7,7 @@ use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\OurBankController;
 use App\Http\Controllers\API\OurPartnerController;
 use App\Http\Controllers\API\AchievementController;
+use App\Http\Controllers\API\OurTeamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,15 @@ Route::prefix('v1/auth/')->middleware('auth:sanctum')->group(function(){
     Route::prefix('our-partners')->group(function(){
         Route::get('/',[OurPartnerController::class,'listData']);
         Route::get('/{id}/view',[OurPartnerController::class,'show']);
+    });
+
+    // Our Team Routes
+    Route::prefix('our-teams')->group(function(){
+        Route::get('languages',[OurTeamController::class,'languageLists']);
+        Route::get('specializeds',[OurTeamController::class,'specializedLists']);
+
+
+        Route::get('/',[OurTeamController::class,'listData']);
     });
 
 });
