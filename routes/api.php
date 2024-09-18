@@ -1,10 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\FAQController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\OurBankController;
+use App\Http\Controllers\API\OurPartnerController;
+use App\Http\Controllers\API\AchievementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,18 @@ Route::prefix('v1/auth/')->middleware('auth:sanctum')->group(function(){
     Route::prefix('faqs')->group(function(){
         Route::get('/',[FAQController::class,'listData']);
         Route::get('/{id}/view',[FAQController::class,'show']);
+    });
+
+    // Achievement Routes
+    Route::prefix('achievements')->group(function(){
+        Route::get('/',[AchievementController::class,'listData']);
+        Route::get('/{id}/view',[AchievementController::class,'show']);
+    });
+
+    // Our Partner Routes
+    Route::prefix('our-partners')->group(function(){
+        Route::get('/',[OurPartnerController::class,'listData']);
+        Route::get('/{id}/view',[OurPartnerController::class,'show']);
     });
 
 });

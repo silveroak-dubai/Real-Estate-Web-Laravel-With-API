@@ -67,3 +67,9 @@ if(!function_exists('dateFormat')){
         return date('d-m-Y',strtotime($date));
     }
 }
+
+if(!function_exists('api_image_path')){
+    function api_image_path($folder){
+        return url('/').'/uploads/'.$folder;
+    }
+}

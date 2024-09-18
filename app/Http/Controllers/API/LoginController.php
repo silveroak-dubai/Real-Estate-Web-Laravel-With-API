@@ -12,7 +12,7 @@ class LoginController extends Controller
 {
     public function login(LoginRequest $request){
         // define variables
-        $email = $request->email;
+        $email    = $request->email;
         $password = $request->password;
 
         $user = User::where('email',$email)->first();
@@ -21,9 +21,9 @@ class LoginController extends Controller
                 return $this->response_json('error','Password Does Not Match!',null,401);
             }else{
                 // Generate token
-                $token = $user->createToken($user->email)->plainTextToken;
-                $user->update(['access_token'=>$token]);
-                return $this->response_json('success','Login Access Token',['token'=>$token],200);
+                $data['token'] = $user->createToken($user->email)->plainTextToken;
+                $user->update(['access_token'=>$data['token']]);
+                return $this->response_json('success','Login Access Token',$data,200);
             }
         }else{
             return $this->response_json('error','Email Does Not Match!',null,401);
