@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\OurTeam;
 
-use Carbon\Carbon;
-use App\Traits\UploadAble;
-use App\Models\TeamLanguage;
-use Illuminate\Http\Request;
-use App\Traits\ResponseMessage;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\TeamLanguageRequest;
 use App\Models\TeamSpecialized;
+use App\Traits\ResponseMessage;
+use App\Traits\UploadAble;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class TeamSpecializedController extends Controller
 {
@@ -66,7 +66,7 @@ class TeamSpecializedController extends Controller
             }
 
             $this->set_page_data('Team Specialized List','Team Specialized List');
-            return view('team-specialized.index');
+            return view('our-team.team-specialized.index');
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -75,7 +75,7 @@ class TeamSpecializedController extends Controller
     public function create(){
         if(permission('team-specialized-create')){
             $this->set_page_data('New Team Specialized','New Team Specialized');
-            return view('team-specialized.create');
+            return view('our-team.team-specialized.create');
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -121,7 +121,7 @@ class TeamSpecializedController extends Controller
         if(permission('team-specialized-edit')){
             $data['edit'] = TeamSpecialized::findOrFail($id);
             $this->set_page_data('Edit Team Specialized','Edit Team Specialized');
-            return view('team-specialized.edit',$data);
+            return view('our-team.team-specialized.edit',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -210,4 +210,3 @@ class TeamSpecializedController extends Controller
         }
     }
 }
-

@@ -9,16 +9,6 @@ use App\Http\Controllers\API\OurPartnerController;
 use App\Http\Controllers\API\AchievementController;
 use App\Http\Controllers\API\OurTeamController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 // Login User
 Route::post('v1/login',[LoginController::class,'login']);
@@ -53,8 +43,7 @@ Route::prefix('v1/auth/')->middleware('auth:sanctum')->group(function(){
         Route::get('languages',[OurTeamController::class,'languageLists']);
         Route::get('specializeds',[OurTeamController::class,'specializedLists']);
 
-
-        Route::get('/',[OurTeamController::class,'listData']);
+        // Route::get('/',[OurTeamController::class,'listData']);
     });
 
 });

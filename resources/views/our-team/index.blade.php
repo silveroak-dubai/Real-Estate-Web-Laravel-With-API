@@ -92,7 +92,7 @@
             @endif
         ],
         language: {
-            processing: '<img src="{{ asset("img/table-loading.svg") }}">',
+            processing: '<div class="text-center"><img src="{{ asset("img/table-loading.svg") }}"></div>',
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
             zeroRecords: '<strong class="text-danger">No Data Found</strong>',

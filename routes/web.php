@@ -1,18 +1,18 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OurBankController;
+use App\Http\Controllers\OurPartnerController;
+use App\Http\Controllers\OurTeam\OurTeamController;
+use App\Http\Controllers\OurTeam\TeamLanguageController;
+use App\Http\Controllers\OurTeam\TeamSpecializedController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FaqController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\OurBankController;
-use App\Http\Controllers\OurTeamController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\OurPartnerController;
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\TeamLanguageController;
-use App\Http\Controllers\TeamSpecializedController;
 
 
 Auth::routes([
