@@ -5,7 +5,7 @@
     white-space: nowrap;
   }
   .sidebar-wrapper {
-    left: -260px;
+    left: -230px;
   }
   .sidebar-wrapper .sidebar-header .sidebar-close {
     display: flex;
@@ -17,14 +17,14 @@
     margin-left: 0;
   }
   .toggled .sidebar-wrapper {
-    width: 260px;
+    width: 230px;
     left: 0px;
   }
   .toggled .sidebar-wrapper .sidebar-header {
-    width: 260px;
+    width: 230px;
   }
   .toggled .sidebar-wrapper .sidebar-bottom {
-    width: 260px;
+    width: 230px;
   }
   .toggled .logo-name {
     display: block;
@@ -54,7 +54,7 @@
 }
 @media only screen and (max-width: 1199px) {
   .top-header .navbar {
-    left: 0;
+    left: 0 !important;
   }
   .top-header .navbar .dropdown {
     position: static;

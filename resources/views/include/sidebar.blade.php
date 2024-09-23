@@ -16,7 +16,7 @@
             @permission('dashboard-access')
             <li class="{{ request()->is('dashboard') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.dashboard') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">home</i>
+                    <div class="parent-icon"><i class="fa fa-tachometer"></i>
                     </div>
                     <div class="menu-title">Dashboard</div>
                 </a>
@@ -26,7 +26,7 @@
             @permission('user-access')
             <li class="{{ request()->is('users*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.users.index') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    <div class="parent-icon"><i class="fa fa-user"></i>
                     </div>
                     <div class="menu-title">Users</div>
                 </a>
@@ -36,7 +36,7 @@
             @permission('blog-access')
             <li class="{{ request()->is('blogs*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.blogs.index') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    <div class="parent-icon"><i class="fa fa-tag"></i>
                     </div>
                     <div class="menu-title">Blogs</div>
                 </a>
@@ -46,7 +46,7 @@
             @permission('our-bank-access')
             <li class="{{ request()->is('our-banks*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.our-banks.index') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    <div class="parent-icon"><i class="fa fa-university"></i>
                     </div>
                     <div class="menu-title">Our Banks</div>
                 </a>
@@ -56,7 +56,7 @@
             @if (permission('faq-access'))
             <li class="{{ request()->is('faqs*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.faqs.index') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    <div class="parent-icon"><i class="fa fa-question-circle"></i>
                     </div>
                     <div class="menu-title">Faqs</div>
                 </a>
@@ -66,7 +66,7 @@
             @if (permission('achievement-access'))
             <li class="{{ request()->is('achievements*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.achievements.index') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    <div class="parent-icon"><i class="fa fa-trophy"></i>
                     </div>
                     <div class="menu-title">Achievements</div>
                 </a>
@@ -76,7 +76,7 @@
             @if (permission('our-partner-access'))
             <li class="{{ request()->is('our-partners*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.our-partners.index') }}">
-                    <div class="parent-icon"><i class="material-icons-outlined">group</i>
+                    <div class="parent-icon"><i class="fa fa-user-circle"></i>
                     </div>
                     <div class="menu-title">Our Parners</div>
                 </a>
@@ -86,7 +86,7 @@
             @if (permission('team-language-access') || permission('team-specialized-access') || permission('our-team-access'))
             <li class="{{ request()->is('team-languages*') || request()->is('team-specializeds*') || request()->is('our-teams*') ? 'mm-active' : '' }}">
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="material-icons-outlined">widgets</i>
+                    <div class="parent-icon"><i class="fa fa-users"></i>
                     </div>
                     <div class="menu-title">Our Team</div>
                 </a>
@@ -110,7 +110,57 @@
             </li>
             @endif
 
-            <li class="menu-label">UI Elements</li>
+            <li class="{{ request()->is('settings*') ? 'mm-active' : '' }}">
+                <a href="#">
+                    <div class="parent-icon"><i class="fa fa-commenting-o"></i>
+                    </div>
+                    <div class="menu-title">Testimonials</div>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="fa fa-paint-brush"></i>
+                    </div>
+                    <div class="menu-title">Appearance</div>
+                </a>
+                <ul class="mm-collapse">
+                    <li class="">
+                        <a href="#"><i class="material-icons-outlined">arrow_right</i>Menus</a>
+                    </li>
+                    <li class="">
+                        <a href="#"><i class="material-icons-outlined">arrow_right</i>Widgets</a>
+                    </li>
+                    <li class="">
+                        <a href="#"><i class="material-icons-outlined">arrow_right</i>Customize</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="{{ request()->is('settings*') ? 'mm-active' : '' }}">
+                <a href="#">
+                    <div class="parent-icon"><i class="fa fa-list-alt"></i>
+                    </div>
+                    <div class="menu-title">List Leads</div>
+                </a>
+            </li>
+
+            {{-- <li class="menu-label">BACKEND</li> --}}
+            <li class="{{ request()->is('settings*') ? 'mm-active' : '' }}">
+                <a href="#">
+                    <div class="parent-icon"><i class="fa fa-user-secret"></i>
+                    </div>
+                    <div class="menu-title">Careers</div>
+                </a>
+            </li>
+
+            <li class="{{ request()->is('settings*') ? 'mm-active' : '' }}">
+                <a href="#">
+                    <div class="parent-icon"><i class="fa fa-cogs"></i>
+                    </div>
+                    <div class="menu-title">Settings</div>
+                </a>
+            </li>
 
         </ul>
         <!--end navigation-->

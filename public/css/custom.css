@@ -121,3 +121,35 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 .dataTables_empty{
     text-align: center;
 }
+
+/* Sidebar */
+.main-wrapper {
+    margin-top: 51px !important;
+}
+.main-wrapper .main-content {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+}
+.top-header .navbar {
+    height: 50px !important;
+    left: 230px !important;
+}
+.sidebar-wrapper,
+.sidebar-wrapper .sidebar-header,
+.sidebar-wrapper .sidebar-bottom {
+    width: 230px !important;
+}
+.sidebar-wrapper .sidebar-bottom{
+    height: 45px !important;
+}
+.sidebar-wrapper .sidebar-bottom .footer-icon {
+    width: 40px !important;
+    height: 40px !important;
+}
+.sidebar-wrapper .sidebar-nav .metismenu a {
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+}
+
+.material-icons-outlined {
+    font-size: 20px !important;
+}

@@ -163,6 +163,7 @@ return [
          */
         Barryvdh\Debugbar\ServiceProvider::class,
         DataTablesServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
         /*
          * Application Service Providers...
          */

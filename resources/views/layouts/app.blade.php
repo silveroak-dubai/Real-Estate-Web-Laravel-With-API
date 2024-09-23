@@ -16,8 +16,7 @@
     <link rel="stylesheet" href="{{ asset('css') }}/font-awesome.min.css">
 
     {{-- Select 2 --}}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="{{ asset('/') }}css/select2.min.css" rel="stylesheet" />
     <!--bootstrap css-->
     <link href="{{ asset('css') }}/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&amp;display=swap"
@@ -25,7 +24,7 @@
     <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
     <!-- datatable-->
     {{-- <link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css" rel="stylesheet"> --}}
-    <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{ asset('/') }}css/responsive.bootstrap4.min.css" rel="stylesheet">
     <!--main css-->
     <link href="{{ asset('css') }}/bootstrap-extended.css" rel="stylesheet">
     <link href="{{ asset('css') }}/main.css" rel="stylesheet">
@@ -87,7 +86,7 @@
         .select2-results__option {
             color: #333;
         }
-        
+
         .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
             color: #333;
         }
@@ -134,26 +133,19 @@
     @include('include.footer')
     <!--top footer-->
 
-
-    <!--bootstrap js-->
-    <script src="{{ asset('js') }}/bootstrap.bundle.min.js"></script>
     <!--plugins-->
     <script src="{{ asset('js') }}/jquery.min.js"></script>
+    <!--bootstrap js-->
+    <script src="{{ asset('js') }}/bootstrap.bundle.min.js"></script>
     <!--sweetalert2-->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js') }}/sweetalert2@11.js"></script>
     <!--datatable-->
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
+    <script src="{{ asset('/') }}js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('/') }}js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{ asset('/') }}js/dataTables.responsive.min.js"></script>
+    <script src="{{ asset('/') }}js/dataTables.buttons.min.js"></script>
     {{-- Select 2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('js') }}/select2.min.js"></script>
     <!--plugins-->
     <script src="{{ asset('js') }}/perfect-scrollbar.js"></script>
     <script src="{{ asset('js') }}/metisMenu.min.js"></script>
