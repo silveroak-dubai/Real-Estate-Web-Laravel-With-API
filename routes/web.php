@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\Blog\BlogController;
-use App\Http\Controllers\Blog\CategoryController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\OurBankController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Blog\BlogController;
+use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\OurPartnerController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\Blog\CategoryController;
+use App\Http\Controllers\Menu\MenuItemController;
 use App\Http\Controllers\OurTeam\OurTeamController;
 use App\Http\Controllers\OurTeam\TeamLanguageController;
 use App\Http\Controllers\OurTeam\TeamSpecializedController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 
 
 
@@ -118,6 +120,26 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('bulk-delete',[OurTeamController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[OurTeamController::class,'statusChange'])->name('status-change');
     });
+
+
+    Route::get('manage-menus/{id?}',[MenuController::class,'index']);
+    Route::post('create-menu',[MenuController::class,'store']);
+    Route::get('update-menu',[MenuController::class,'updateMenu']);
+    Route::get('delete-menu/{id}',[MenuController::class,'destroy']);
+
+    // Menu Item Routes
+    Route::get('add-categories-to-menu',[MenuItemController::class,'addCatToMenu']);
+    Route::get('add-post-to-menu',[MenuItemController::class,'addPostToMenu']);
+    Route::get('add-custom-link',[MenuItemController::class,'addCustomLink']);
+    Route::post('update-menuitem/{id}',[MenuItemController::class,'updateMenuItem']);
+    Route::get('delete-menuitem/{id}/{key}/{in?}',[MenuItemController::class,'deleteMenuItem']);
+
+
+
+
+
+
+
 
 });
 
