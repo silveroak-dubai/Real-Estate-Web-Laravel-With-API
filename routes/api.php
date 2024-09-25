@@ -1,17 +1,21 @@
 <?php
 
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AchievementController;
+use App\Http\Controllers\API\DocumentController;
 use App\Http\Controllers\API\FAQController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\OurBankController;
 use App\Http\Controllers\API\OurPartnerController;
-use App\Http\Controllers\API\AchievementController;
 use App\Http\Controllers\API\OurTeamController;
+use Illuminate\Support\Facades\Route;
 
+
+// API Document
+Route::get('v1/document',[DocumentController::class,'apiDocs']);
 
 // Login User
-Route::post('v1/login',[LoginController::class,'login']);
+Route::post('v1/login',[LoginController::class,'login']);;
 
 Route::prefix('v1/auth/')->middleware('auth:sanctum')->group(function(){
     // Our Bank Routes
