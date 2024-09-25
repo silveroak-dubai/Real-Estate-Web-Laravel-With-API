@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\FaqController;
+use App\Http\Controllers\Blog\BlogController;
+use App\Http\Controllers\Blog\CategoryController;
+use App\Http\Controllers\FAQController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OurBankController;
 use App\Http\Controllers\OurPartnerController;
@@ -13,6 +14,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 Auth::routes([
@@ -42,11 +45,22 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     Route::post('password-change',[ProfileController::class,'passwordUpdate'])->name('password.update');
 
     // Blog Routes
-    Route::resource('blogs',BlogController::class)->except('destroy','update');
+    Route::resource('blogs',BlogController::class)->except('destroy','update','show');
     Route::name('blogs.')->prefix('blogs')->group(function(){
+        // Category Routes
+        Route::name('categories.')->prefix('categories')->group(function(){
+            Route::get('/',[CategoryController::class,'index'])->name('index');
+            Route::post('store-or-update',[CategoryController::class,'storeOrUpdate'])->name('store-or-update');
+            Route::post('edit',[CategoryController::class,'edit'])->name('edit');
+            Route::post('delete',[CategoryController::class,'delete'])->name('delete');
+            Route::post('bulk-delete',[CategoryController::class,'bulkDelete'])->name('bulk-delete');
+            Route::post('status-change',[CategoryController::class,'statusChange'])->name('status-change');
+        });
+
         Route::post('delete',[BlogController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[BlogController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[BlogController::class,'statusChange'])->name('status-change');
+
     });
 
     // Our Banks Routes
@@ -58,11 +72,11 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     });
 
     // Faq Routes
-    Route::resource('faqs',FaqController::class)->except('destroy','update');
+    Route::resource('faqs',FAQController::class)->except('destroy','update');
     Route::name('faqs.')->prefix('faqs')->group(function(){
-        Route::post('delete',[FaqController::class,'delete'])->name('delete');
-        Route::post('bulk-delete',[FaqController::class,'bulkDelete'])->name('bulk-delete');
-        Route::post('status-change',[FaqController::class,'statusChange'])->name('status-change');
+        Route::post('delete',[FAQController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[FAQController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[FAQController::class,'statusChange'])->name('status-change');
     });
 
     // Achievement Routes

@@ -81,6 +81,8 @@
 
         .btn{
             border-radius: 0 !important;
+            font-size: 13px;
+            font-weight: normal;
         }
 
         .select2-results__option {
@@ -89,6 +91,23 @@
 
         .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
             color: #333;
+        }
+        table thead tr th {
+            font-weight: 400 !important;
+            font-size: 13px !important;
+        }
+        .modal-title {
+            font-size: 1.1rem;
+        }
+        .swal2-popup.swal2-toast {
+            padding: .5em 1em !important;
+        }
+        .swal2-popup.swal2-toast .swal2-title {
+            font-size: .8em !important;
+            line-height: 2 !important;
+        }
+        .swal2-popup.swal2-toast .swal2-icon {
+            margin: 0 !important;
         }
     </style>
     @stack('styles')

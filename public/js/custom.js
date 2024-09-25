@@ -1,9 +1,12 @@
+var popup_modal;
+popup_modal = new bootstrap.Modal(document.getElementById('store_or_update_modal'), {
+    keyboard: false,
+    backdrop: 'static'
+});
+
 // show modal
 function showFormModal(modal_title, btn_text) {
-    $('#store_or_update_modal').modal({
-        keyboard: false,
-        backdrop: 'static'
-    });
+    popup_modal.show();
     $('#store_or_update_form')[0].reset();
     $('#store_or_update_form #update_id').val('');
     $('#store_or_update_form #schedule_id').val('');
@@ -49,7 +52,7 @@ function store_or_update_data(method, url, formData) {
                     } else {
                         table.ajax.reload();
                     }
-                    $('#store_or_update_modal').modal('hide');
+                    popup_modal.hide();
                 }
             }
         },

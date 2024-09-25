@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Blog;
 
 use Carbon\Carbon;
 use App\Models\Blog;
@@ -11,6 +11,7 @@ use App\Traits\ResponseMessage;
 use App\Http\Requests\BlogRequest;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Controllers\Controller;
 
 class BlogController extends Controller
 {
@@ -125,16 +126,6 @@ class BlogController extends Controller
             $data['edit'] = Blog::findOrFail($id);
             $this->set_page_data('Edit User','Edit User');
             return view('blog.edit',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
-
-    public function show(int $id){
-        if(permission('blog-view')){
-            $data['view'] = Blog::findOrFail($id);
-            $this->set_page_data('View User','View User');
-            return view('blog.view',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }

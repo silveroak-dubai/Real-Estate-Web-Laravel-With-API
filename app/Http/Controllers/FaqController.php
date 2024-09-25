@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OurBankRequest;
 use Yajra\DataTables\Facades\DataTables;
 
-class FaqController extends Controller
+class FAQController extends Controller
 {
     use UploadAble, ResponseMessage;
 
@@ -21,7 +21,7 @@ class FaqController extends Controller
         if (permission('faq-access')) {
             if($request->ajax()){
 
-                $getData = Faq::orderBy('id','desc');
+                $getData = FAQ::orderBy('id','desc');
                 return DataTables::eloquent($getData)
                     ->addIndexColumn()
                     ->filter(function ($query) use ($request) {
@@ -63,7 +63,7 @@ class FaqController extends Controller
                     ->make(true);
             }
 
-            $this->set_page_data('Faq List','Faq List');
+            $this->set_page_data('FAQ List','FAQ List');
             return view('faqs.index');
         }else{
             return $this->unauthorized_access_blocked();
@@ -72,7 +72,7 @@ class FaqController extends Controller
 
     public function create(){
         if(permission('faq-create')){
-            $this->set_page_data('New Faq','New Faq');
+            $this->set_page_data('New FAQ','New FAQ');
             return view('faqs.create');
         }else{
             return $this->unauthorized_access_blocked();
@@ -94,7 +94,7 @@ class FaqController extends Controller
                         $collection = $collection->merge(compact('created_by','created_at'));
                     }
 
-                    Faq::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    FAQ::updateOrCreate(['id'=>$request->update_id],$collection->all());
                     DB::commit();
                     return $this->response_json('success','Faq has been saved succesfull.');
                 } catch (\Exception $e) {
@@ -109,8 +109,8 @@ class FaqController extends Controller
 
     public function edit(int $id){
         if(permission('faq-edit')){
-            $data['edit'] = Faq::findOrFail($id);
-            $this->set_page_data('Edit Faq','Edit Faq');
+            $data['edit'] = FAQ::findOrFail($id);
+            $this->set_page_data('Edit FAQ','Edit FAQ');
             return view('faqs.edit',$data);
         }else{
             return $this->unauthorized_access_blocked();
@@ -119,7 +119,7 @@ class FaqController extends Controller
 
     public function show(int $id){
         if(permission('faq-view')){
-            $data['view'] = Faq::findOrFail($id);
+            $data['view'] = FAQ::findOrFail($id);
             $this->set_page_data('View Faq','View Faq ('.$data['view']->name.')');
             return view('faqs.view',$data);
         }else{
@@ -136,7 +136,7 @@ class FaqController extends Controller
     public function delete(Request $request){
         if ($request->ajax()) {
             if(permission('faq-delete')){
-                $result = Faq::find($request->id);
+                $result = FAQ::find($request->id);
                 if($result){
                     if ($result->image) {
                         $this->delete_file($result->image,OUR_BANKS_PATH);
@@ -164,7 +164,7 @@ class FaqController extends Controller
     public function bulkDelete(Request $request){
         if ($request->ajax()) {
             if(permission('faq-bulk-delete')){
-                $result = Faq::destroy($request->ids);
+                $result = FAQ::destroy($request->ids);
                 if($result){
                     return $this->bulk_delete_message($result);
                 }else{
@@ -187,7 +187,7 @@ class FaqController extends Controller
     public function statusChange(Request $request){
         if ($request->ajax()) {
             if(permission('faq-active')){
-                $result = Faq::find($request->id);
+                $result = FAQ::find($request->id);
                 if ($result) {
                     $result->update(['status'=>$request->status]);
                     return $this->status_message($result);

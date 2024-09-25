@@ -15,7 +15,7 @@ class Blog extends Model
      *
      * @var string
      */
-    protected $table = 'blogs';
+    protected $table = 'posts';
 
     /**
      * The attributes that are mass assignable.

@@ -35,13 +35,25 @@
 
             @permission('blog-access')
             <li class="{{ request()->is('blogs*') ? 'mm-active' : '' }}">
-                <a href="{{ route('app.blogs.index') }}">
+                <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="fa fa-tag"></i>
                     </div>
                     <div class="menu-title">Blogs</div>
                 </a>
+                <ul class="mm-collapse {{ request()->is('blogs*') ? 'mm-show' : '' }}">
+                    @permission('blog-access')
+                    <li class="{{ request()->is('blogs/categories') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.blogs.categories.index') }}"><i class="material-icons-outlined">arrow_right</i>Categories</a>
+                    </li>
+                    @endpermission
+                    @permission('blog-access')
+                    <li class="{{ request()->is('blogs') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.blogs.index') }}"><i class="material-icons-outlined">arrow_right</i>Posts</a>
+                    </li>
+                    @endpermission
+                </ul>
             </li>
-            @endif
+            @endpermission
 
             @permission('our-bank-access')
             <li class="{{ request()->is('our-banks*') ? 'mm-active' : '' }}">
@@ -58,7 +70,7 @@
                 <a href="{{ route('app.faqs.index') }}">
                     <div class="parent-icon"><i class="fa fa-question-circle"></i>
                     </div>
-                    <div class="menu-title">Faqs</div>
+                    <div class="menu-title">FAQs</div>
                 </a>
             </li>
             @endif

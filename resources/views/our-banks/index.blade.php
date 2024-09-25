@@ -12,7 +12,7 @@
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
                         @permission('our-bank-create')
-                        <a href="{{ route('app.our-banks.create') }}" class="btn btn-sm btn-primary rounded-1">Add Our Bank</a>
+                        <a href="{{ route('app.our-banks.create') }}" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Our Bank</a>
                         @endpermission
                     </h4>
                 </div>
