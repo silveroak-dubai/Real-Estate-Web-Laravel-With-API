@@ -69,7 +69,7 @@ class BlogController extends Controller
                     ->make(true);
             }
 
-            $this->set_page_data('Blog List','Blog List');
+            $this->set_page_data('Post List','Post List');
             return view('blog.index');
         }else{
             return $this->unauthorized_access_blocked();

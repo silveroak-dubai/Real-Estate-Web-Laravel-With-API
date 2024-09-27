@@ -1,5 +1,5 @@
 var popup_modal;
-popup_modal = new bootstrap.Modal(document.getElementById('store_or_update_modal'), {
+popup_modal = new bootstrap.Modal(document.getElementById('store_or_update_modal'),{
     keyboard: false,
     backdrop: 'static'
 });

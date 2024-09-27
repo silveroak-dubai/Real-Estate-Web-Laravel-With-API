@@ -12,7 +12,7 @@
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
                         @permission('blog-create')
-                        <a href="{{ route('app.blogs.create') }}" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Blog</a>
+                        <a href="{{ route('app.blogs.create') }}" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Post</a>
                         @endpermission
                     </h4>
                 </div>

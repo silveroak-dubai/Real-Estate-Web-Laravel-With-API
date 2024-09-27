@@ -31,7 +31,7 @@ class CategoryController extends Controller
                         return dateFormat($row->created_at);
                     })
                     ->addColumn('status', function($row){
-                        if(permission('blog-active')){
+                        if(permission('blog-status')){
                             return change_status($row->id,$row->status,$row->name);
                         }
                     })
@@ -147,6 +147,28 @@ class CategoryController extends Controller
             }
         }else{
             return $this->response_json('error',UNAUTORIZED_BLOCK,null,204);
+        }
+    }
+
+        /**
+     * spacified status update
+     *
+     * @return \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function statusChange(Request $request){
+        if ($request->ajax()) {
+            if(permission('blog-status')){
+                $result = Category::find($request->id);
+                if ($result) {
+                    $result->update(['status'=>$request->status]);
+                    return $this->status_message($result);
+                }else{
+                    return $this->response_json('error','Failed to change status',null,204);
+                }
+            }else{
+                return $this->response_json('error',UNAUTORIZED_BLOCK,null,204);
+            }
         }
     }
 }

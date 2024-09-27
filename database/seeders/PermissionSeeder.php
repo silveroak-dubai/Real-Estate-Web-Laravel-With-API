@@ -113,7 +113,7 @@ class PermissionSeeder extends Seeder
         Permission::updateOrInsert(['slug'=>'our-banks-access'],['module_id'=>$ourBanksModule->id,'name'=>'Access','slug'=>'our-banks-access']);
         Permission::updateOrInsert(['slug'=>'our-banks-create'],['module_id'=>$ourBanksModule->id,'name'=>'Create','slug'=>'our-banks-create']);
         Permission::updateOrInsert(['slug'=>'our-banks-edit'],['module_id'=>$ourBanksModule->id,'name'=>'Edit/Update','slug'=>'our-banks-edit']);
-        Permission::updateOrInsert(['slug'=>'our-banks-active'],['module_id'=>$ourBanksModule->id,'name'=>'Is Active','slug'=>'our-banks-active']);
+        Permission::updateOrInsert(['slug'=>'our-banks-status'],['module_id'=>$ourBanksModule->id,'name'=>'Is Active','slug'=>'our-banks-active']);
         Permission::updateOrInsert(['slug'=>'our-banks-delete'],['module_id'=>$ourBanksModule->id,'name'=>'Delete','slug'=>'our-banks-delete']);
         Permission::updateOrInsert(['slug'=>'our-banks-bulk-delete'],['module_id'=>$ourBanksModule->id,'name'=>'Bulk Delete','slug'=>'our-banks-bulk-delete']);
         Permission::updateOrInsert(['slug'=>'our-banks-view'],['module_id'=>$ourBanksModule->id,'name'=>'View','slug'=>'our-banks-view']);

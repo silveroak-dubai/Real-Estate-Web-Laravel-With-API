@@ -30,7 +30,7 @@
                                 @endif
                                 <th>SL</th>
                                 <th>Name</th>
-                                @if(permission('blog-active'))
+                                @if(permission('blog-status'))
                                 <th>Status</th>
                                 @endif
                                 <th>Created By</th>
@@ -82,7 +82,7 @@
             @endif
             {data: 'DT_RowIndex'},
             {data: 'name'},
-            @if(permission('blog-active'))
+            @if(permission('blog-status'))
             {data: 'status'},
             @endif
             {data: 'created_by'},
@@ -191,7 +191,7 @@
     }
     @endif
 
-    @if(permission('blog-active'))
+    @if(permission('blog-status'))
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');

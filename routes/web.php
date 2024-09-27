@@ -122,7 +122,7 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     });
 
 
-    Route::get('manage-menus/{id?}',[MenuController::class,'index']);
+    Route::get('manage-menus/{id?}',[MenuController::class,'index'])->name('menu.index');
     Route::post('create-menu',[MenuController::class,'store']);
     Route::get('update-menu',[MenuController::class,'updateMenu']);
     Route::get('delete-menu/{id}',[MenuController::class,'destroy']);
