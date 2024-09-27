@@ -32,11 +32,11 @@
                                 <th>Image</th>
                                 <th>Title</th>
                                 <th>Slug</th>
-                                <th>Is Comment</th>
                                 @permission('blog-status')
-                                <th>Is Active</th>
+                                <th>Status</th>
                                 @endpermission
                                 <th>Published Date</th>
+                                <th>Visibility</th>
                                 <th>Created By</th>
                                 <th>Created Date</th>
                                 @if(permission('blog-delete') || permission('blog-view') || permission('blog-edit'))
@@ -84,11 +84,11 @@
             {data: 'image'},
             {data: 'title'},
             {data: 'slug'},
-            {data: 'is_comment'},
             @permission('blog-status')
             {data: 'status'},
             @endpermission
             {data: 'published_date'},
+            {data: 'visibility'},
             {data: 'created_by'},
             {data: 'created_at'},
             @if(permission('blog-delete') || permission('blog-view') || permission('blog-edit'))
@@ -147,17 +147,6 @@
             bulk_delete(ids,url,rows);
         }
     }
-    @endpermission
-
-    @permission('blog-status')
-    // status changes
-    $(document).on('click','.change_status', function(){
-        var id = $(this).data('id');
-        var name = $(this).data('name');
-        var status = $(this).data('status');
-        var url = "{{ route('app.blogs.status-change') }}"
-        change_status(id,status,name,url);
-    });
     @endpermission
 </script>
 @endpush

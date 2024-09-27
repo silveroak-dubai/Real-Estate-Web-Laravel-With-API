@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Blog extends Model
+class Post extends Model
 {
     use HasFactory;
 
@@ -23,17 +23,30 @@ class Blog extends Model
      * @var array
      */
     protected $fillable = [
+        'author_id',
         'title',
         'slug',
         'short_description',
         'description',
-        'image',
+        'feature_image',
+        'alt_text',
         'status',
-        'is_comment',
+        'visibility',
         'published_date',
         'meta_title',
         'meta_description',
         'created_by',
         'updated_by',
     ];
+
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = str()->slug($value,'-');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
 }

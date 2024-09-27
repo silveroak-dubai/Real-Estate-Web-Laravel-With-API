@@ -61,8 +61,6 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
 
         Route::post('delete',[BlogController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[BlogController::class,'bulkDelete'])->name('bulk-delete');
-        Route::post('status-change',[BlogController::class,'statusChange'])->name('status-change');
-
     });
 
     // Our Banks Routes

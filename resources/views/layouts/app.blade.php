@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/simplebar.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('css') }}/font-awesome.min.css">
-
+    <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
     {{-- Select 2 --}}
     <link href="{{ asset('/') }}css/select2.min.css" rel="stylesheet" />
     <!--bootstrap css-->
@@ -22,8 +22,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&amp;display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}">
     <!-- datatable-->
-    {{-- <link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css" rel="stylesheet"> --}}
     <link href="{{ asset('/') }}css/responsive.bootstrap4.min.css" rel="stylesheet">
     <!--main css-->
     <link href="{{ asset('css') }}/bootstrap-extended.css" rel="stylesheet">
@@ -34,6 +34,9 @@
     <link href="{{ asset('css') }}/custom.css" rel="stylesheet">
     <link href="{{ asset('css') }}/responsive.css" rel="stylesheet">
     <style>
+        .flatpickr-calendar {
+            top: 234.4px !important;
+        }
         table.table{
             width: 100% !important;
         }
@@ -165,6 +168,13 @@
     <script src="{{ asset('/') }}js/dataTables.buttons.min.js"></script>
     {{-- Select 2 --}}
     <script src="{{ asset('js') }}/select2.min.js"></script>
+    {{-- datarange --}}
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/daterangepicker.min.js') }}"></script>
+    {{-- flatpickr --}}
+    <script src="{{ asset('js/flatpickr.js') }}"></script>
+    {{-- toastr --}}
+    <script src="{{ asset('js/toastr.min.js') }}"></script>
     <!--plugins-->
     <script src="{{ asset('js') }}/perfect-scrollbar.js"></script>
     <script src="{{ asset('js') }}/metisMenu.min.js"></script>
@@ -186,10 +196,9 @@
 
         // token
         var _token = "{{ csrf_token() }}";
-
         var table;
 
-        // toastr alert message
+        // sweetalert message
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -201,6 +210,45 @@
                 toast.onmouseleave = Swal.resumeTimer;
             }
         });
+
+        // toastr alert
+        function toastr_alert(status, message) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "500",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+            switch (status) {
+                case 'success':
+                    toastr.success(message);
+                    break;
+
+                case 'error':
+                    toastr.error(message);
+                    break;
+
+                case 'warning':
+                    toastr.warning(message);
+                    break;
+
+                case 'info':
+                    toastr.info(message);
+                    break;
+            }
+        }
 
         function notification(status, message){
             Toast.fire({icon: status,title: message});

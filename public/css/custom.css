@@ -2,48 +2,20 @@
     content: '*';
     color: red;
 }
-/* checkbox */
-.form-checkbox input {
-    padding: 0;
-    height: initial;
-    width: initial;
-    margin-bottom: 0;
-    display: none;
-    cursor: pointer;
+.optional-text.mb-0 {
+	background: #00d571;
+	color: #086036;
+	font-size: 13px;
+	padding: 3px 5px;
 }
-
-.form-checkbox label {
-    position: relative;
-    cursor: pointer;
+textarea::placeholder {
+    color: #52585e !important;
+    font-size: 13px !important;
 }
-
-.form-checkbox label:before {
-    content:'';
-    -webkit-appearance: none;
-    background-color: transparent;
-    border: 1px solid #cbcbcb;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-    padding: 6px;
-    display: inline-block;
-    position: relative;
-    vertical-align: middle;
-    cursor: pointer;
-    margin-right: 5px;
+input::placeholder {
+    color: #495057 !important;
+    font-size: 13px !important;
 }
-
-.form-checkbox input:checked + label:after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 4px;
-    left: 5px;
-    width: 6px;
-    height: 12px;
-    border: solid #00a1ff;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
 table td{
     vertical-align: middle !important;
 }

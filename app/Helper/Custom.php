@@ -18,6 +18,8 @@ define('UNAUTORIZED_BLOCK','Unauthorized Access!');
 define('TABLE_PAGE_LENGTH',15);
 define('MAIL_MAILER',['smtp','sendmail','mail']);
 define('MAIL_ENCRYPTION',['none'=>'null','tls'=>'tls','ssl'=>'ssl']);
+define('VISIBILITY',[1=>'Public',2=>'Private']);
+define('POST_STATUS',[1=>'Published',2=>'Draft',3=>'Pending']);
 
 if(!function_exists('permission')){
     function permission(string $value){
@@ -61,6 +63,7 @@ if (!function_exists('change_status')) {
         '<span class="badge bg-danger change_status" data-id="' . $id . '" data-name="' . $name . '" data-status="1" style="cursor:pointer;">Inactive</span>';
     }
 }
+
 
 if(!function_exists('dateFormat')){
     function dateFormat($date){

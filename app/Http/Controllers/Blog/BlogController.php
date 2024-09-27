@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Blog;
 
-use Carbon\Carbon;
-use App\Models\Blog;
-use App\Traits\UploadAble;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Traits\ResponseMessage;
-use App\Http\Requests\BlogRequest;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BlogRequest;
+use App\Models\Category;
+use App\Models\Post;
+use App\Traits\ResponseMessage;
+use App\Traits\UploadAble;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class BlogController extends Controller
 {
@@ -21,7 +22,7 @@ class BlogController extends Controller
         if (permission('blog-access')) {
             if($request->ajax()){
 
-                $getData = Blog::orderBy('id','desc');
+                $getData = Post::orderBy('id','desc');
                 return DataTables::eloquent($getData)
                     ->addIndexColumn()
                     ->filter(function ($query) use ($request) {
@@ -32,7 +33,7 @@ class BlogController extends Controller
                         }
                     })
                     ->addColumn('image', function($row){
-                        return table_image(BLOG_PATH,$row->image,$row->slug);
+                        return table_image(BLOG_PATH,$row->feature_image,$row->slug);
                     })
                     ->addColumn('created_at', function($row){
                         return dateFormat($row->created_at);
@@ -40,9 +41,12 @@ class BlogController extends Controller
                     ->addColumn('published_date', function($row){
                         return dateFormat($row->published_date);
                     })
+                    ->addColumn('visibility', function($row){
+                        return VISIBILITY[$row->visibility] ?? '';
+                    })
                     ->addColumn('status', function($row){
                         if(permission('blog-status')){
-                            return change_status($row->id,$row->status,$row->name);
+                            return POST_STATUS[$row->status];
                         }
                     })
                     ->addColumn('bulk_check', function($row){
@@ -53,7 +57,7 @@ class BlogController extends Controller
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
                         if(permission('blog-view')){
-                            $action .= '<a href="'.route('app.blogs.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
+                            // $action .= '<a href="'.route('app.blogs.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
                         }
                         if(permission('blog-edit')){
                             $action .= '<a href="'.route('app.blogs.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
@@ -78,8 +82,10 @@ class BlogController extends Controller
 
     public function create(){
         if(permission('blog-create')){
+            $data['categories'] = Category::active()->latest()->pluck('name','id');
+
             $this->set_page_data('New Blog','New Blog');
-            return view('blog.create');
+            return view('blog.create',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -90,27 +96,28 @@ class BlogController extends Controller
             if ($request->ajax()) {
                 DB::beginTransaction();
                 try {
-                    $collection = collect($request->validated())->except('slug');
-                    $slug       = str()->slug($request->slug,'-');
-                    $created_at = $updated_at = Carbon::now();
-                    $created_by = $updated_by = auth()->user()->name;
-                    $image = $request->old_image;
-                    if($request->hasFile('image')){
-                        if(!empty($request->old_image)){
-                            $this->delete_file($request->old_image,BLOG_PATH);
+                    $collection    = collect($request->validated());
+                    $created_at    = $updated_at = Carbon::now();
+                    $created_by    = $updated_by = auth()->user()->name;
+                    $feature_image = $request->old_feature_image;
+                    $author_id     = auth()->user()->id;
+                    if($request->hasFile('feature_image')){
+                        if(!empty($request->old_feature_image)){
+                            $this->delete_file($request->old_feature_image,BLOG_PATH);
                         }
-                        $image = $this->upload_file($request->file('image'),BLOG_PATH);
+                        $feature_image = $this->upload_file($request->file('feature_image'),BLOG_PATH);
                     }
 
                     if($request->update_id){
-                        $collection = $collection->merge(compact('slug','image','updated_by','updated_at'));
+                        $collection = $collection->merge(compact('author_id','feature_image','updated_by','updated_at'));
                     }else{
-                        $collection = $collection->merge(compact('slug','image','created_by','created_at'));
+                        $collection = $collection->merge(compact('author_id','feature_image','created_by','created_at'));
                     }
 
-                    $result = Blog::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    $result = Post::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    $result->categories()->sync($request->category);
                     DB::commit();
-                    return $this->store_message($result,$request->update_id);
+                    return $this->store_message($result,$request->update_id,'Post');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return $this->response_json('error',$e->getMessage());
@@ -123,7 +130,11 @@ class BlogController extends Controller
 
     public function edit(int $id){
         if(permission('blog-edit')){
-            $data['edit'] = Blog::findOrFail($id);
+            $data['edit'] = Post::with('categories')->findOrFail($id);
+            $data['categories'] = Category::active()->latest()->pluck('name','id');
+
+            $data['selectedCategories'] = $data['edit']->categories->pluck('id')->toArray();
+
             $this->set_page_data('Edit User','Edit User');
             return view('blog.edit',$data);
         }else{
@@ -140,13 +151,13 @@ class BlogController extends Controller
     public function delete(Request $request){
         if ($request->ajax()) {
             if(permission('blog-delete')){
-                $result = Blog::find($request->id);
+                $result = Post::find($request->id);
                 if($result){
-                    if(!empty($result->image)){
-                        $this->delete_file($result->image,BLOG_PATH);
+                    if(!empty($result->feature_image)){
+                        $this->delete_file($result->feature_image,BLOG_PATH);
                     }
                     $result->delete();
-                    return $this->delete_message($result);
+                    return $this->delete_message($result,'Post');
                 }else{
                     return $this->response_json('error','Data Cannot Delete',null,204);
                 }
@@ -167,15 +178,15 @@ class BlogController extends Controller
     public function bulkDelete(Request $request){
         if ($request->ajax()) {
             if(permission('blog-bulk-delete')){
-                $result = Blog::whereIn('id',$request->ids)->get('image');
+                $result = Post::whereIn('id',$request->ids)->get('feature_image');
                 if($result){
                     foreach($result as $value){
-                        if(!empty($value->image)){
-                            $this->delete_file($value->image,BLOG_PATH);
+                        if(!empty($value->feature_image)){
+                            $this->delete_file($value->feature_image,BLOG_PATH);
                         }
                     }
-                    Blog::destroy($request->ids);
-                    return $this->bulk_delete_message($result);
+                    Post::destroy($request->ids);
+                    return $this->bulk_delete_message($result,'Post');
                 }else{
                     return $this->response_json('error','Data Cannot Delete',null,204);
                 }
@@ -187,25 +198,4 @@ class BlogController extends Controller
         }
     }
 
-    /**
-     * spacified user status update
-     *
-     * @return \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function statusChange(Request $request){
-        if ($request->ajax()) {
-            if(permission('blog-status')){
-                $result = Blog::find($request->id);
-                if ($result) {
-                    $result->update(['status'=>$request->status]);
-                    return $this->status_message($result);
-                }else{
-                    return $this->response_json('error','Failed to change status',null,204);
-                }
-            }else{
-                return $this->response_json('error',UNAUTORIZED_BLOCK,null,204);
-            }
-        }
-    }
 }
