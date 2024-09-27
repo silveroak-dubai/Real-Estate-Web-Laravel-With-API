@@ -141,7 +141,7 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ route('app.blogs.store') }}",
+            url: "{{ route('app.posts.store') }}",
             data: formData,
             dataType: "JSON",
             contentType: false,
@@ -166,7 +166,7 @@
                     notification(response.status,response.message);
                     if (response.status == 'success') {
                         setInterval(() => {
-                            window.location.href = "{{ route('app.blogs.index') }}";
+                            window.location.href = "{{ route('app.posts.index') }}";
                         }, 1000);
                     }
                 }

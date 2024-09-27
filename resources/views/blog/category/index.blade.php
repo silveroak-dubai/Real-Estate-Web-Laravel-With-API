@@ -68,7 +68,7 @@
         ],
         pageLength: "{{ TABLE_PAGE_LENGTH }}", //number of data show per page
         ajax: {
-            url: "{{ route('app.blogs.categories.index') }}",
+            url: "{{ route('app.posts.categories.index') }}",
             type: "GET",
             dataType: "JSON",
             data: function(d) {
@@ -115,7 +115,7 @@
         var id = $('input#update_id').val();
         var form = document.getElementById('store_or_update_form');
         var formData = new FormData(form);
-        var url = "{{ route('app.blogs.categories.store-or-update') }}";
+        var url = "{{ route('app.posts.categories.store-or-update') }}";
         var method;
         if (id) {
             method = 'update';
@@ -134,7 +134,7 @@
         $('#store_or_update_form').find('.error').remove();
         if (id) {
             $.ajax({
-                url: "{{ route('app.blogs.categories.edit') }}",
+                url: "{{ route('app.posts.categories.edit') }}",
                 type: "POST",
                 data: {id: id,_token:_token},
                 dataType: "JSON",
@@ -162,7 +162,7 @@
         let id   = $(this).data('id');
         let name = $(this).data('name');
         let row  = table.row($(this).parent('tr'));
-        let url  = "{{ route('app.blogs.categories.delete') }}";
+        let url  = "{{ route('app.posts.categories.delete') }}";
         delete_data(id,url,row,name);
     });
     @endif
@@ -185,7 +185,7 @@
                 icon: 'warning',
             });
         }else{
-            let url = "{{ route('app.blogs.categories.bulk-delete') }}";
+            let url = "{{ route('app.posts.categories.bulk-delete') }}";
             bulk_delete(ids,url,rows);
         }
     }
@@ -197,7 +197,7 @@
         var id = $(this).data('id');
         var name = $(this).data('name');
         var status = $(this).data('status');
-        var url = "{{ route('app.blogs.categories.status-change') }}"
+        var url = "{{ route('app.posts.categories.status-change') }}"
         change_status(id,status,name,url);
     });
     @endif

@@ -34,21 +34,21 @@
             @endpermission
 
             @permission('blog-access')
-            <li class="{{ request()->is('blogs*') ? 'mm-active' : '' }}">
+            <li class="{{ request()->is('posts*') ? 'mm-active' : '' }}">
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="fa fa-tag"></i>
                     </div>
-                    <div class="menu-title">Blogs</div>
+                    <div class="menu-title">Posts</div>
                 </a>
-                <ul class="mm-collapse {{ request()->is('blogs*') ? 'mm-show' : '' }}">
+                <ul class="mm-collapse {{ request()->is('posts*') ? 'mm-show' : '' }}">
                     @permission('blog-access')
-                    <li class="{{ request()->is('blogs/categories') ? 'mm-active' : '' }}">
-                        <a href="{{ route('app.blogs.categories.index') }}"><i class="material-icons-outlined">arrow_right</i>Categories</a>
+                    <li class="{{ request()->is('posts/categories') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.posts.categories.index') }}"><i class="material-icons-outlined">arrow_right</i>Categories</a>
                     </li>
                     @endpermission
                     @permission('blog-access')
-                    <li class="{{ request()->is('blogs') ? 'mm-active' : '' }}">
-                        <a href="{{ route('app.blogs.index') }}"><i class="material-icons-outlined">arrow_right</i>Posts</a>
+                    <li class="{{ request()->is('posts') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.posts.index') }}"><i class="material-icons-outlined">arrow_right</i>Posts</a>
                     </li>
                     @endpermission
                 </ul>

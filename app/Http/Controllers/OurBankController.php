@@ -47,7 +47,7 @@ class OurBankController extends Controller
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
                         if(permission('our-bank-edit')){
-                            $action .= '<a href="'.route('app.our-banks.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                            $action .= '<button type="button" data-id="'.$row->id.'" class="btn-style btn-style-edit edit_data ms-1"><i class="fa fa-edit"></i></button>';
                         }
                         if(permission('our-bank-delete')){
                             $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
@@ -67,16 +67,7 @@ class OurBankController extends Controller
         }
     }
 
-    public function create(){
-        if(permission('our-bank-create')){
-            $this->set_page_data('New Our Bank','New Our Bank');
-            return view('our-banks.create');
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
-
-    public function store(OurBankRequest $request){
+    public function storeOrUpdate(OurBankRequest $request){
         if(permission('our-bank-create') || permission('our-bank-edit')){
             if ($request->ajax()) {
                 DB::beginTransaction();
@@ -111,23 +102,18 @@ class OurBankController extends Controller
         }
     }
 
-    public function edit(int $id){
-        if(permission('our-bank-edit')){
-            $data['edit'] = OurBank::findOrFail($id);
-            $this->set_page_data('Edit Our Bank','Edit Our Bank');
-            return view('our-banks.edit',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
-
-    public function show(int $id){
-        if(permission('our-bank-view')){
-            $data['view'] = OurBank::findOrFail($id);
-            $this->set_page_data('View Our Bank','View Our Bank ('.$data['view']->name.')');
-            return view('our-banks.view',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
+    public function edit(Request $request){
+        if($request->ajax()){
+            if(permission('our-bank-edit')){
+                $data = OurBank::find($request->id);
+                if($data->count()){
+                    return $this->response_json('success',null,$data,201);
+                }else{
+                    return $this->response_json('error','No Data Found',null,204);
+                }
+            }else{
+                return $this->unauthorized_access_blocked();
+            }
         }
     }
 
@@ -145,7 +131,6 @@ class OurBankController extends Controller
                     if ($result->image) {
                         $this->delete_file($result->image,OUR_BANKS_PATH);
                     }
-
                     $result->delete();
                     return $this->delete_message($result);
                 }else{

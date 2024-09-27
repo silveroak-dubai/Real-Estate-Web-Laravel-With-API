@@ -12,7 +12,7 @@
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
                         @if(permission('achievement-create'))
-                        <a href="{{ route('app.achievements.create') }}" class="btn btn-sm btn-primary rounded-1">Add Achievement</a>
+                        <button type="button" onclick="showFormModal('New Achievement','Save')" class="btn btn-sm btn-primary rounded-1">Add Achievement</button>
                         @endif
                     </h4>
                 </div>
@@ -47,6 +47,10 @@
             </div>
         </div>
     </div>
+
+    @if(permission('achievement-create') || permission('achievement-edit'))
+    @include('achievement.store_or_update')
+    @endif
 @endsection
 
 @push('scripts')
@@ -107,6 +111,53 @@
                 </div>`,
         }
     });
+
+    @permission('achievement-create')
+    $(document).on('click', '#save-btn', function(){
+        var id = $('input#update_id').val();
+        var form = document.getElementById('store_or_update_form');
+        var formData = new FormData(form);
+        var url = "{{ route('app.achievements.store-or-update') }}";
+        var method;
+        if (id) {
+            method = 'update';
+        }else{
+            method = 'add';
+        }
+        store_or_update_data(method,url,formData);
+    });
+    @endpermission
+
+    @permission('achievement-edit')
+    $(document).on('click','.edit_data',function(){
+        let id = $(this).data('id');
+        $('#store_or_update_form')[0].reset();
+        $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
+        $('#store_or_update_form').find('.error').remove();
+        if (id) {
+            $.ajax({
+                url: "{{ route('app.achievements.edit') }}",
+                type: "POST",
+                data: {id: id,_token:_token},
+                dataType: "JSON",
+                success: function (data) {
+                    $('#store_or_update_form #update_id').val(data.data.id);
+                    $('#store_or_update_form #old_image').val(data.data.image);
+                    $('#store_or_update_form #alt_text').val(data.data.alt_text);
+                    $('#store_or_update_form #status').val(data.data.status);
+                    popup_modal.show();
+                    $('#store_or_update_modal .modal-title').html(
+                        '<span>Edit - ' + data.data.name + '</span>');
+                    $('#store_or_update_modal #save-btn').html('<span></span> Update');
+
+                },
+                error: function (xhr, ajaxOption, thrownError) {
+                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+                }
+            });
+        }
+    });
+    @endpermission
 
     @if(permission('achievement-delete'))
     // single delete

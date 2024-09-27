@@ -51,11 +51,8 @@ class AchievementController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        // if(permission('achievement-view')){
-                        // $action .= '<a href="'.route('app.achievement.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
-                        // }
                         if(permission('achievement-edit')){
-                        $action .= '<a href="'.route('app.achievements.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                        $action .= '<button type="button" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
                         }
                         if(permission('achievement-delete')){
                         $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
@@ -75,16 +72,7 @@ class AchievementController extends Controller
         }
     }
 
-    public function create(){
-        if(permission('achievement-create')){
-            $this->set_page_data('New Achievement','New Achievement');
-            return view('achievement.create');
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
-
-    public function store(AchievementRequest $request){
+    public function storeOrUpdate(AchievementRequest $request){
         if(permission('achievement-create') || permission('achievement-edit')){
             if ($request->ajax()) {
                 DB::beginTransaction();
@@ -119,23 +107,18 @@ class AchievementController extends Controller
         }
     }
 
-    public function edit(int $id){
-        if(permission('achievement-edit')){
-            $data['edit'] = Achievement::findOrFail($id);
-            $this->set_page_data('Edit Achievement','Edit Achievement');
-            return view('achievement.edit',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
-
-    public function show(int $id){
-        if(permission('achievement-view')){
-            $data['view'] = Achievement::findOrFail($id);
-            $this->set_page_data('View Achievement','View Achievement ('.$data['view']->name.')');
-            return view('achievement.view',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
+    public function edit(Request $request){
+        if($request->ajax()){
+            if(permission('achievement-edit')){
+                $data = Achievement::find($request->id);
+                if($data->count()){
+                    return $this->response_json('success',null,$data,201);
+                }else{
+                    return $this->response_json('error','No Data Found',null,204);
+                }
+            }else{
+                return $this->unauthorized_access_blocked();
+            }
         }
     }
 

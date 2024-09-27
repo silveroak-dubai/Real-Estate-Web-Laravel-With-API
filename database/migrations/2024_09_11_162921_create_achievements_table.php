@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('achievements', function (Blueprint $table) {
             $table->id();
             $table->string('image');
-            $table->string('alt_text');
+            $table->string('alt_text')->nullable();
             $table->enum('status',['1','2'])->default('1')->comment('1 = Active, 2 = Inactive');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

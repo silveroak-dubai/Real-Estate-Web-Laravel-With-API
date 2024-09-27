@@ -12,7 +12,7 @@
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
                         @permission('blog-create')
-                        <a href="{{ route('app.blogs.create') }}" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Post</a>
+                        <a href="{{ route('app.posts.create') }}" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Post</a>
                         @endpermission
                     </h4>
                 </div>
@@ -68,7 +68,7 @@
         ],
         pageLength: "{{ TABLE_PAGE_LENGTH }}", //number of data show per page
         ajax: {
-            url: "{{ route('app.blogs.index') }}",
+            url: "{{ route('app.posts.index') }}",
             type: "GET",
             dataType: "JSON",
             data: function(d) {
@@ -120,7 +120,7 @@
         let id   = $(this).data('id');
         let name = $(this).data('name');
         let row  = table.row($(this).parent('tr'));
-        let url  = "{{ route('app.blogs.delete') }}";
+        let url  = "{{ route('app.posts.delete') }}";
         delete_data(id,url,row,name);
     });
     @endpermission
@@ -143,7 +143,7 @@
                 icon: 'warning',
             });
         }else{
-            let url = "{{ route('app.blogs.bulk-delete') }}";
+            let url = "{{ route('app.posts.bulk-delete') }}";
             bulk_delete(ids,url,rows);
         }
     }

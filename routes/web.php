@@ -7,11 +7,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OurBankController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Blog\BlogController;
+use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\OurPartnerController;
 use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\Blog\CategoryController;
+use App\Http\Controllers\Post\CategoryController;
 use App\Http\Controllers\Menu\MenuItemController;
 use App\Http\Controllers\OurTeam\OurTeamController;
 use App\Http\Controllers\OurTeam\TeamLanguageController;
@@ -47,8 +47,8 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     Route::post('password-change',[ProfileController::class,'passwordUpdate'])->name('password.update');
 
     // Blog Routes
-    Route::resource('blogs',BlogController::class)->except('destroy','update','show');
-    Route::name('blogs.')->prefix('blogs')->group(function(){
+    Route::resource('posts',PostController::class)->except('destroy','update','show');
+    Route::name('posts.')->prefix('posts')->group(function(){
         // Category Routes
         Route::name('categories.')->prefix('categories')->group(function(){
             Route::get('/',[CategoryController::class,'index'])->name('index');
@@ -59,13 +59,15 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
             Route::post('status-change',[CategoryController::class,'statusChange'])->name('status-change');
         });
 
-        Route::post('delete',[BlogController::class,'delete'])->name('delete');
-        Route::post('bulk-delete',[BlogController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('delete',[PostController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[PostController::class,'bulkDelete'])->name('bulk-delete');
     });
 
     // Our Banks Routes
-    Route::resource('our-banks',OurBankController::class)->except('destroy','update');
     Route::name('our-banks.')->prefix('our-banks')->group(function(){
+        Route::get('/',[OurBankController::class,'index'])->name('index');
+        Route::post('store-or-update',[OurBankController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[OurBankController::class,'edit'])->name('edit');
         Route::post('delete',[OurBankController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[OurBankController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[OurBankController::class,'statusChange'])->name('status-change');
@@ -80,16 +82,20 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     });
 
     // Achievement Routes
-    Route::resource('achievements',AchievementController::class)->except('destroy','update');
     Route::name('achievements.')->prefix('achievements')->group(function(){
+        Route::get('/',[AchievementController::class,'index'])->name('index');
+        Route::post('store-or-update',[AchievementController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[AchievementController::class,'edit'])->name('edit');
         Route::post('delete',[AchievementController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[AchievementController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[AchievementController::class,'statusChange'])->name('status-change');
     });
 
     // Our Partners Routes
-    Route::resource('our-partners',OurPartnerController::class)->except('destroy','update');
     Route::name('our-partners.')->prefix('our-partners')->group(function(){
+        Route::get('/',[OurPartnerController::class,'index'])->name('index');
+        Route::post('store-or-update',[OurPartnerController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[OurPartnerController::class,'edit'])->name('edit');
         Route::post('delete',[OurPartnerController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[OurPartnerController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[OurPartnerController::class,'statusChange'])->name('status-change');

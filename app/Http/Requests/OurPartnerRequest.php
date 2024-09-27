@@ -22,7 +22,7 @@ class OurPartnerRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'alt_text'      => ['required','string','max:190'],
+            'alt_text'   => ['nullable','string','max:190'],
             'status'     => ['required','in:1,2'],
             'image'      => ['required','image','mimes:png,jpg']
         ];

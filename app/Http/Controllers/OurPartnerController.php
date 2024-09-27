@@ -48,11 +48,8 @@ class OurPartnerController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        // if(permission('our-partner-view')){
-                        // $action .= '<a href="'.route('app.our-partner.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
-                        // }
                         if(permission('our-partner-edit')){
-                        $action .= '<a href="'.route('app.our-partners.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                        $action .= '<button type="button" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
                         }
                         if(permission('our-partner-delete')){
                         $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
@@ -65,23 +62,15 @@ class OurPartnerController extends Controller
                     ->make(true);
             }
 
-            $this->set_page_data('Our partners List','Our partners List');
+            $this->set_page_data('Our Partners List','Our Partners List');
             return view('our-partner.index');
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
-    public function create(){
-        if(permission('our-partner-create')){
-            $this->set_page_data('New Our partners','New Our partners');
-            return view('our-partner.create');
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
 
-    public function store(OurPartnerRequest $request){
+    public function storeOrUpdate(OurPartnerRequest $request){
         if(permission('our-partner-create') || permission('our-partner-edit')){
             if ($request->ajax()) {
                 DB::beginTransaction();
@@ -116,23 +105,18 @@ class OurPartnerController extends Controller
         }
     }
 
-    public function edit(int $id){
-        if(permission('our-partner-edit')){
-            $data['edit'] = OurPartner::findOrFail($id);
-            $this->set_page_data('Edit Our partners','Edit Our partners');
-            return view('our-partner.edit',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
-
-    public function show(int $id){
-        if(permission('our-partner-view')){
-            $data['view'] = OurPartner::findOrFail($id);
-            $this->set_page_data('View Our partners','View Our partners ('.$data['view']->name.')');
-            return view('our-partner.view',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
+    public function edit(Request $request){
+        if($request->ajax()){
+            if(permission('our-partner-edit')){
+                $data = OurPartner::find($request->id);
+                if($data->count()){
+                    return $this->response_json('success',null,$data,201);
+                }else{
+                    return $this->response_json('error','No Data Found',null,204);
+                }
+            }else{
+                return $this->unauthorized_access_blocked();
+            }
         }
     }
 
