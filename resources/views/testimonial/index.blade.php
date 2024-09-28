@@ -11,16 +11,16 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
-                        @if(permission('team-language-create'))
-                        <button type="button" onclick="showFormModal('New Language','Save')" class="btn btn-sm btn-primary rounded-1">Add Language</button>
+                        @if(permission('testimonial-create'))
+                        <button type="button" onclick="showFormModal('New Testimonial','Save')" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Testimonial</button>
                         @endif
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table-sm table-striped table-bordered table table-hover mb-0" id="language_table">
+                        <table class="table-sm table-striped table-bordered table table-hover mb-0" id="blog_table">
                             <thead>
-                                @if(permission('team-language-bulk-delete'))
+                                @if(permission('testimonial-bulk-delete'))
                                 <th>
                                     <div class="form-checkbox">
                                         <input type="checkbox" class="form-check-input" id="select_all" onclick="select_all()">
@@ -29,13 +29,17 @@
                                 </th>
                                 @endif
                                 <th>SL</th>
+                                <th>Image</th>
                                 <th>Name</th>
-                                @if(permission('team-language-status'))
+                                <th>Role</th>
+                                <th>Rating</th>
+                                <th>Feedback</th>
+                                @if(permission('testimonial-status'))
                                 <th>Status</th>
                                 @endif
                                 <th>Created By</th>
                                 <th>Created At</th>
-                                @if(permission('team-language-delete') || permission('team-language-edit'))
+                                @if(permission('testimonial-delete') || permission('testimonial-edit'))
                                 <th class="text-end">Action</th>
                                 @endif
                             </thead>
@@ -47,14 +51,14 @@
         </div>
     </div>
 
-    @if(permission('team-language-create') || permission('team-language-edit'))
-    @include('our-team.team-language.store_or_update')
+    @if(permission('testimonial-create') || permission('testimonial-edit'))
+    @include('testimonial.store_or_update')
     @endif
 @endsection
 
 @push('scripts')
 <script>
-    table = $('#language_table').DataTable({
+    table = $('#blog_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
@@ -68,7 +72,7 @@
         ],
         pageLength: "{{ TABLE_PAGE_LENGTH }}", //number of data show per page
         ajax: {
-            url: "{{ route('app.team-languages.index') }}",
+            url: "{{ route('app.testimonials.index') }}",
             type: "GET",
             dataType: "JSON",
             data: function(d) {
@@ -77,17 +81,21 @@
             },
         },
         columns: [
-            @if(permission('team-language-bulk-delete'))
+            @if(permission('testimonial-bulk-delete'))
             {data: 'bulk_check'},
             @endif
             {data: 'DT_RowIndex'},
+            {data: 'image'},
             {data: 'name'},
-            @if(permission('team-language-status'))
+            {data: 'role'},
+            {data: 'rating'},
+            {data: 'feedback'},
+            @if(permission('testimonial-status'))
             {data: 'status'},
             @endif
             {data: 'created_by'},
             {data: 'created_at'},
-            @if(permission('team-language-delete') || permission('team-language-view') || permission('team-language-edit'))
+            @if(permission('testimonial-delete') || permission('testimonial-view') || permission('testimonial-edit'))
             {data: 'action'}
             @endif
         ],
@@ -110,12 +118,12 @@
         }
     });
 
-    @permission('team-language-create')
+    @permission('testimonial-create')
     $(document).on('click', '#save-btn', function(){
         var id = $('input#update_id').val();
         var form = document.getElementById('store_or_update_form');
         var formData = new FormData(form);
-        var url = "{{ route('app.team-languages.store-or-update') }}";
+        var url = "{{ route('app.testimonials.store-or-update') }}";
         var method;
         if (id) {
             method = 'update';
@@ -126,7 +134,7 @@
     });
     @endpermission
 
-    @permission('team-language-edit')
+    @permission('testimonial-edit')
     $(document).on('click','.edit_data',function(){
         let id = $(this).data('id');
         $('#store_or_update_form')[0].reset();
@@ -134,13 +142,17 @@
         $('#store_or_update_form').find('.error').remove();
         if (id) {
             $.ajax({
-                url: "{{ route('app.team-languages.edit') }}",
+                url: "{{ route('app.testimonials.edit') }}",
                 type: "POST",
                 data: {id: id,_token:_token},
                 dataType: "JSON",
                 success: function (data) {
                     $('#store_or_update_form #update_id').val(data.data.id);
+                    $('#store_or_update_form #old_image').val(data.data.image);
                     $('#store_or_update_form #name').val(data.data.name);
+                    $('#store_or_update_form #role').val(data.data.role);
+                    $('#store_or_update_form #rating').val(data.data.rating);
+                    $('#store_or_update_form #feedback').val(data.data.feedback);
                     $('#store_or_update_form #status').val(data.data.status);
                     popup_modal.show();
                     $('#store_or_update_modal .modal-title').html(
@@ -156,18 +168,18 @@
     });
     @endpermission
 
-    @if(permission('team-language-delete'))
+    @if(permission('testimonial-delete'))
     // single delete
     $(document).on('click', '.delete_data', function () {
         let id   = $(this).data('id');
         let name = $(this).data('name');
         let row  = table.row($(this).parent('tr'));
-        let url  = "{{ route('app.team-languages.delete') }}";
+        let url  = "{{ route('app.testimonials.delete') }}";
         delete_data(id,url,row,name);
     });
     @endif
 
-    @if (permission('team-language-bulk-delete'))
+    @if (permission('testimonial-bulk-delete'))
     // multi delete
     function multi_delete(){
         let ids = [];
@@ -185,19 +197,19 @@
                 icon: 'warning',
             });
         }else{
-            let url = "{{ route('app.team-languages.bulk-delete') }}";
+            let url = "{{ route('app.testimonials.bulk-delete') }}";
             bulk_delete(ids,url,rows);
         }
     }
     @endif
 
-    @if(permission('team-language-status'))
+    @if(permission('testimonial-status'))
     // status changes
     $(document).on('click','.change_status', function(){
         var id = $(this).data('id');
         var name = $(this).data('name');
         var status = $(this).data('status');
-        var url = "{{ route('app.team-languages.status-change') }}"
+        var url = "{{ route('app.testimonials.status-change') }}"
         change_status(id,status,name,url);
     });
     @endif

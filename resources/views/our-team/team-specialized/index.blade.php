@@ -12,13 +12,13 @@
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
                         @if(permission('team-specialized-create'))
-                        <a href="{{ route('app.team-specializeds.create') }}" class="btn btn-sm btn-primary rounded-1">Add Team Specialization</a>
+                        <button type="button" onclick="showFormModal('New Specialized','Save')" class="btn btn-sm btn-primary rounded-1">Add Specialized</button>
                         @endif
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table-sm table-striped table-bordered table table-hover mb-0" id="blog_table">
+                        <table class="table-sm table-striped table-bordered table table-hover mb-0" id="specialization_table">
                             <thead>
                                 @if(permission('team-specialized-bulk-delete'))
                                 <th>
@@ -35,7 +35,7 @@
                                 @endif
                                 <th>Created By</th>
                                 <th>Created At</th>
-                                @if(permission('team-specialized-delete') || permission('team-specialized-view') || permission('team-specialized-edit'))
+                                @if(permission('team-specialized-delete') || permission('team-specialized-edit'))
                                 <th class="text-end">Action</th>
                                 @endif
                             </thead>
@@ -46,11 +46,16 @@
             </div>
         </div>
     </div>
+
+    @if(permission('team-specialized-create') || permission('team-specialized-edit'))
+    @include('our-team.team-specialized.store_or_update')
+    @endif
+
 @endsection
 
 @push('scripts')
 <script>
-    table = $('#blog_table').DataTable({
+    table = $('#specialization_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
@@ -105,6 +110,52 @@
                 </div>`,
         }
     });
+
+    @permission('team-specialized-create')
+    $(document).on('click', '#save-btn', function(){
+        var id = $('input#update_id').val();
+        var form = document.getElementById('store_or_update_form');
+        var formData = new FormData(form);
+        var url = "{{ route('app.team-specializeds.store-or-update') }}";
+        var method;
+        if (id) {
+            method = 'update';
+        }else{
+            method = 'add';
+        }
+        store_or_update_data(method,url,formData);
+    });
+    @endpermission
+
+    @permission('team-specialized-edit')
+    $(document).on('click','.edit_data',function(){
+        let id = $(this).data('id');
+        $('#store_or_update_form')[0].reset();
+        $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
+        $('#store_or_update_form').find('.error').remove();
+        if (id) {
+            $.ajax({
+                url: "{{ route('app.team-specializeds.edit') }}",
+                type: "POST",
+                data: {id: id,_token:_token},
+                dataType: "JSON",
+                success: function (data) {
+                    $('#store_or_update_form #update_id').val(data.data.id);
+                    $('#store_or_update_form #name').val(data.data.name);
+                    $('#store_or_update_form #status').val(data.data.status);
+                    popup_modal.show();
+                    $('#store_or_update_modal .modal-title').html(
+                        '<span>Edit - ' + data.data.name + '</span>');
+                    $('#store_or_update_modal #save-btn').html('<span></span> Update');
+
+                },
+                error: function (xhr, ajaxOption, thrownError) {
+                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+                }
+            });
+        }
+    });
+    @endpermission
 
     @if(permission('team-specialized-delete'))
     // single delete

@@ -16,9 +16,7 @@ use App\Http\Controllers\Menu\MenuItemController;
 use App\Http\Controllers\OurTeam\OurTeamController;
 use App\Http\Controllers\OurTeam\TeamLanguageController;
 use App\Http\Controllers\OurTeam\TeamSpecializedController;
-
-
-
+use App\Http\Controllers\TestimonialController;
 
 Auth::routes([
     'register', // 404 Disabled
@@ -102,16 +100,20 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     });
 
     // Team Language Routes
-    Route::resource('team-languages',TeamLanguageController::class)->except('destroy','update');
     Route::name('team-languages.')->prefix('team-languages')->group(function(){
+        Route::get('/',[TeamLanguageController::class,'index'])->name('index');
+        Route::post('store-or-update',[TeamLanguageController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[TeamLanguageController::class,'edit'])->name('edit');
         Route::post('delete',[TeamLanguageController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[TeamLanguageController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[TeamLanguageController::class,'statusChange'])->name('status-change');
     });
 
     // Team Specilization Routes
-    Route::resource('team-specializeds',TeamSpecializedController::class)->except('destroy','update');
     Route::name('team-specializeds.')->prefix('team-specializeds')->group(function(){
+        Route::get('/',[TeamSpecializedController::class,'index'])->name('index');
+        Route::post('store-or-update',[TeamSpecializedController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[TeamSpecializedController::class,'edit'])->name('edit');
         Route::post('delete',[TeamSpecializedController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[TeamSpecializedController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[TeamSpecializedController::class,'statusChange'])->name('status-change');
@@ -125,6 +127,15 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('status-change',[OurTeamController::class,'statusChange'])->name('status-change');
     });
 
+    // Testimonial Routes
+    Route::name('testimonials.')->prefix('testimonials')->group(function(){
+        Route::get('/',[TestimonialController::class,'index'])->name('index');
+        Route::post('store-or-update',[TestimonialController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[TestimonialController::class,'edit'])->name('edit');
+        Route::post('delete',[TestimonialController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[TestimonialController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[TestimonialController::class,'statusChange'])->name('status-change');
+    });
 
     Route::get('manage-menus/{id?}',[MenuController::class,'index'])->name('menu.index');
     Route::post('create-menu',[MenuController::class,'store']);

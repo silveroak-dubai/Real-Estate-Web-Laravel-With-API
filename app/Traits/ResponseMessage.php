@@ -12,7 +12,7 @@ trait ResponseMessage{
                 : $collection->merge(compact('created_by','created_at'));
     }
 
-    public function store_message($result,$update_id=null,$title = 'Data'){
+    public function store_message($result,$update_id=null,$title = 'Data '){
         return $result ? ['status'=>'success','message'=> !empty($update_id) ? $title.' has been updated successfully' : $title.' has been saved successfully']
             : ['status'=>'error','message'=> !empty($update_id) ? 'Failed to update data' : 'Falied to save data'];
     }
@@ -22,11 +22,11 @@ trait ResponseMessage{
                 : ['status'=>'error','message'=>'Failed to change status'];
     }
 
-    protected function delete_message($result,$title = 'Data'){
+    protected function delete_message($result,$title = 'Data '){
         return $result ? ['status'=>'success','message'=> $title.' has been deleted successfully']
         : ['status'=>'error','message'=> 'Failed to delete data'];
     }
-    protected function bulk_delete_message($result,$title = 'Data'){
+    protected function bulk_delete_message($result,$title = 'Data '){
         return $result ? ['status'=>'success','message'=> $title.'selected has been deleted successfull']
         : ['status'=>'error','message'=> 'Failed to delete selected data'];
     }

@@ -85,7 +85,7 @@
             </li>
             @endif
 
-            @if (permission('our-partner-access'))
+            @permission('our-partner-access')
             <li class="{{ request()->is('our-partners*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.our-partners.index') }}">
                     <div class="parent-icon"><i class="fa fa-user-circle"></i>
@@ -93,7 +93,7 @@
                     <div class="menu-title">Our Parners</div>
                 </a>
             </li>
-            @endif
+            @endpermission
 
             @if (permission('team-language-access') || permission('team-specialized-access') || permission('our-team-access'))
             <li class="{{ request()->is('team-languages*') || request()->is('team-specializeds*') || request()->is('our-teams*') ? 'mm-active' : '' }}">
@@ -122,13 +122,15 @@
             </li>
             @endif
 
-            <li class="{{ request()->is('settings*') ? 'mm-active' : '' }}">
-                <a href="#">
+            @permission('testimonial-access')
+            <li class="{{ request()->is('testimonials*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.testimonials.index') }}">
                     <div class="parent-icon"><i class="fa fa-commenting-o"></i>
                     </div>
                     <div class="menu-title">Testimonials</div>
                 </a>
             </li>
+            @endpermission
 
             <li class="">
                 <a href="javascript:;" class="has-arrow">

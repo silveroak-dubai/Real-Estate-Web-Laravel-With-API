@@ -48,11 +48,8 @@ class TeamSpecializedController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        // if(permission('team-specialized-view')){
-                        // $action .= '<a href="'.route('app.team-specialized.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
-                        // }
                         if(permission('team-specialized-edit')){
-                        $action .= '<a href="'.route('app.team-specializeds.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
+                        $action .= '<button type="button" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
                         }
                         if(permission('team-specialized-delete')){
                         $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
@@ -72,16 +69,8 @@ class TeamSpecializedController extends Controller
         }
     }
 
-    public function create(){
-        if(permission('team-specialized-create')){
-            $this->set_page_data('New Team Specialized','New Team Specialized');
-            return view('our-team.team-specialized.create');
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
 
-    public function store(TeamLanguageRequest $request){
+    public function storeOrUpdate(TeamLanguageRequest $request){
         if(permission('team-specialized-create') || permission('team-specialized-edit')){
             if ($request->ajax()) {
                 DB::beginTransaction();
@@ -89,14 +78,6 @@ class TeamSpecializedController extends Controller
                     $collection = collect($request->validated());
                     $created_at = $updated_at = Carbon::now();
                     $created_by = $updated_by = auth()->user()->name;
-
-                    $image = $request->old_image;
-                    if($request->hasFile('image')){
-                        $image = $this->upload_file($request->file('image'),OUR_TEAM_LANGUAGE_PATH);
-                        if(!empty($request->old_image)){
-                            $this->delete_file($request->old_image,OUR_TEAM_LANGUAGE_PATH);
-                        }
-                    }
 
                     if($request->update_id){
                         $collection = $collection->merge(compact('updated_by','updated_at'));
@@ -117,25 +98,19 @@ class TeamSpecializedController extends Controller
         }
     }
 
-    public function edit(int $id){
+    public function edit(Request $request){
         if(permission('team-specialized-edit')){
-            $data['edit'] = TeamSpecialized::findOrFail($id);
-            $this->set_page_data('Edit Team Specialized','Edit Team Specialized');
-            return view('our-team.team-specialized.edit',$data);
+            $data = TeamSpecialized::find($request->id);
+            if($data->count()){
+                return $this->response_json('success',null,$data,201);
+            }else{
+                return $this->response_json('error','No Data Found',null,204);
+            }
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
-    public function show(int $id){
-        if(permission('team-specialized-view')){
-            $data['view'] = TeamSpecialized::findOrFail($id);
-            $this->set_page_data('View Team Specialized','View Team Specialized ('.$data['view']->name.')');
-            return view('team-specialized.view',$data);
-        }else{
-            return $this->unauthorized_access_blocked();
-        }
-    }
 
     /**
      * spacified delete resource
@@ -148,10 +123,6 @@ class TeamSpecializedController extends Controller
             if(permission('team-specialized-delete')){
                 $result = TeamSpecialized::find($request->id);
                 if($result){
-                    if ($result->image) {
-                        $this->delete_file($result->image,OUR_TEAM_LANGUAGE_PATH);
-                    }
-
                     $result->delete();
                     return $this->delete_message($result);
                 }else{
