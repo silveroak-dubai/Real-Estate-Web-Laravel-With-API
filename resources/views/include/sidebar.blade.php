@@ -104,13 +104,18 @@
                 </a>
                 <ul class="mm-collapse {{ request()->is('team-languages*') || request()->is('team-specializeds*') || request()->is('our-teams*') ? 'mm-show' : '' }}">
                     @permission('team-language-access')
+                    <li class="{{ request()->is('departments*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('app.departments.index') }}"><i class="material-icons-outlined">arrow_right</i>Departments</a>
+                    </li>
+                    @endpermission
+                    @permission('team-language-access')
                     <li class="{{ request()->is('team-languages*') ? 'mm-active' : '' }}">
-                        <a href="{{ route('app.team-languages.index') }}"><i class="material-icons-outlined">arrow_right</i>Team Language</a>
+                        <a href="{{ route('app.team-languages.index') }}"><i class="material-icons-outlined">arrow_right</i>Language</a>
                     </li>
                     @endpermission
                     @permission('team-specialized-access')
                     <li class="{{ request()->is('team-specializeds*') ? 'mm-active' : '' }}">
-                        <a href="{{ route('app.team-specializeds.index') }}"><i class="material-icons-outlined">arrow_right</i>Team Specialized</a>
+                        <a href="{{ route('app.team-specializeds.index') }}"><i class="material-icons-outlined">arrow_right</i>Specialized</a>
                     </li>
                     @endpermission
                     @permission('our-team-access')

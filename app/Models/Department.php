@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class TeamSpecialized extends Model
+class Department extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class TeamSpecialized extends Model
      *
      * @var string
      */
-    protected $table = 'team_specializeds';
+    protected $table = 'departments';
 
     /**
      * The attributes that are mass assignable.
@@ -37,16 +37,5 @@ class TeamSpecialized extends Model
     public function scopeActive($query)
     {
         return $query->where('status','1');
-    }
-
-    /**
-     * Scope a query to only include
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrder($query,$column,$sortBy)
-    {
-        return $query->orderBy($column,$sortBy);
     }
 }

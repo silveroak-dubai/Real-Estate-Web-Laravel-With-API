@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('our_partners', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->string('image');
-            $table->string('alt_text')->nullable();
+            $table->string('name');
             $table->enum('status',['1','2'])->default('1')->comment('1 = Active, 2 = Inactive');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('our_partners');
+        Schema::dropIfExists('departments');
     }
 };

@@ -33,9 +33,6 @@ class TeamLanguageController extends Controller
                     ->addColumn('created_at', function($row){
                         return dateFormat($row->created_at);
                     })
-                    ->addColumn('image', function($row){
-                        return table_image(OUR_TEAM_LANGUAGE_PATH,$row->image,$row->name);
-                    })
                     ->addColumn('status', function($row){
                         if(permission('team-language-status')){
                             return change_status($row->id,$row->status,$row->name);

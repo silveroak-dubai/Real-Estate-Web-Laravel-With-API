@@ -1,22 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\OurBankController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\Menu\MenuController;
-use App\Http\Controllers\OurPartnerController;
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\Post\CategoryController;
 use App\Http\Controllers\Menu\MenuItemController;
+use App\Http\Controllers\OurBankController;
+use App\Http\Controllers\OurPartnerController;
+use App\Http\Controllers\OurTeam\DepartmentController;
 use App\Http\Controllers\OurTeam\OurTeamController;
 use App\Http\Controllers\OurTeam\TeamLanguageController;
 use App\Http\Controllers\OurTeam\TeamSpecializedController;
+use App\Http\Controllers\Post\CategoryController;
+use App\Http\Controllers\Post\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 
 Auth::routes([
     'register', // 404 Disabled
@@ -117,6 +119,16 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('delete',[TeamSpecializedController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[TeamSpecializedController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[TeamSpecializedController::class,'statusChange'])->name('status-change');
+    });
+
+    // Department Routes
+    Route::name('departments.')->prefix('departments')->group(function(){
+        Route::get('/',[DepartmentController::class,'index'])->name('index');
+        Route::post('store-or-update',[DepartmentController::class,'storeOrUpdate'])->name('store-or-update');
+        Route::post('edit',[DepartmentController::class,'edit'])->name('edit');
+        Route::post('delete',[DepartmentController::class,'delete'])->name('delete');
+        Route::post('bulk-delete',[DepartmentController::class,'bulkDelete'])->name('bulk-delete');
+        Route::post('status-change',[DepartmentController::class,'statusChange'])->name('status-change');
     });
 
     // Our Team Routes

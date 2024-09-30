@@ -74,6 +74,16 @@ class PermissionSeeder extends Seeder
         Permission::updateOrInsert(['slug'=>'our-partner-delete'],['module_id'=>$ourPartnerModule->id,'name'=>'Delete','slug'=>'our-partner-delete']);
         Permission::updateOrInsert(['slug'=>'our-partner-bulk-delete'],['module_id'=>$ourPartnerModule->id,'name'=>'Bulk Delete','slug'=>'our-partner-bulk-delete']);
 
+        // Department Module with Permission
+        $departmentModule = Module::updateOrCreate(['name'=>'Department'],['name'=>'Department','ordering'=>7]);
+        Permission::updateOrInsert(['slug'=>'department-access'],['module_id'=>$departmentModule->id,'name'=>'Access','slug'=>'department-access']);
+        Permission::updateOrInsert(['slug'=>'department-create'],['module_id'=>$departmentModule->id,'name'=>'Create','slug'=>'department-create']);
+        Permission::updateOrInsert(['slug'=>'department-edit'],['module_id'=>$departmentModule->id,'name'=>'Edit/Update','slug'=>'department-edit']);
+        Permission::updateOrInsert(['slug'=>'department-status'],['module_id'=>$departmentModule->id,'name'=>'Status','slug'=>'department-status']);
+        Permission::updateOrInsert(['slug'=>'department-delete'],['module_id'=>$departmentModule->id,'name'=>'Delete','slug'=>'department-delete']);
+        Permission::updateOrInsert(['slug'=>'department-bulk-delete'],['module_id'=>$departmentModule->id,'name'=>'Bulk Delete','slug'=>'department-bulk-delete']);
+
+
         // Team Language Module with Permission
         $teamLanguageModule = Module::updateOrCreate(['name'=>'Team Language Permission'],['name'=>'Team Language Permission','ordering'=>7]);
         Permission::updateOrInsert(['slug'=>'team-language-access'],['module_id'=>$teamLanguageModule->id,'name'=>'Access','slug'=>'team-language-access']);
@@ -103,13 +113,13 @@ class PermissionSeeder extends Seeder
         Permission::updateOrInsert(['slug'=>'our-team-view'],['module_id'=>$ourTeamModule->id,'name'=>'View','slug'=>'our-team-view']);
 
         // Testimonial Module with Permission
-        $ourTeamModule = Module::updateOrCreate(['name'=>'Testimonial Permission'],['name'=>'Testimonial Permission','ordering'=>9]);
-        Permission::updateOrInsert(['slug'=>'testimonial-access'],['module_id'=>$ourTeamModule->id,'name'=>'Access','slug'=>'testimonial-access']);
-        Permission::updateOrInsert(['slug'=>'testimonial-create'],['module_id'=>$ourTeamModule->id,'name'=>'Create','slug'=>'testimonial-create']);
-        Permission::updateOrInsert(['slug'=>'testimonial-edit'],['module_id'=>$ourTeamModule->id,'name'=>'Edit/Update','slug'=>'testimonial-edit']);
-        Permission::updateOrInsert(['slug'=>'testimonial-status'],['module_id'=>$ourTeamModule->id,'name'=>'Status','slug'=>'testimonial-status']);
-        Permission::updateOrInsert(['slug'=>'testimonial-delete'],['module_id'=>$ourTeamModule->id,'name'=>'Delete','slug'=>'testimonial-delete']);
-        Permission::updateOrInsert(['slug'=>'testimonial-bulk-delete'],['module_id'=>$ourTeamModule->id,'name'=>'Bulk Delete','slug'=>'testimonial-bulk-delete']);
+        $testimonialModule = Module::updateOrCreate(['name'=>'Testimonial Permission'],['name'=>'Testimonial Permission','ordering'=>9]);
+        Permission::updateOrInsert(['slug'=>'testimonial-access'],['module_id'=>$testimonialModule->id,'name'=>'Access','slug'=>'testimonial-access']);
+        Permission::updateOrInsert(['slug'=>'testimonial-create'],['module_id'=>$testimonialModule->id,'name'=>'Create','slug'=>'testimonial-create']);
+        Permission::updateOrInsert(['slug'=>'testimonial-edit'],['module_id'=>$testimonialModule->id,'name'=>'Edit/Update','slug'=>'testimonial-edit']);
+        Permission::updateOrInsert(['slug'=>'testimonial-status'],['module_id'=>$testimonialModule->id,'name'=>'Status','slug'=>'testimonial-status']);
+        Permission::updateOrInsert(['slug'=>'testimonial-delete'],['module_id'=>$testimonialModule->id,'name'=>'Delete','slug'=>'testimonial-delete']);
+        Permission::updateOrInsert(['slug'=>'testimonial-bulk-delete'],['module_id'=>$testimonialModule->id,'name'=>'Bulk Delete','slug'=>'testimonial-bulk-delete']);
 
     }
 }

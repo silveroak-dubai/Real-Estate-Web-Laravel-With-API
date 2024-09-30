@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('our_teams', function (Blueprint $table) {
             $table->id();
-            $table->text('language_ids')->nullable();
             $table->text('specialization_ids')->nullable();
             $table->string('full_name');
             $table->string('position');
