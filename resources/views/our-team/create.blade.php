@@ -6,6 +6,8 @@
 @endpush
 
 @section('content')
+<form method="POST" id="form_data">
+    @csrf
     <div class="row">
         <div class="col-12 col-md-8">
             <div class="card">
@@ -13,26 +15,18 @@
                     <h4 class="mb-0 card-title">{{ $title }}</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" id="form_data">
-                        @csrf
-                        <input type="hidden" name="update_id" id="update_id">
-                        <x-form.inputbox labelName="Full Name" name="full_name" required="required" placeholder="Enter Full Name"/>
-                        <x-form.inputbox labelName="Position" name="position" required="required" placeholder="Enter Position"/>
-                        <x-form.inputbox labelName="Experience" name="experience" required="required" placeholder="Enter Experience"/>
-                        <x-form.selectbox labelName="Department" name="department_id" required="required">
-                            <option value="">Select Department</option>
-                            @forelse ($departments as $id=>$name)
-                            <option value="{{ $id }}">{{ $name }}</option>
-                            @empty
+                    <x-form.inputbox labelName="Full Name" name="full_name" required="required" placeholder="Enter Full Name"/>
+                    <x-form.inputbox labelName="Position" name="position" required="required" placeholder="Enter Position"/>
+                    <x-form.inputbox labelName="Experience" name="experience" required="required" placeholder="Enter Experience"/>
+                    <x-form.selectbox labelName="Department" name="department_id" required="required">
+                        <option value="">Select Department</option>
+                        @forelse ($departments as $id=>$name)
+                        <option value="{{ $id }}">{{ $name }}</option>
+                        @empty
 
-                            @endforelse
-                        </x-form.selectbox>
-                        <x-form.textarea labelName="Description" name="description" required="required" placeholder="Enter Description"></x-form.textarea>
-                    </form>
-
-                    <div class="text-end mt-3">
-                        <button type="button" class="btn btn-sm btn-primary rounded-0" id="save-btn"><span></span> Save</button>
-                    </div>
+                        @endforelse
+                    </x-form.selectbox>
+                    <x-form.textarea labelName="Description" name="description" required="required" placeholder="Enter Description"></x-form.textarea>
                 </div>
             </div>
             <div class="card">
@@ -65,11 +59,11 @@
                     <h4 class="card-title mb-0 required">Specialized</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="m-0 o-0 list-unstyled">
+                    <ul class="m-0 o-0 list-unstyled" id="specialized">
                         @forelse ($specializeds as $id=>$name)
                         <li>
                             <div class="form-check">
-                                <input class="form-check-input shadow-none" type="checkbox" value="{{ $id }}" name="specialized" id="specialized-{{ $id }}">
+                                <input class="form-check-input shadow-none" type="radio" value="{{ $id }}" name="specialized_id" id="specialized-{{ $id }}">
                                 <label class="form-check-label" for="specialized-{{ $id }}">{{ $name }}</label>
                             </div>
                         </li>
@@ -84,7 +78,7 @@
                     <h4 class="card-title mb-0 required">Languages</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="m-0 o-0 list-unstyled">
+                    <ul class="m-0 o-0 list-unstyled" id="languages">
                         @forelse ($languages as $id=>$name)
                         <li>
                             <div class="form-check">
@@ -111,6 +105,8 @@
             </div>
         </div>
     </div>
+</form>
+
 @endsection
 
 @push('scripts')
@@ -133,7 +129,7 @@
 		}
     });
 
-    $('input[name="feature_image"]').prop('required',true);
+    $('input[name="image"]').prop('required',true);
     $('.remove-files').on('click', function(){
         $(this).parents('.col-md-12').remove();
     });

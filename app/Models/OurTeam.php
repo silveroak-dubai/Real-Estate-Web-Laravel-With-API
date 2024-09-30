@@ -21,5 +21,33 @@ class OurTeam extends Model
      *
      * @var array
      */
-    protected $fillable = ['full_name', 'position','status','experience','language_ids','specialization_ids','created_by','updated_by'];
+    protected $fillable = [
+        'department_id',
+        'specialized_id',
+        'full_name',
+        'position',
+        'experience',
+        'description',
+        'image',
+        'alt_text',
+        'languages',
+        'status',
+        'meta_title',
+        'meta_description',
+        'created_by',
+        'updated_by'
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'languages' => 'json',
+    ];
+
+    public function languages(){
+        return $this->belongsToMany(TeamLanguage::class);
+    }
 }

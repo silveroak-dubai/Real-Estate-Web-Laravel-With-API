@@ -7,6 +7,7 @@ define('OUR_BANKS_PATH','our-banks/');
 define('OUR_ACHIEVEMENT_PATH','achievements/');
 define('OUR_PARTNER_PATH','our-partners/');
 define('TESTIMONIAL_IMAGE_PATH','testimonial/');
+define('OUR_TEAM_IMAGE_PATH','our-team/');
 define('GENDER',[1=>'Male',2=>'Female']);
 define('ENABLED_DISABLED',[1=>'Enabled',2=>'Disabled']);
 define('STATUS',[1=>'Active',2=>'Inactive']);
@@ -20,6 +21,11 @@ define('MAIL_MAILER',['smtp','sendmail','mail']);
 define('MAIL_ENCRYPTION',['none'=>'null','tls'=>'tls','ssl'=>'ssl']);
 define('VISIBILITY',[1=>'Public',2=>'Private']);
 define('POST_STATUS',[1=>'Published',2=>'Draft',3=>'Pending']);
+define('POST_STATUS_LABEL',[
+    1=>'<span class="badge badge-sm bg-success">Published</span>',
+    2=>'<span class="badge badge-sm bg-wraning">Draft</span>',
+    3=>'<span class="badge badge-sm bg-danger">Pending</span>'
+]);
 
 if(!function_exists('permission')){
     function permission(string $value){

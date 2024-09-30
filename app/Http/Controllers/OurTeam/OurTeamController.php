@@ -37,11 +37,11 @@ class OurTeamController extends Controller
                         return dateFormat($row->created_at);
                     })
                     ->addColumn('image', function($row){
-                        return table_image(OUR_TEAM_LANGUAGE_PATH,$row->image,$row->name);
+                        return table_image(OUR_TEAM_IMAGE_PATH,$row->image,$row->name);
                     })
                     ->addColumn('status', function($row){
                         if(permission('our-team-status')){
-                            return change_status($row->id,$row->status,$row->name);
+                            return POST_STATUS_LABEL[$row->status];
                         }
                     })
                     ->addColumn('bulk_check', function($row){
@@ -51,9 +51,6 @@ class OurTeamController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        // if(permission('our-team-view')){
-                        // $action .= '<a href="'.route('app.our-team.show',$row->id).'" type="button" class="btn-style btn-style-view view_data ms-1" data-id="' . $row->id . '"><i class="fa fa-eye"></i></a>';
-                        // }
                         if(permission('our-team-edit')){
                         $action .= '<a href="'.route('app.our-teams.edit',$row->id).'" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></a>';
                         }
@@ -77,10 +74,11 @@ class OurTeamController extends Controller
 
     public function create(){
         if(permission('our-team-create')){
-            $this->set_page_data('New Our Team','New Our Team');
-            $data['departments'] = Department::active()->orderBy('name','asc')->pluck('name','id');
-            $data['languages'] = TeamLanguage::active()->orderBy('name','asc')->pluck('name','id');
+            $data['departments']  = Department::active()->orderBy('name','asc')->pluck('name','id');
+            $data['languages']    = TeamLanguage::active()->orderBy('name','asc')->pluck('name','id');
             $data['specializeds'] = TeamSpecialized::active()->orderBy('name','asc')->pluck('name','id');
+
+            $this->set_page_data('New Our Team','New Our Team');
             return view('our-team.create',$data);
         }else{
             return $this->unauthorized_access_blocked();
@@ -95,19 +93,27 @@ class OurTeamController extends Controller
                     $collection = collect($request->validated());
                     $created_at = $updated_at = Carbon::now();
                     $created_by = $updated_by = auth()->user()->name;
-
-                    $language_ids = json_encode($request->language_ids) ?? [];
-                    $specialization_ids = json_encode($request->specialization_ids) ?? [];
-
-                    if($request->update_id){
-                        $collection = $collection->merge(compact('language_ids','specialization_ids','updated_by','updated_at'));
-                    }else{
-                        $collection = $collection->merge(compact('language_ids','specialization_ids','created_by','created_at'));
+                    $image = $request->old_image;
+                    if($request->hasFile('image')){
+                        $image = $this->upload_file($request->file('image'),OUR_TEAM_IMAGE_PATH);
+                        if(!empty($request->old_image)){
+                            $this->delete_file($request->old_image,OUR_TEAM_IMAGE_PATH);
+                        }
                     }
 
-                    OurTeam::updateOrCreate(['id'=>$request->update_id],$collection->all());
+                    if($request->update_id){
+                        $collection = $collection->merge(compact('image','updated_by','updated_at'));
+                    }else{
+                        $collection = $collection->merge(compact('image','created_by','created_at'));
+                    }
+
+                    $result = OurTeam::updateOrCreate(['id'=>$request->update_id],$collection->all())->languages()->sync($request->languages);
                     DB::commit();
-                    return $this->response_json('success','Our Team has been saved succesfull.');
+                    if($result){
+                        return $this->store_message($result,$request->update_id);
+                    }else{
+                        return $this->response_json('error','Something went wrong!');
+                    }
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return $this->response_json('error',$e->getMessage());
@@ -120,10 +126,12 @@ class OurTeamController extends Controller
 
     public function edit(int $id){
         if(permission('our-team-edit')){
-            $data['edit'] = OurTeam::findOrFail($id);
+            $data['edit']         = OurTeam::with('languages')->findOrFail($id);
+            $data['departments']  = Department::active()->orderBy('name','asc')->pluck('name','id');
+            $data['languages']    = TeamLanguage::active()->orderBy('name','asc')->pluck('name','id');
+            $data['specializeds'] = TeamSpecialized::active()->orderBy('name','asc')->pluck('name','id');
+
             $this->set_page_data('Edit Our Team','Edit Our Team');
-            $data['languages'] = TeamLanguage::where('status',1)->pluck('name','id');
-            $data['specializations'] = TeamSpecialized::where('status',1)->pluck('name','id');
             return view('our-team.edit',$data);
         }else{
             return $this->unauthorized_access_blocked();
@@ -152,7 +160,7 @@ class OurTeamController extends Controller
                 $result = OurTeam::find($request->id);
                 if($result){
                     if ($result->image) {
-                        $this->delete_file($result->image,OUR_TEAM_LANGUAGE_PATH);
+                        $this->delete_file($result->image,OUR_TEAM_IMAGE_PATH);
                     }
 
                     $result->delete();

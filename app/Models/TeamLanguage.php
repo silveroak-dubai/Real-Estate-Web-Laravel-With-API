@@ -49,4 +49,8 @@ class TeamLanguage extends Model
     {
         return $query->orderBy($column,$sortBy);
     }
+
+    public function ourTeams(){
+        return $this->belongsToMany(OurTeam::class);
+    }
 }

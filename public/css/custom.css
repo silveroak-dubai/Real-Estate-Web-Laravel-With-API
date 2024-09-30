@@ -125,3 +125,14 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 .material-icons-outlined {
     font-size: 20px !important;
 }
+label {
+    font-weight: 300 !important;
+}
+select{
+    font-weight: 300 !important;
+    font-size: 13px;
+}
+.error {
+	font-weight: 300 !important;
+	font-size: 13px;
+}

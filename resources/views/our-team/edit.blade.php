@@ -3,148 +3,153 @@
 @section('title',$siteTitle)
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css">
-    <style>
-        #permission.tree, #permission.tree ul {
-            margin:0 !important;
-            padding:0 !important;
-            list-style:none !important;
-        }
-        #permission.tree ul {
-            margin-left:0.5em !important;
-            position:relative;
-        }
-        #permission.tree ul ul {
-            margin-left:.5em;
-        }
-        #permission.tree ul:before {
-            content:"";
-            display:block;
-            width:0;
-            position:absolute;
-            top:0;
-            bottom:0;
-            left:0;
-            border-left:1px solid;
-            z-index: 1;
-        }
-        #permission.tree li {
-            margin:0 0 10px 0;
-            padding: .5rem 0 .5rem .5em;
-            line-height:2em;
-            font-weight:700;
-            position:relative;
-            border-left: 2px solid #038fde;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            background: #212529;
-        }
-        #permission.tree li:hover{
-            cursor: move;
-        }
-        #permission.tree li li{
-            margin:0;
-            padding: 0 0 0 1em;
-            line-height:2em;
-            font-weight:700;
-            position:relative;
-            border-left: 0;
-            box-shadow: none !important;
-        }
-        #permission.tree ul li:before {
-            content:"";
-            display:block;
-            width:10px;
-            height:0;
-            border-top:1px solid;
-            margin-top:-1px;
-            position:absolute;
-            top:1em;
-            left:0
-        }
-        .indicator {
-            margin-right:5px;
-        }
-
-        #permission.tree li .indicator{
-            position: absolute;
-            top: 12px;
-            right: 20px;
-            color: #ffffff;
-            font-size: 18px;
-            float: right;
-            line-height: 25px;
-            cursor: pointer;
-        }
-        #permission.tree li li .indicator{
-            position: absolute;
-            top: 0;
-            right: 20px;
-            color: #ffffff;
-            font-size: 18px;
-            float: right;
-            line-height: 30px;
-            cursor: pointer;
-        }
-    </style>
 @endpush
 
 @section('content')
+<form method="POST" id="form_data">
+    @csrf
     <div class="row">
-        <div class="col-12 col-md-8 mx-auto">
+        <div class="col-12 col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h4 class="mb-0 card-title">{{ $title }}</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" id="form_data">
-                        @csrf
-                        <input type="hidden" name="update_id" id="update_id" value="{{ $edit->id }}">
+                    <input type="hidden" name="update_id" id="update_id" value="{{ $edit->id }}">
+                    <x-form.inputbox labelName="Full Name" name="full_name" required="required" value="{{ $edit->full_name }}" placeholder="Enter Full Name"/>
+                    <x-form.inputbox labelName="Position" name="position" required="required" value="{{ $edit->position }}" placeholder="Enter Position"/>
+                    <x-form.inputbox labelName="Experience" name="experience" required="required" value="{{ $edit->experience }}" placeholder="Enter Experience"/>
+                    <x-form.selectbox labelName="Department" name="department_id" required="required">
+                        <option value="">Select Department</option>
+                        @forelse ($departments as $id=>$name)
+                        <option value="{{ $id }}" {{ $edit->department_id == $id ? 'selected' : '' }}>{{ $name }}</option>
+                        @empty
 
-                        <x-form.inputbox labelName="Full Name" name="full_name" value="{{ $edit->full_name ?? '' }}" required="required" placeholder="Enter Full Name"/>
-                        <x-form.inputbox labelName="Position" name="position" value="{{ $edit->position ?? '' }}" required="required" placeholder="Enter Position"/>
-                        <x-form.inputbox labelName="Experience" name="experience" value="{{ $edit->experience ?? '' }}" required="required" placeholder="Enter Experience"/>
-                        @php
-                            $language_ids = json_decode($edit->language_ids);
-                            $specialization_ids = json_decode($edit->specialization_ids);
-                        @endphp
-                        <x-form.selectbox id="language_ids" labelName="Languages" name="language_ids[]" multiple="multiple" class="select2" required="required">
-                            <option value="">select language</option>
-                            @foreach ($languages as $key=>$value)
-                            <option value="{{ $key }}" {{ in_array($key, $language_ids) ? 'selected' : '' }}>{{ $value }}</option>
-                            @endforeach
-                        </x-form.selectbox>
-
-                        <x-form.selectbox id="specialization_ids" labelName="Specializations" name="specialization_ids[]" multiple="multiple" class="select2" required="required">
-                            <option value="">select specialization</option>
-                            @foreach ($specializations as $key=>$value)
-                            <option value="{{ $key }}" {{ in_array($key, $specialization_ids) ? 'selected' : '' }}>{{ $value }}</option>
-                            @endforeach
-                        </x-form.selectbox>
-
-                        <x-form.selectbox labelName="Status" name="status" required="required">
-                            <option value="">Select Status</option>
-                            @foreach (STATUS as $key=>$value)
-                            <option value="{{ $key }}" {{ $edit->status == $key ? 'selected' : '' }}>{{ $value }}</option>
-                            @endforeach
-                        </x-form.selectbox>
-                        {{-- <x-form.inputbox type="file" labelName="Image" name="image"/>
-                        <input type="hidden" name="old_image" value="{{ $edit->image ?? '' }}"> --}}
-
-
-                    </form>
-
-                    <div class="text-end mt-3">
-                        <button type="button" class="btn btn-sm btn-primary rounded-0" id="save-btn"><span></span> Save</button>
+                        @endforelse
+                    </x-form.selectbox>
+                    <x-form.textarea labelName="Description" name="description" value="{{ $edit->description }}" required="required" placeholder="Enter Description"></x-form.textarea>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0 card-title">SEO Data</h4>
+                </div>
+                <div class="card-body">
+                    <small class="d-block mb-3">Setup meta title & description to make your site easy to discovered on search engines such as Google</small>
+                    <x-form.inputbox labelName="Meta Title" value="{{ $edit->meta_title }}" name="meta_title" placeholder="Enter title" optional="Meta titles with 50-60 characters, including spaces, for ideal Google search visibility"/>
+                    <x-form.textarea labelName="Meta Description" value="{{ $edit->meta_description }}" name="meta_description" placeholder="Enter description" optional="Meta description with 155-160 characters, including spaces, for ideal Google search visibility"></x-form.textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="card">
+                <div class="card-header"><h4 class="card-title mb-0">Published</h4></div>
+                <div class="card-body">
+                    <x-form.selectbox required="required" name="status" labelName="Status">
+                        @foreach (POST_STATUS as $key=>$value)
+                        <option value="{{ $key }}" {{ $edit->status == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </x-form.selectbox>
+                    <div class="text-end">
+                        <button type="button" id="save-btn" class="btn btn-sm btn-primary rounded-0"><span></span> Update</button>
                     </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0 required">Specialized</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="m-0 o-0 list-unstyled" id="specialized">
+                        @forelse ($specializeds as $id=>$name)
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input shadow-none" type="radio" value="{{ $id }}" name="specialized_id" id="specialized-{{ $id }}" {{ $edit->specialized_id == $id ? 'checked' : '' }}>
+                                <label class="form-check-label" for="specialized-{{ $id }}">{{ $name }}</label>
+                            </div>
+                        </li>
+                        @empty
+
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0 required">Languages</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="m-0 o-0 list-unstyled" id="languages">
+                        @forelse ($languages as $id=>$name)
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input shadow-none" type="checkbox" value="{{ $id }}" name="languages[]" id="languages-{{ $id }}" {{ in_array($id,$edit->languages) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="languages-{{ $id }}">{{ $name }}</label>
+                            </div>
+                        </li>
+                        @empty
+
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0 required">image</h4>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div id="image"></div>
+                    </div>
+                    <input type="hidden" name="old_image" id="old_image" value="{{ $edit->image ?? '' }}">
+                    <x-form.inputbox name="alt_text" value="{{ $edit->alt_text ?? '' }}" groupClass="mt-3 mb-0" placeholder="Enter alt text for image"/>
                 </div>
             </div>
         </div>
     </div>
+</form>
+
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js') }}/tree.js"></script>
+<script src="{{ asset('js/spartan-multi-image-picker-min.js') }}"></script>
 <script>
-    $('#permission').treed(); //intialized tree js
+    $('#image').spartanMultiImagePicker({
+        fieldName: 'image',
+        maxCount: 1,
+        rowHeight: '200px',
+        groupClassName: 'col-md-12 com-sm-12 com-xs-12 mb-0',
+        maxFileSize: '',
+        dropFileLabel: 'Drop Here',
+        allowExt: 'png|jpg|jpeg',
+        onExtensionErr: function(index, file){
+            Swal.fire({icon:'error',title:'Oops...',text: 'Only png,jpg,jpeg file format allowed!'});
+        },
+        onSizeErr : function(index, file){
+			console.log(index, file,  'file size too big');
+			Swal.fire({icon:'error',title:'Oops...',text: 'file size too big!'});
+		}
+    });
+
+    $('input[name="image"]').prop('required',true);
+    $('.remove-files').on('click', function(){
+        $(this).parents('.col-md-12').remove();
+    });
+
+    @if($edit->image)
+        $('#form_data #image img.spartan_image_placeholder').css('display','none');
+        $('#form_data #image .spartan_remove_row').css('display','none');
+        $('#form_data #image .img_').css('display','block');
+        $('#form_data #image .img_').attr('src',"{{ asset('uploads/'.OUR_TEAM_IMAGE_PATH.$edit->image) }}");
+    @endif
+
+    $(document).on('keyup keypress','#title',function(){
+        var input_value = $(this).val();
+        var value = input_value.toLowerCase().trim();
+        var str = value.replace(/ +(?= )/g,'');
+        var name = str.split(' ').join('-');
+        $('#slug').val(name);
+    });
 
     $(document).on('click','#save-btn',function(){
         var form = document.getElementById('form_data');
@@ -158,6 +163,12 @@
             contentType: false,
             processData: false,
             cache: false,
+            beforeSend: function(){
+                $('#save-btn span').addClass('spinner-border spinner-border-sm text-light');
+            },
+            complete: function(){
+                $('#save-btn span').removeClass('spinner-border spinner-border-sm text-light');
+            },
             success: function (response) {
                 $('#form_data').find('.error').remove();
                 $('#form_data').find('.is-invalid').removeClass('is-invalid');
@@ -170,7 +181,7 @@
                     notification(response.status,response.message);
                     if (response.status == 'success') {
                         setInterval(() => {
-                            // window.location.href = "{{ route('app.our-teams.index') }}";
+                            window.location.href = "{{ route('app.our-teams.index') }}";
                         }, 1000);
                     }
                 }
