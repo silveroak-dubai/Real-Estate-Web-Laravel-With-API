@@ -38,4 +38,8 @@ class Department extends Model
     {
         return $query->where('status','1');
     }
+
+    public function ourTeams(){
+        return $this->hasMany(OurTeam::class)->orderBy('ordering','ASC');
+    }
 }

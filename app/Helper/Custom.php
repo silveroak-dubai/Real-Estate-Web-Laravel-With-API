@@ -70,6 +70,11 @@ if (!function_exists('change_status')) {
     }
 }
 
+if(!function_exists('tooltip')){
+    function tooltip($title,$dir = 'top'){
+        return 'data-bs-toggle="tooltip" data-bs-placement="'.$dir.'" title="'.$title.'"';
+    }
+}
 
 if(!function_exists('dateFormat')){
     function dateFormat($date){

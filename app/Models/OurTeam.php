@@ -34,6 +34,7 @@ class OurTeam extends Model
         'status',
         'meta_title',
         'meta_description',
+        'ordering',
         'created_by',
         'updated_by'
     ];

@@ -185,13 +185,16 @@
     <script src="{{ asset('js') }}/main.js"></script>
     <script src="{{ asset('js') }}/custom.js"></script>
     <script>
-        $(".data-attributes span").peity("donut");
-
-         // ajax header setup
-         $.ajaxSetup({
+        // ajax header setup
+        $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        // tooltip
+        $(document).ready(function() {
+            $("body").tooltip({ selector: '[data-bs-toggle=tooltip]' });
         });
 
         // token

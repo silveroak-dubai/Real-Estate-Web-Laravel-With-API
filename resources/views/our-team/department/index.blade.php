@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title',$siteTitle)
 @push('styles')
 

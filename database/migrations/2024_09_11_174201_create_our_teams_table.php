@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('status',['1','2','3'])->default('1')->comment('1 = Active, 2 = Inactive');
             $table->string('meta_title',100)->nullable();
             $table->string('meta_description',190)->nullable();
+            $table->integer('ordering')->default(0);
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();

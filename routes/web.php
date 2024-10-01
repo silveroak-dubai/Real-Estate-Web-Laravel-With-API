@@ -129,6 +129,8 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('delete',[DepartmentController::class,'delete'])->name('delete');
         Route::post('bulk-delete',[DepartmentController::class,'bulkDelete'])->name('bulk-delete');
         Route::post('status-change',[DepartmentController::class,'statusChange'])->name('status-change');
+        Route::get('ordering/{id}',[DepartmentController::class,'deptOrderForm'])->name('ordering.index');
+        Route::post('ordering/store',[DepartmentController::class,'deptOrder'])->name('ordering');
     });
 
     // Our Team Routes

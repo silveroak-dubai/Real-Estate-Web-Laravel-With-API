@@ -5,6 +5,7 @@ namespace App\Http\Controllers\OurTeam;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DepartmentRequest;
 use App\Models\Department;
+use App\Models\OurTeam;
 use App\Traits\ResponseMessage;
 use App\Traits\UploadAble;
 use Carbon\Carbon;
@@ -20,14 +21,12 @@ class DepartmentController extends Controller
         if (permission('department-access')) {
             if($request->ajax()){
 
-                $getData = Department::orderBy('id','desc');
+                $getData = Department::with('ourTeams')->orderBy('id','desc');
                 return DataTables::eloquent($getData)
                     ->addIndexColumn()
                     ->filter(function ($query) use ($request) {
                         if (!empty($request->search)) {
-                            $query->where('name', 'LIKE', "%$request->search%")
-                                ->orWhere('email', 'LIKE', "%$request->search%")
-                                ->orWhere('mobile_no', 'LIKE', "%$request->search%");
+                            $query->where('name', 'LIKE', "%$request->search%");
                         }
                     })
                     ->addColumn('created_at', function($row){
@@ -45,11 +44,16 @@ class DepartmentController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $action = '<div class="d-flex align-items-center justify-content-end">';
-                        if(permission('department-edit')){
-                        $action .= '<button type="button" class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
+                        if($row->ourTeams->isNotEmpty()){
+                        $action .= '<a href="'.route('app.departments.ordering.index',$row->id).'" '.tooltip('Team Member Ordering').' class="btn-style btn-style-view ms-1"><i class="fa fa-sort-amount-asc"></i></a>';
                         }
+
+                        if(permission('department-edit')){
+                        $action .= '<button type="button" '.tooltip('Edit').' class="btn-style btn-style-edit edit_data ms-1" data-id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
+                        }
+
                         if(permission('department-delete')){
-                        $action .= '<button type="button" class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
+                        $action .= '<button type="button" '.tooltip('Delete').' class="btn-style btn-style-danger delete_data ms-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fa fa-trash"></i></button>';
                         }
                         $action .= '</div>';
 
@@ -66,6 +70,28 @@ class DepartmentController extends Controller
         }
     }
 
+    public function deptOrderForm(int $id){
+        $data = Department::with('ourTeams')->findOrFail($id);
+        $this->set_page_data('Team Member Order','Team Member Order');
+        return view('our-team.ordering', compact('data'));
+    }
+
+    public function deptOrder(Request $request){
+        if($request->ajax()){
+            try {
+                $order = $request->order;
+                foreach ($order as $key => $id) {
+                    $item = OurTeam::find($id);
+                    $item->ordering = $key + 1;
+                    $item->save();
+                }
+
+                return response()->json(['status'=>'success','message'=>'Status order successfull.']);
+            } catch (\Exception $e) {
+                return response()->json(['status'=>'error','message'=>'Something went wrong!']);
+            }
+        }
+    }
 
     public function storeOrUpdate(DepartmentRequest $request){
         if(permission('department-create') || permission('department-edit')){
