@@ -28,9 +28,8 @@ class OurTeamController extends Controller
                     ->addIndexColumn()
                     ->filter(function ($query) use ($request) {
                         if (!empty($request->search)) {
-                            $query->where('name', 'LIKE', "%$request->search%")
-                                ->orWhere('email', 'LIKE', "%$request->search%")
-                                ->orWhere('mobile_no', 'LIKE', "%$request->search%");
+                            $query->where('full_name', 'LIKE', "%$request->search%")
+                                ->orWhere('position', 'LIKE', "%$request->search%");
                         }
                     })
                     ->addColumn('created_at', function($row){

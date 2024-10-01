@@ -109,6 +109,15 @@
         }
     });
 
+    // slug generate
+    $('#name').on('keyup keypress', function() {
+        clearTimeout(debounceTimeout);
+        let title = $(this).val();
+        var db_table = "departments";
+
+        generate_url(title,db_table);
+    });
+
     @permission('department-create')
     $(document).on('click', '#save-btn', function(){
         var id = $('input#update_id').val();
@@ -140,7 +149,10 @@
                 success: function (data) {
                     $('#store_or_update_form #update_id').val(data.data.id);
                     $('#store_or_update_form #name').val(data.data.name);
+                    $('#store_or_update_form #slug').val(data.data.slug);
                     $('#store_or_update_form #status').val(data.data.status);
+                    $('#store_or_update_form #meta_title').val(data.data.meta_title);
+                    $('#store_or_update_form #meta_description').val(data.data.meta_description);
                     popup_modal.show();
                     $('#store_or_update_modal .modal-title').html(
                         '<span>Edit - ' + data.data.name + '</span>');

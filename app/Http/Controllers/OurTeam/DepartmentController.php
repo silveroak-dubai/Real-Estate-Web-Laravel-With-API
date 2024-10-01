@@ -11,6 +11,7 @@ use App\Traits\UploadAble;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class DepartmentController extends Controller
@@ -101,16 +102,17 @@ class DepartmentController extends Controller
                     $collection = collect($request->validated());
                     $created_at = $updated_at = Carbon::now();
                     $created_by = $updated_by = auth()->user()->name;
+                    $slug       = Str::slug($request->slug,'-');
 
                     if($request->update_id){
-                        $collection = $collection->merge(compact('updated_by','updated_at'));
+                        $collection = $collection->merge(compact('slug','updated_by','updated_at'));
                     }else{
-                        $collection = $collection->merge(compact('created_by','created_at'));
+                        $collection = $collection->merge(compact('slug','created_by','created_at'));
                     }
 
                     Department::updateOrCreate(['id'=>$request->update_id],$collection->all());
                     DB::commit();
-                    return $this->response_json('success','Team Language has been saved succesfull.');
+                    return $this->response_json('success','Department has been saved succesfull.');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return $this->response_json('error',$e->getMessage());

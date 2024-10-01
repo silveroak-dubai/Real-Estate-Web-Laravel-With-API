@@ -22,12 +22,15 @@ class DepartmentRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name'      => ['required','string','max:190','unique:departments,name'],
-            'status'    => ['required','in:1,2'],
+            'name'             => ['required','string','max:190'],
+            'slug'             => ['required','string','max:190','unique:departments,slug'],
+            'status'           => ['required','in:1,2'],
+            'meta_title'       => ['nullable','string','max:80'],
+            'meta_description' => ['nullable','string','max:180'],
         ];
 
         if(request()->update_id){
-            $rules['name'][3] = 'unique:departments,name,'.request()->update_id;
+            $rules['slug'][3] = 'unique:departments,slug,'.request()->update_id;
         }
 
         return $rules;

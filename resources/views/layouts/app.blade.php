@@ -199,7 +199,7 @@
 
         // token
         var _token = "{{ csrf_token() }}";
-        var table;
+        var table, debounceTimeout;
 
         // sweetalert message
         const Toast = Swal.mixin({
@@ -266,6 +266,30 @@
         @elseif (Session::get('warning'))
             notification('warning',"{{ Session::get('warning') }}")
         @endif
+
+        function generate_url(title,db_table){
+            if (title.length > 0 && title.length <= 255) {
+                debounceTimeout = setTimeout(function() {
+                    $.ajax({
+                        url: '{{ route("app.slug.generate") }}',
+                        type: 'POST',
+                        data: {
+                            title: title,
+                            model: db_table,
+                            _token: _token
+                        },
+                        success: function(response) {
+                            $('#slug').val(response.slug);
+                        },
+                        error: function(xhr) {
+                            console.log('Error:', xhr);
+                        }
+                    });
+                }, 500); // Delay the request by 500ms
+            } else {
+                console.log('Title is either too short or too long.');
+        }
+        }
 
         $(document).ready(function() {
             $('.select2').select2();

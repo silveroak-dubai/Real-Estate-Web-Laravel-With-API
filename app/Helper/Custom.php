@@ -12,8 +12,8 @@ define('GENDER',[1=>'Male',2=>'Female']);
 define('ENABLED_DISABLED',[1=>'Enabled',2=>'Disabled']);
 define('STATUS',[1=>'Active',2=>'Inactive']);
 define('STATUS_LABEL',[
-    1=>'<span class="badge badge-sm bg-success">Active</span>',
-    2=>'<span class="badge badge-sm bg-danger">Inctive</span>'
+    1=>'<span class="badge badge-sm fw-normal rounded-0 bg-success">Active</span>',
+    2=>'<span class="badge badge-sm fw-normal rounded-0 bg-danger">Inctive</span>'
 ]);
 define('UNAUTORIZED_BLOCK','Unauthorized Access!');
 define('TABLE_PAGE_LENGTH',15);
@@ -22,9 +22,9 @@ define('MAIL_ENCRYPTION',['none'=>'null','tls'=>'tls','ssl'=>'ssl']);
 define('VISIBILITY',[1=>'Public',2=>'Private']);
 define('POST_STATUS',[1=>'Published',2=>'Draft',3=>'Pending']);
 define('POST_STATUS_LABEL',[
-    1=>'<span class="badge badge-sm bg-success">Published</span>',
-    2=>'<span class="badge badge-sm bg-wraning">Draft</span>',
-    3=>'<span class="badge badge-sm bg-danger">Pending</span>'
+    1=>'<span class="badge badge-sm fw-normal rounded-0 bg-success">Published</span>',
+    2=>'<span class="badge badge-sm fw-normal rounded-0 text-dark bg-warning">Draft</span>',
+    3=>'<span class="badge badge-sm fw-normal rounded-0 bg-danger">Pending</span>'
 ]);
 
 if(!function_exists('permission')){
@@ -65,8 +65,8 @@ if (!function_exists('user_image')) {
 
 if (!function_exists('change_status')) {
     function change_status(int $id,int $status,string $name = null){
-        return $status == 1 ? '<span class="badge bg-success change_status" data-id="' . $id . '" data-name="' . $name . '" data-status="2" style="cursor:pointer;">Active</span>' :
-        '<span class="badge bg-danger change_status" data-id="' . $id . '" data-name="' . $name . '" data-status="1" style="cursor:pointer;">Inactive</span>';
+        return $status == 1 ? '<span class="badge fw-normal rounded-0 bg-success change_status" data-id="' . $id . '" data-name="' . $name . '" data-status="2" style="cursor:pointer;">Active</span>' :
+        '<span class="badge fw-normal rounded-0 bg-danger change_status" data-id="' . $id . '" data-name="' . $name . '" data-status="1" style="cursor:pointer;">Inactive</span>';
     }
 }
 

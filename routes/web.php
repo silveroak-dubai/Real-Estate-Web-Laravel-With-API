@@ -3,6 +3,7 @@
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\Menu\MenuItemController;
 use App\Http\Controllers\OurBankController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 
 Auth::routes([
@@ -168,6 +170,8 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
 
 
 
+    // Slug Generate Route
+    Route::post('slug/generate',[MapController::class, 'generateSlug'])->name('slug.generate');
 
 
 });
