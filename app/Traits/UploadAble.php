@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Trait UploadAble
@@ -20,10 +20,10 @@ trait UploadAble
      * @param null $disk
      * @return false|string
      */
-    public function upload_file($file, $folder = null, $file_name = null, $disk = 'uploads/') {
-        // if not have a folder create folder
-        if (!File::exists($disk.$folder)) {
-            File::makeDirectory($disk.$folder, 0777, true);
+    public function upload_file(UploadedFile $file, $folder = null,  $file_name = null, $disk = 'public')
+    {
+        if (!Storage::directories($disk.'/'.$folder)) {
+			Storage::makeDirectory($disk.'/'.$folder,0777, true); //if directory not exist then make the directory
         }
 
         $filenameWithExt = $file->getClientOriginalName(); // Get filename with extension like index.jpg
@@ -33,7 +33,7 @@ trait UploadAble
         $fileNameToStore = !is_null($file_name) ?
         str_replace(' ', '-', $file_name).'.'.$extension :
         str_replace(' ', '-', $filename).'-'.rand(111111,999999).'.'.$extension; //Filename to store  like index1545gfh5465.jpg
-        $file->move($disk.$folder, $fileNameToStore); // upload file storage
+        $file->storeAs($folder,$fileNameToStore,$disk); //store file in targetted folder
         return $fileNameToStore;
     }
 
@@ -44,10 +44,12 @@ trait UploadAble
      * @param string $disk
      * @return true|false
      */
-    public function delete_file($filename,$folder,$disk = 'uploads/'){
-        if (file_exists($disk.$folder.$filename) && $filename != '') {
-            unlink($disk.$folder.$filename);
-            return true;
+    public function delete_file($filename,$folder,$disk = 'public')
+    {
+        if(Storage::exists($disk.'/'.$folder.$filename))
+        {
+            Storage::disk($disk)->delete($folder.$filename);
+            return TRUE;
         }
         return false;
     }

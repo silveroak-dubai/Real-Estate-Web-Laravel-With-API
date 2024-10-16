@@ -40,7 +40,7 @@ class UserController extends Controller
                         return GENDER[$row->gender];
                     })
                     ->addColumn('image', function($row){
-                        return table_image(USER_AVATAR_PATH,$row->avatar,$row->name);
+                        return table_image(USER_AVATAR_PATH,$row->image,$row->name);
                     })
                     ->addColumn('created_at', function($row){
                         return dateFormat($row->created_at);

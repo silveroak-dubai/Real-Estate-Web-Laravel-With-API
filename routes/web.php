@@ -153,19 +153,17 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('status-change',[TestimonialController::class,'statusChange'])->name('status-change');
     });
 
+
+    // Menu Routes
     Route::get('manage-menus/{id?}',[MenuController::class,'index'])->name('menu.index');
     Route::post('create-menu',[MenuController::class,'store']);
+    Route::get('add-categories-to-menu', [MenuController::class, 'addCatToMenu']);
+    Route::get('add-post-to-menu', [MenuController::class, 'addPostToMenu']);
+    Route::get('add-custom-link', [MenuController::class, 'addCustomLink']);
     Route::get('update-menu',[MenuController::class,'updateMenu']);
-    Route::get('delete-menu/{id}',[MenuController::class,'destroy']);
-
-    // Menu Item Routes
-    Route::get('add-categories-to-menu',[MenuItemController::class,'addCatToMenu']);
-    Route::get('add-post-to-menu',[MenuItemController::class,'addPostToMenu']);
-    Route::get('add-custom-link',[MenuItemController::class,'addCustomLink']);
-    Route::post('update-menuitem/{id}',[MenuItemController::class,'updateMenuItem']);
-    Route::get('delete-menuitem/{id}/{key}/{in?}',[MenuItemController::class,'deleteMenuItem']);
-
-
+    Route::post('update-menuitem/{id}',[MenuController::class,'updateMenuItem']);
+    Route::get('delete-menuitem/{id}/{key}/{in?}',[MenuController::class,'deleteMenuItem']);
+    Route::delete('delete-menu/{id}',[MenuController::class,'destroy']);
 
 
 

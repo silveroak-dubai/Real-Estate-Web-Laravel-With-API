@@ -178,7 +178,7 @@
         $('#blog_form #feature_image img.spartan_image_placeholder').css('display','none');
         $('#blog_form #feature_image .spartan_remove_row').css('display','none');
         $('#blog_form #feature_image .img_').css('display','block');
-        $('#blog_form #feature_image .img_').attr('src',"{{ asset('uploads/'.BLOG_PATH.$edit->feature_image) }}");
+        $('#blog_form #feature_image .img_').attr('src',"{{ asset(STORAGE_PATH.BLOG_PATH.$edit->feature_image) }}");
     @endif
 </script>
 @endpush

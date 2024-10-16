@@ -1,5 +1,6 @@
 <?php
 
+define('STORAGE_PATH','storage/');
 define('USER_AVATAR_PATH','user/');
 define('LOGO_PATH','logo/');
 define('BLOG_PATH','blog/');
@@ -47,7 +48,7 @@ if (!function_exists('table_checkbox')) {
 
 if (!function_exists('table_image')) {
     function table_image($path,$image,$name){
-        return $image ? "<img src='".asset('/')."uploads/".$path.$image."' alt='".$name."' style='width:40px;'/>"
+        return $image ? "<img src='".asset('/').STORAGE_PATH.$path.$image."' alt='".$name."' style='width:40px;'/>"
         : "<img src='".asset('/')."img/default.svg' alt='Default Image' style='width:40px;'/>";
     }
 }
@@ -55,7 +56,7 @@ if (!function_exists('table_image')) {
 if (!function_exists('user_image')) {
     function user_image($gender,$path,$image,$name,$class=null,$style=null){
         if ($image){
-            return '<img src="'.asset('/').'uploads/'.$path.'/'.$image.'" alt="'.$name.'" style="'.$style.'" class="'.$class.'">';
+            return '<img src="'.asset('/').STORAGE_PATH.$path.$image.'" alt="'.$name.'" style="'.$style.'" class="'.$class.'">';
         }else{
             $img = $gender == '1' ? 'male' : 'female';
             return '<img src="'.asset('/').'img/'.$img.'.svg" alt="'.$name.'" class="'.$class.'" style="'.$style.'">';

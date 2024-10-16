@@ -140,7 +140,7 @@
         $('#form_data #image img.spartan_image_placeholder').css('display','none');
         $('#form_data #image .spartan_remove_row').css('display','none');
         $('#form_data #image .img_').css('display','block');
-        $('#form_data #image .img_').attr('src',"{{ asset('uploads/'.OUR_TEAM_IMAGE_PATH.$edit->image) }}");
+        $('#form_data #image .img_').attr('src',"{{ asset(STORAGE_PATH.OUR_TEAM_IMAGE_PATH.$edit->image) }}");
     @endif
 
     $(document).on('keyup keypress','#title',function(){
