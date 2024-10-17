@@ -523,15 +523,18 @@
             var newText = $("#serialize_output").text();
             var data = JSON.parse($("#serialize_output").text());
             $.ajax({
-                type: "get",
+                type: "GET",
                 data: {
                     menuid: menuid,
                     data: data,
                     location: location
                 },
                 url: "{{ route('app.menus.update-with.items') }}",
-                success: function(res) {
-                    window.location.reload();
+                success: function(response) {
+                    notification(response.status, response.message);
+                    setInterval(() => {
+                        window.location.reload();
+                    }, 1000);
                 }
             })
         })

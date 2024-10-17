@@ -114,9 +114,25 @@ class MenuController extends Controller
         if (Menu::create($data)) {
             $newdata = Menu::orderby('id', 'DESC')->first();
             Session::flash('success', 'Menu saved successfully !');
-            return redirect("menus/manage?id=$newdata->id");
+            return redirect("menus/manage?id=$newdata->id")->with('success', 'Menu has been saved successful.');
         } else {
-            return redirect()->back()->with('error', 'Failed to save menu !');
+            return back()->with('error', 'Failed to save menu !');
+        }
+    }
+
+    public function updateMenu(Request $request)
+    {
+        if($request->ajax()){
+            $menu = Menu::find($request->menuid);
+            if($menu){
+                $menu->update([
+                    'location'=>$request->location,
+                    'content'=>json_encode($request->data)
+                ]);
+                return $this->response_json('success','Menu Updated Successful.');
+            }else{
+                return $this->response_json('error','Menu not saved.');
+            }
         }
     }
 
@@ -230,16 +246,7 @@ class MenuController extends Controller
         }
       }
 
-    public function updateMenu(Request $request)
-    {
-        $newdata = $request->all();
-        $menu = Menu::findOrFail($request->menuid);
-        $content = $request->data;
-        $newdata = [];
-        $newdata['location'] = $request->location;
-        $newdata['content'] = json_encode($content);
-        $menu->update($newdata);
-    }
+
 
     public function updateMenuItem(Request $request)
     {
