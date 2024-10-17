@@ -27,6 +27,11 @@ define('POST_STATUS_LABEL',[
     2=>'<span class="badge badge-sm fw-normal rounded-0 text-dark bg-warning">Draft</span>',
     3=>'<span class="badge badge-sm fw-normal rounded-0 bg-danger">Pending</span>'
 ]);
+define('MENU_LOCATION_LABEL',[
+    1    => '<span class="badge badge-sm fw-normal rounded-0 bg-success">Primary Menu</span>',
+    null => '<span class="badge badge-sm fw-normal rounded-0 text-dark bg-warning">Widget Menu</span>',
+]);
+
 
 if(!function_exists('permission')){
     function permission(string $value){

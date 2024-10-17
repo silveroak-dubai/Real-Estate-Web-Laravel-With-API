@@ -136,3 +136,8 @@ select{
 	font-weight: 300 !important;
 	font-size: 13px;
 }
+
+.badge{
+    font-size: 12px;
+    padding: 6px 10px;
+}

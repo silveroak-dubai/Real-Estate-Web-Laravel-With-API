@@ -145,7 +145,7 @@
                 </a>
                 <ul class="mm-collapse">
                     <li class="">
-                        <a href="{{ route('app.menu.index') }}"><i class="material-icons-outlined">arrow_right</i>Menus</a>
+                        <a href="{{ route('app.menus.index') }}"><i class="material-icons-outlined">arrow_right</i>Menus</a>
                     </li>
                     <li class="">
                         <a href="#"><i class="material-icons-outlined">arrow_right</i>Widgets</a>

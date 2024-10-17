@@ -27,6 +27,7 @@ class MenuItem extends Model
         'name',
         'slug',
         'type',
+        'classes',
         'target'
     ];
 }
