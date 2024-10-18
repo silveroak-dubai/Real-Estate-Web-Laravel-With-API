@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <input type="hidden" name="update_id" id="update_id">
                     <x-form.inputbox labelName="Title" name="title" required="required" placeholder="Enter title"/>
-                    <x-form.inputbox labelName="Slug" name="slug" required="required" placeholder="Enter slug"/>
+                    <x-form.inputbox labelName="Slug" name="slug" required="required" placeholder="Enter slug" optional="The “slug” is the URL-friendly version of the title. It is usually all lowercase and contains only letters, numbers, and hyphens."/>
                     <x-form.textarea labelName="Short Description" name="short_description" required="required" placeholder="Enter Short Description"></x-form.textarea>
                     <x-form.textarea labelName="Description" name="description" required="required" placeholder="Enter Description"></x-form.textarea>
                 </div>

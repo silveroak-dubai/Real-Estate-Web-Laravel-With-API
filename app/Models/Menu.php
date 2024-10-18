@@ -21,5 +21,6 @@ class Menu extends Model
      *
      * @var array
      */
-    protected $fillable = ['title','location','content'];
+    protected $fillable = ['title','location','content','created_by','updated_by'];
+
 }

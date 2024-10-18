@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->constrained('menus');
+            $table->foreignId('menu_id')->constrained('menus')->cascadeOnDelete();
             $table->string('title');
             $table->string('name')->nullable();
             $table->string('slug');
             $table->string('type');
+            $table->text('classes')->nullable();
             $table->enum('target',['_self','_blank'])->default('_self');
             $table->timestamps();
         });

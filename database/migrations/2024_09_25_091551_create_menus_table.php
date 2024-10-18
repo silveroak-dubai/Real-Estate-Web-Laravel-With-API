@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('location')->nullable();
             $table->longText('content')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

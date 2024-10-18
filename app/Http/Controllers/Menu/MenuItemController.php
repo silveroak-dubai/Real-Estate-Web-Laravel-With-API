@@ -2,150 +2,161 @@
 
 namespace App\Http\Controllers\Menu;
 
-use App\Models\Blog;
-use App\Models\Menu;
-use App\Models\Category;
-use App\Models\MenuItem;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Blog;
+use App\Models\Category;
+use App\Models\Department;
+use App\Models\Menu;
+use App\Models\MenuItem;
+use App\Models\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MenuItemController extends Controller
 {
-    public function addCatToMenu(Request $request){
-        $data = $request->all();
-        $menuid = $request->menuid;
-        $ids = $request->ids;
-        $menu = Menu::findOrFail($menuid);
-        if($menu->content == ''){
-          foreach($ids as $id){
-            $data['title'] = category::where('id',$id)->value('name');
-            $data['slug'] = category::where('id',$id)->value('slug');
-            $data['type'] = 'category';
-            $data['menu_id'] = $menuid;
-            $data['updated_at'] = NULL;
-            MenuItem::create($data);
-          }
-        }else{
-          $olddata = json_decode($menu->content,true);
-          foreach($ids as $id){
-            $data['title'] = category::where('id',$id)->value('name');
-            $data['slug'] = category::where('id',$id)->value('slug');
-            $data['type'] = 'category';
-            $data['menu_id'] = $menuid;
-            $data['updated_at'] = NULL;
-            MenuItem::create($data);
-          }
-          foreach($ids as $id){
-            $array['title'] = category::where('id',$id)->value('name');
-            $array['slug'] = category::where('id',$id)->value('slug');
-            $array['name'] = NULL;
-            $array['type'] = 'category';
-            $array['target'] = NULL;
-            $array['id'] = MenuItem::where('slug',$array['slug'])->where('name',$array['name'])->where('type',$array['type'])->value('id');
-            $array['children'] = [[]];
-            array_push($olddata[0],$array);
-            $olddata = json_encode($olddata);
-            $menu->update(['content'=>$olddata]);
-          }
-        }
-      }
+    public function addCatToMenu(Request $request)
+    {
+        if($request->ajax()){
+            $menuId = $request->menuId;
+            $ids    = $request->ids;
+            $menu   = Menu::find($menuId);
+            $data   = [];
 
-      public function addPostToMenu(Request $request){
-        $data = $request->all();
-        $menuid = $request->menuid;
-        $ids = $request->ids;
-        $menu = Menu::findOrFail($menuid);
-        if($menu->content == ''){
-          foreach($ids as $id){
-            $data['title'] = Blog::where('id',$id)->value('title');
-            $data['slug'] = Blog::where('id',$id)->value('slug');
-            $data['type'] = 'post';
-            $data['menu_id'] = $menuid;
-            $data['updated_at'] = NULL;
-            MenuItem::create($data);
-          }
-        }else{
-          $olddata = json_decode($menu->content,true);
-          foreach($ids as $id){
-            $data['title'] = Blog::where('id',$id)->value('title');
-            $data['slug'] = Blog::where('id',$id)->value('slug');
-            $data['type'] = 'post';
-            $data['menu_id'] = $menuid;
-            $data['updated_at'] = NULL;
-            MenuItem::create($data);
-          }
-          foreach($ids as $id){
-            $array['title'] = Blog::where('id',$id)->value('title');
-            $array['slug'] = Blog::where('id',$id)->value('slug');
-            $array['name'] = NULL;
-            $array['type'] = 'post';
-            $array['target'] = NULL;
-            $array['id'] = MenuItem::where('slug',$array['slug'])->where('name',$array['name'])->where('type',$array['type'])->orderby('id','DESC')->value('id');
-            $array['children'] = [[]];
-            array_push($olddata[0],$array);
-            $olddata = json_encode($olddata);
-            $menu->update(['content'=>$olddata]);
-          }
+            if($menu && $menu->content == ''){
+                foreach($ids as $id){
+                    $category         = Category::find($id);
+                    $data[] = [
+                        'menu_id'    => $menuId,
+                        'title'      => $category->name,
+                        'slug'       => $category->slug,
+                        'type'       => 'category',
+                        'created_at' => now()
+                    ];
+                }
+                MenuItem::insert($data);
+                return $this->response_json('success','Menu items added.');
+            }else{
+                return $this->response_json('error','Something went wrong!');
+            }
         }
-      }
+    }
 
-      public function addCustomLink(Request $request){
-        $data = $request->all();
-        $menuid = $request->menuid;
-        $menu = Menu::findOrFail($menuid);
-        if($menu->content == ''){
-          $data['title'] = $request->link;
-          $data['slug'] = $request->url;
-          $data['type'] = 'custom';
-          $data['menu_id'] = $menuid;
-          $data['updated_at'] = NULL;
-          MenuItem::create($data);
-        }else{
-          $olddata = json_decode($menu->content,true);
-          $data['title'] = $request->link;
-          $data['slug'] = $request->url;
-          $data['type'] = 'custom';
-          $data['menu_id'] = $menuid;
-          $data['updated_at'] = NULL;
-          MenuItem::create($data);
-          $array = [];
-          $array['title'] = $request->link;
-          $array['slug'] = $request->url;
-          $array['name'] = NULL;
-          $array['type'] = 'custom';
-          $array['target'] = NULL;
-          $array['id'] = MenuItem::where('slug',$array['slug'])->where('name',$array['name'])->where('type',$array['type'])->orderby('id','DESC')->value('id');
-          $array['children'] = [[]];
-          array_push($olddata[0],$array);
-          $olddata = json_encode($olddata);
-          $menu->update(['content'=>$olddata]);
+    public function addPostToMenu(Request $request)
+    {
+        if($request->ajax()){
+            $menuId = $request->menuId;
+            $ids    = $request->ids;
+            $menu   = Menu::find($menuId);
+            $data   = [];
+            if($menu && $menu->content == ''){
+                foreach($ids as $id){
+                    $post         = Post::find($id);
+                    $data[] = [
+                        'menu_id'    => $menuId,
+                        'title'      => $post->title,
+                        'slug'       => $post->slug,
+                        'type'       => 'post',
+                        'created_at' => now()
+                    ];
+                }
+                MenuItem::insert($data);
+                return $this->response_json('success','Menu items added.');
+            }else{
+                return $this->response_json('error','Something went wrong!');
+            }
         }
-      }
+    }
 
-    public function updateMenuItem(Request $request){
+    public function addDepartmentToMenu(Request $request)
+    {
+        if($request->ajax()){
+            $menuId = $request->menuId;
+            $ids    = $request->ids;
+            $menu   = Menu::find($menuId);
+            $data   = [];
+            if($menu && $menu->content == ''){
+                foreach($ids as $id){
+                    $department         = Department::find($id);
+                    $data[] = [
+                        'menu_id'    => $menuId,
+                        'title'      => $department->name,
+                        'slug'       => $department->slug,
+                        'type'       => 'department',
+                        'created_at' => now()
+                    ];
+                }
+                MenuItem::insert($data);
+                return $this->response_json('success','Menu items added.');
+            }else{
+                return $this->response_json('error','Something went wrong!');
+            }
+        }
+    }
+
+    public function addCustomLink(Request $request){
+        if($request->ajax()){
+            $validator = Validator::make($request->all(),[
+                'menu_id'   => ['required','integer'],
+                'url'       => ['required','string'],
+                'link_text' => ['required','string','max:60']
+            ]);
+
+            if($validator->fails()){
+                return $this->response_json(false,null,['errors'=>$validator->errors()]);
+            }
+
+            $menuId = $request->menu_id;
+            $menu   = Menu::find($menuId);
+            try {
+                if($menu && empty($menu->content)){
+                    MenuItem::insert([
+                        'menu_id'    => $menuId,
+                        'title'      => $request->link_text,
+                        'slug'       => $request->url,
+                        'type'       => 'custom',
+                        'created_at' => now()
+                    ]);
+
+                    return $this->response_json('success','Menu items added.');
+                }else{
+                    return $this->response_json('error','Menu item not added!');
+                }
+            } catch (\Exception $e) {
+                return $this->response_json('error',$e->getMessage());
+            }
+        }
+    }
+
+    public function updateMenuItem(Request $request)
+    {
         $data = $request->all();
         $item = MenuItem::findOrFail($request->id);
         $item->update($data);
         return redirect()->back();
-      }
+    }
 
-      public function deleteMenuItem($id,$key,$in=''){
+    public function deleteMenuItem($id, $key, $in = '')
+    {
         $menuitem = MenuItem::findOrFail($id);
-        $menu = Menu::where('id',$menuitem->menu_id)->first();
-        if($menu->content != ''){
-          $data = json_decode($menu->content,true);
-          $maindata = $data[0];
-          if($in == ''){
-            unset($data[0][$key]);
+        $menu = Menu::where('id', $menuitem->menu_id)->first();
+
+        if ($menu->content != '') {
+            $data = json_decode($menu->content, true); // Decode JSON to array
+            if ($in == '') {
+                if (isset($data[$key])) {
+                    unset($data[$key]);
+                }
+            } else {
+                if (isset($data[$key]['children'][0][$in])) {
+                    unset($data[$key]['children'][0][$in]);
+                }
+            }
+
             $newdata = json_encode($data);
-            $menu->update(['content'=>$newdata]);
-          }else{
-            unset($data[0][$key]['children'][0][$in]);
-            $newdata = json_encode($data);
-            $menu->update(['content'=>$newdata]);
-          }
+            $menu->update(['content' => $newdata]);
         }
+
         $menuitem->delete();
-        return redirect()->back();
-      }
+        return back()->with('success', 'Menu item deleted successfully.');
+    }
 }

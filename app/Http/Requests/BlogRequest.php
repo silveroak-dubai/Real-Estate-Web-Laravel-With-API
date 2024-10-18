@@ -26,7 +26,7 @@ class BlogRequest extends FormRequest
             'slug'              => ['required','string','max:190','unique:posts,slug'],
             'visibility'        => ['required','in:1,2'],
             'status'            => ['required','in:1,2,3'],
-            'short_description' => ['required','string','max:180'],
+            'short_description' => ['required','string','max:250'],
             'description'       => ['required','string'],
             'published_date'    => ['required','date'],
             'feature_image'     => ['required','image','mimes:png,jpg','max:512'],

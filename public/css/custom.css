@@ -3,10 +3,9 @@
     color: red;
 }
 .optional-text.mb-0 {
-	background: #00d571;
-	color: #086036;
-	font-size: 13px;
-	padding: 3px 5px;
+    color: #8f8f8f;
+    font-size: 11px;
+    padding: 3px;
 }
 textarea::placeholder {
     color: #52585e !important;
@@ -135,4 +134,9 @@ select{
 .error {
 	font-weight: 300 !important;
 	font-size: 13px;
+}
+
+.badge{
+    font-size: 12px;
+    padding: 6px 10px;
 }
