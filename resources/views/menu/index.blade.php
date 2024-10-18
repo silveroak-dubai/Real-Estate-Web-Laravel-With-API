@@ -196,23 +196,18 @@
                         <form method="POST" action="{{ route('app.menus.store') }}">
                             @csrf
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <label>Name</label>
-                                </div>
                                 <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input type="text" name="title" class="form-control">
-                                    </div>
+                                    <x-form.inputbox name="menu_name" labelName="Menu Name" placeholder="Enter Menu Name"/>
                                 </div>
                                 <div class="col-sm-6 text-right">
-                                    <button class="btn btn-sm btn-primary">Create Menu</button>
+                                    <button class="btn btn-sm btn-primary mt-4">Create Menu</button>
                                 </div>
                             </div>
                         </form>
                     @else
                         <div id="menu-content">
                             <div class="mb-3">
-                                <p>Select categories, pages or add custom links to menus.</p>
+                                <p>Select categories, posts, department or add custom links to menus.</p>
                                 @if ($desiredMenu != '')
                                     <div class="dd" id="menuitems">
                                         <ol class="dd-list accordion" id="accordionPanelsStayOpenExample">
@@ -319,13 +314,9 @@
                                 </div>
                                 <div class="text-end">
                                     <button class="btn btn-sm btn-primary" id="saveMenu">Save Menu</button>
+
                                     <button type="button" class="btn btn-sm btn-danger"
-                                        onclick="document.getElementById('deleteMenu').submit()">Delete Menu</button>
-                                    <form id="deleteMenu" action="{{ url('delete-menu') }}/{{ $desiredMenu->id }}"
-                                        method="post">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
+                                        onclick="deleteMenu()" data-id="{{ $desiredMenu->id }}">Delete Menu</button>
                                 </div>
                             @endif
                         </div>
@@ -338,9 +329,12 @@
     <div id="serialize_output">
         @if ($desiredMenu)
             {{ $desiredMenu->content }}
-            <input type="hidden" id="menu_id" value="{{ $desiredMenu->id }}">
         @endif
     </div>
+
+    @if ($desiredMenu)
+        <input type="hidden" id="menu_id" value="{{ $desiredMenu->id }}">
+    @endif
 @endsection
 
 @push('scripts')
@@ -361,7 +355,7 @@
 
     @if($desiredMenu)
         $(document).on('click','#add-categories',function(){
-            var menuId = $('input#menu_id').val();
+            var menu_id = $('input#menu_id').val();
             var ids = [];
             $('input[name="select-category[]"]:checked').each(function(){
                 ids.push($(this).val());
@@ -379,7 +373,7 @@
                     url: "{{ route('app.menus.add.categories') }}",
                     data: {
                         _token: _token,
-                        menuId: menuId,
+                        menuId: menu_id,
                         ids: ids
                     },
                     dataType: 'JSON',
@@ -521,6 +515,7 @@
                 type: "POST",
                 url: "{{ route('app.menus.update-with.items') }}",
                 data: {
+                    _token: _token,
                     menuid: menuid,
                     data: data,
                     location: location
@@ -536,6 +531,41 @@
                 }
             })
         });
+
+        function deleteMenu() {
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure to delete menu?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Confirm',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: {id:id,_token:_token},
+                        dataType: "JSON",
+                    }).done(function (response) {
+                        if (response.status == "success") {
+                            Swal.fire("Deleted", response.message, "success").then(function () {
+                                window.location.href = "{{ route('app.menus.index') }}";
+                            });
+                        }
+
+                        if (response.status == "error") {
+                            Swal.fire('Oops...', response.message, "error");
+                        }
+                    }).fail(function () {
+                        Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");
+                    });
+                }
+            });
+        }
     @endif
 
     $(document).ready(function() {

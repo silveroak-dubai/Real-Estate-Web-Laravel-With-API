@@ -22,21 +22,27 @@ class MenuItemController extends Controller
             $menu   = Menu::find($menuId);
             $data   = [];
 
-            if($menu && $menu->content == ''){
-                foreach($ids as $id){
-                    $category         = Category::find($id);
-                    $data[] = [
-                        'menu_id'    => $menuId,
-                        'title'      => $category->name,
-                        'slug'       => $category->slug,
-                        'type'       => 'category',
-                        'created_at' => now()
-                    ];
+            try {
+                if($menu && $menu->content == ''){
+                    foreach($ids as $id){
+                        $category         = Category::find($id);
+                        $data[] = [
+                            'menu_id'    => $menuId,
+                            'title'      => $category->name,
+                            'slug'       => $category->slug,
+                            'type'       => 'category',
+                            'created_at' => now()
+                        ];
+                    }
+                    MenuItem::insert($data);
+                    return $this->response_json('success','Menu items added.');
+                }else if($menu && $menu->content != ''){
+
+                }else{
+                    return $this->response_json('error','Menu item cannot saved!');
                 }
-                MenuItem::insert($data);
-                return $this->response_json('success','Menu items added.');
-            }else{
-                return $this->response_json('error','Something went wrong!');
+            } catch (\Exception $e) {
+                return $this->response_json('error',$e->getMessage());
             }
         }
     }
@@ -61,6 +67,8 @@ class MenuItemController extends Controller
                 }
                 MenuItem::insert($data);
                 return $this->response_json('success','Menu items added.');
+            }else if($menu && $menu->content != ''){
+
             }else{
                 return $this->response_json('error','Something went wrong!');
             }
@@ -87,6 +95,8 @@ class MenuItemController extends Controller
                 }
                 MenuItem::insert($data);
                 return $this->response_json('success','Menu items added.');
+            }else if($menu && $menu->content != ''){
+
             }else{
                 return $this->response_json('error','Something went wrong!');
             }
@@ -118,6 +128,8 @@ class MenuItemController extends Controller
                     ]);
 
                     return $this->response_json('success','Menu items added.');
+                }else if($menu && $menu->content != ''){
+
                 }else{
                     return $this->response_json('error','Menu item not added!');
                 }

@@ -111,7 +111,9 @@
                         <div id="custom-links">
                             <form method="POST" id="custom_menu_form">
                                 @csrf
+                                @if($desiredMenu)
                                 <input type="hidden" name="menu_id" value="{{ $desiredMenu->id }}">
+                                @endif
                                 <x-form.inputbox labelName="URL" name="url" required="required" placeholder="https://"/>
                                 <x-form.inputbox labelName="Link Text" name="link_text" required="required" placeholder="Enter Text"/>
                             </form>

@@ -110,13 +110,14 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
-        if (Menu::create($data)) {
-            $newdata = Menu::orderby('id', 'DESC')->first();
-            Session::flash('success', 'Menu saved successfully !');
-            return redirect("menus/manage?id=$newdata->id")->with('success', 'Menu has been saved successful.');
+        $request->validate([
+            'menu_name'=>['required','string','max:100']
+        ]);
+        $result = Menu::create(['title'=>$request->menu_name]);
+        if ($result) {
+            return redirect("menus/manage?id=$result->id")->with('success', 'Menu has been saved successful.');
         } else {
-            return back()->with('error', 'Failed to save menu !');
+            return back()->with('error', 'Failed to save menu!');
         }
     }
 
@@ -138,17 +139,18 @@ class MenuController extends Controller
 
     public function delete(Request $request)
     {
-        if(permission('achievement-delete')){
-            $result = Menu::find($request->id);
-            if($result){
-                $result->delete();
-                return $this->delete_message($result);
+        if($request->ajax()){
+            if(permission('achievement-delete')){
+                $result = Menu::find($request->id);
+                if($result){
+                    $result->delete();
+                    return $this->delete_message($result,'Menu');
+                }else{
+                    return $this->response_json('error','Menu Cannot Delete',null,204);
+                }
             }else{
-                return $this->response_json('error','Data Cannot Delete',null,204);
+                return $this->response_json('error',UNAUTORIZED_BLOCK,null,204);
             }
-        }else{
-            return $this->response_json('error',UNAUTORIZED_BLOCK,null,204);
         }
-
     }
 }
