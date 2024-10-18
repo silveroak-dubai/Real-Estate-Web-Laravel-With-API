@@ -146,7 +146,7 @@
                 @if (count($menus) > 0)
                     Select a menu to edit:
                     <form action="{{ url('manage-menus') }}" class="form-inline">
-                        <select name="id">
+                    <select name="id">
                             @foreach ($menus as $menu)
                                 @if ($desiredMenu != '')
                                     <option value="{{ $menu->id }}" @if ($menu->id == $desiredMenu->id) selected @endif>
@@ -155,8 +155,8 @@
                                     <option value="{{ $menu->id }}">{{ $menu->title }}</option>
                                 @endif
                             @endforeach
-                        </select>
-                        <button class="btn btn-sm btn-primary btn-menu-select">Select</button>
+                    </select>
+                <button class="btn btn-sm btn-primary btn-menu-select">Select</button>
                     </form>
                     or <a href="{{ url('manage-menus?id=new') }}">Create a new menu</a>.
                 @endif
