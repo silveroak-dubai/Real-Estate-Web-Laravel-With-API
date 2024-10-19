@@ -240,7 +240,7 @@
                                     <button class="btn btn-sm btn-primary" id="saveMenu">Save Menu</button>
 
                                     <button type="button" class="btn btn-sm btn-danger"
-                                        onclick="deleteMenu()" data-id="{{ $desiredMenu->id }}">Delete Menu</button>
+                                        onclick="deleteMenu({{ $desiredMenu->id }})">Delete Menu</button>
                                 </div>
                             @endif
                         </div>
@@ -488,8 +488,7 @@
         }
 
 
-        function deleteMenu() {
-            var id = $(this).data('id');
+        function deleteMenu(menu_id) {
             Swal.fire({
                 title: 'Are you sure to delete menu?',
                 icon: 'warning',
@@ -502,9 +501,9 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: url,
+                        url: "{{ route('app.menus.delete') }}",
                         type: "POST",
-                        data: {id:id,_token:_token},
+                        data: {id:menu_id,_token:_token},
                         dataType: "JSON",
                     }).done(function (response) {
                         if (response.status == "success") {

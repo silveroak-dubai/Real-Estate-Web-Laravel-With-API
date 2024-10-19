@@ -113,7 +113,7 @@ class MenuController extends Controller
         $request->validate([
             'menu_name'=>['required','string','max:100']
         ]);
-        $result = Menu::create(['title'=>$request->menu_name]);
+        $result = Menu::create(['title'=>$request->menu_name,'created_by'=>auth()->user()->name]);
         if ($result) {
             return redirect("menus/manage?id=$result->id")->with('success', 'Menu has been saved successful.');
         } else {
@@ -138,7 +138,7 @@ class MenuController extends Controller
     }
 
     public function delete(Request $request)
-    {
+    {  
         if($request->ajax()){
             if(permission('achievement-delete')){
                 $result = Menu::find($request->id);
