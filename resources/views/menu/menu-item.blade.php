@@ -40,7 +40,11 @@
                                                                     <div class="mt-2">
                                                                         <button type="button" class="btn btn-sm btn-primary" onclick="menuItemSave({{ $item->id }})">Save</button>
 
-                                                                        <a href="{{ url('menus/delete-menuitem', [$item->id, $key]) }}" class="btn btn-sm btn-danger">Delete</a>
+                                                                        <button class="btn btn-sm btn-danger" onclick="deleteItem({{ $item->id }})">Delete</button>
+                                                                        <form class="d-none" id="delete_form_{{ $item->id }}" action="{{ url('menus/delete-menuitem', [$item->id, $key]) }}" method="POST">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                        </form>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -90,7 +94,11 @@
                                                                                     <div class="mt-2">
                                                                                         <button type="buttion" class="btn btn-sm btn-primary" onclick="menuItemSave({{ $data->id }})">Save</button>
 
-                                                                                        <a href="{{ url('menus/delete-menuitem', [$data->id, $key, $in]) }}" class="btn btn-sm btn-danger">Delete</a>
+                                                                                        <button class="btn btn-sm btn-danger" onclick="deleteItem({{ $data->id }})">Delete</button>
+                                                                                        <form class="d-none" id="delete_form_{{ $data->id }}" action="{{ url('menus/delete-menuitem', [$data->id, $key, $in]) }}" method="POST">
+                                                                                            @csrf
+                                                                                            @method('DELETE')
+                                                                                        </form>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

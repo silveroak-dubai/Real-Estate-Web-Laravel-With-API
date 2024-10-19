@@ -180,8 +180,8 @@ class MenuItemController extends Controller
                     unset($data[$key]);
                 }
             } else {
-                if (isset($data[$key]['children'][0][$in])) {
-                    unset($data[$key]['children'][0][$in]);
+                if (isset($data[$key]['children'][$in])) {
+                    unset($data[$key]['children'][$in]);
                 }
             }
 
