@@ -11,7 +11,7 @@
                 <div class="card-header">
                     <h4 class="mb-0 card-title d-flex align-items-center justify-content-between">{{ $title }}
                         @if(permission('department-create'))
-                        <button type="button" onclick="showFormModal('New Department','Save')" class="btn btn-sm btn-primary rounded-1">Add Department</button>
+                        <button type="button" onclick="showFormModal('New Department','Save')" class="btn btn-sm btn-primary rounded-1"><i class="fa fa-plus fa-sm"></i> Add Department</button>
                         @endif
                     </h4>
                 </div>
@@ -29,6 +29,7 @@
                                 @endif
                                 <th>SL</th>
                                 <th>Name</th>
+                                <th>Slug</th>
                                 @if(permission('department-status'))
                                 <th>Status</th>
                                 @endif
@@ -81,6 +82,7 @@
             @endif
             {data: 'DT_RowIndex'},
             {data: 'name'},
+            {data: 'slug'},
             @if(permission('department-status'))
             {data: 'status'},
             @endif
@@ -107,15 +109,6 @@
                     </div>
                 </div>`,
         }
-    });
-
-    // slug generate
-    $('#name').on('keyup keypress', function() {
-        clearTimeout(debounceTimeout);
-        let title = $(this).val();
-        var db_table = "departments";
-
-        generate_url(title,db_table);
     });
 
     @permission('department-create')

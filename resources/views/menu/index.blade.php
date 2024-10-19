@@ -140,6 +140,18 @@
             background: transparent;
             border: 0;
         }
+        .input-icon span {
+            font-size: 15px;
+            left: 0;
+            height: 100%;
+            line-height: 2;
+            background: #424242;
+            padding: 0 5px;
+            font-weight: 300;
+        }
+        .input-icon .form-control {
+            padding-left: 11rem !important;
+        }
     </style>
 @endpush
 
@@ -211,96 +223,8 @@
                                 @if ($desiredMenu != '')
                                     <div class="dd" id="menuitems">
                                         <ol class="dd-list accordion" id="accordionPanelsStayOpenExample">
-
-                                            @if (!empty($menuitems))
-                                                @forelse ($menuitems as $key => $item)
-                                                    <li class="dd-item mt-2" data-id="{{ $item->id }}">
-                                                        <div class="border rounded-0 w-100">
-                                                            <div class="d-flex align-items-center justify-content-between">
-                                                                <div class="dd-handle border-0 w-100">
-                                                                    <i class="fa fa-arrows-alt"></i> {{ $item->title ?? '' }}
-                                                                </div>
-
-                                                                <button class="edit-btn" data-bs-toggle="collapse" data-bs-target="#collapseItem{{ $item->id }}">
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </button>
-                                                            </div>
-
-                                                            <div class="collapse" id="collapseItem{{ $item->id }}">
-                                                                <div class="input-box">
-                                                                    <form method="POST" action="{{ url('menus/update-menuitem', $item->id) }}">
-                                                                        @csrf
-                                                                        <x-form.inputbox labelName="Link Name" required="required" name="name" value="{{ $item->title ?? '' }}"/>
-
-                                                                        <x-form.inputbox labelName="URL" required="required" name="slug" value="{{ $item->slug ?? '' }}"/>
-
-                                                                        <x-form.inputbox labelName="Extra Classes" name="classes" value="{{ $item->classes ?? '' }}"/>
-
-                                                                        <div class="form-check">
-                                                                            <input type="checkbox" name="target" id="target-{{ $item->id }}" {{ $item->target == "_blank" ? 'checked' : '' }} value="_blank"  class="form-check-input shadow-none">
-                                                                            <label class="form-check-label" for="target-{{ $item->id }}">Open in a new tab</label>
-                                                                        </div>
-
-                                                                        <div class="mt-2">
-                                                                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
-
-                                                                            <a href="{{ url('menus/delete-menuitem', [$item->id, $key]) }}" class="btn btn-sm btn-danger">Delete</a>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        @if (isset($item->children))
-                                                            <ol class="dd-list mt-2">
-                                                                @foreach ($item->children as $in => $data)
-                                                                    <li class="dd-item mt-2" data-id="{{ $data->id }}">
-                                                                        <div class="border rounded-0 w-100">
-                                                                            <div class="d-flex align-items-center justify-content-between">
-                                                                                <div class="dd-handle border-0 w-100">
-                                                                                    <i class="fa fa-arrows-alt"></i> {{ $data->name ?? $data->title }}
-                                                                                </div>
-
-                                                                                <button class="edit-btn" data-bs-toggle="collapse" data-bs-target="#collapseChild{{ $data->id }}">
-                                                                                    <i class="fa fa-caret-down"></i>
-                                                                                </button>
-                                                                            </div>
-
-                                                                            <div class="collapse" id="collapseChild{{ $data->id }}">
-                                                                                <div class="input-box">
-                                                                                    <form method="POST" action="{{ url('update-menuitem', $data->id) }}">
-                                                                                        @csrf
-                                                                                        <x-form.inputbox labelName="Link Name" required="required" name="name" value="{{ $data->name ?? $data->title }}"/>
-
-                                                                                        <x-form.inputbox labelName="URL" required="required" name="slug" value="{{ $data->slug }}"/>
-
-                                                                                        <x-form.inputbox labelName="Extra Classes" name="classes" value="{{ $data->classes ?? '' }}"/>
-
-                                                                                        <div class="form-check">
-                                                                                            <input type="checkbox" name="target" id="target-{{ $data->id }}" value="_blank" @if ($data->target == '_blank') checked @endif class="form-check-input shadow-none">
-                                                                                            <label class="form-check-label" for="target-{{ $data->id }}">Open in a new tab</label>
-                                                                                        </div>
-
-                                                                                        <div class="mt-2">
-                                                                                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
-
-                                                                                            <a href="{{ url('menus/delete-menuitem', [$data->id, $key, $in]) }}" class="btn btn-sm btn-danger">Delete</a>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ol>
-                                                        @endif
-                                                    </li>
-                                                @empty
-
-                                                @endforelse
-                                            @endif
+                                            @include('menu.menu-item')
                                         </ol>
-
                                     </div>
                                 @endif
                             </div>
@@ -531,6 +455,38 @@
                 }
             })
         });
+
+        //menu item update
+        function menuItemSave(menu_item_id){
+            var form = document.getElementById('menu_item_form'+menu_item_id);
+            var formData = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('app.menus.items.update') }}",
+                data: formData,
+                dataType: 'JSON',
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if(response.status == false){
+                        $('#menu_item_form'+menu_item_id).find('.error').remove();
+                        $.each(response.data.errors,function(key,value){
+                            $('#menu_item_form'+menu_item_id+' #'+key).parent().append('<small class="text-danger error d-block">'+value+'</small>')
+                        });
+                    }
+
+                    if(response.status == 'success'){
+                        notification(response.status, response.message);
+                        window.location.reload();
+                    }
+                    if(response.status == 'error'){
+                        notification(response.status, response.message);
+                    }
+                }
+            })
+        }
+
 
         function deleteMenu() {
             var id = $(this).data('id');

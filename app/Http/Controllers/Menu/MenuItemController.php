@@ -141,10 +141,31 @@ class MenuItemController extends Controller
 
     public function updateMenuItem(Request $request)
     {
-        $data = $request->all();
-        $item = MenuItem::findOrFail($request->id);
-        $item->update($data);
-        return redirect()->back();
+        if($request->ajax()){
+            $validator = Validator::make($request->all(),[
+                'menu_item_id' => ['required','integer'],
+                'url'          => ['required','string'],
+                'link_name'    => ['required','string','max:60'],
+                'classes'      => ['nullable','string','max:100'],
+            ]);
+
+            if($validator->fails()){
+                return $this->response_json(false,null,['errors'=>$validator->errors()]);
+            }
+
+            $result = MenuItem::find($request->menu_item_id);
+            if($result){
+                $result->update([
+                    'slug'    => $request->url,
+                    'title'   => $request->link_name,
+                    'classes' => $request->classes,
+                    'target'  => $request->target ?? '_self',
+                ]);
+                return $this->response_json('success','Menu items updated successful.');
+            }else{
+                return $this->response_json('error','Something went wrong!');
+            }
+        }
     }
 
     public function deleteMenuItem($id, $key, $in = '')

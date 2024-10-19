@@ -167,7 +167,7 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('add-post-to-menu', [MenuItemController::class, 'addPostToMenu'])->name('add.posts');
         Route::post('add-department-to-menu', [MenuItemController::class, 'addDepartmentToMenu'])->name('add.departments');
         Route::post('add-custom-link', [MenuItemController::class, 'addCustomLink'])->name('add.customs');
-        Route::post('update-menuitem/{id}',[MenuItemController::class,'updateMenuItem']);
+        Route::post('update-menuitem',[MenuItemController::class,'updateMenuItem'])->name('items.update');
         Route::get('delete-menuitem/{id}/{key}/{in?}',[MenuItemController::class,'deleteMenuItem']);
     });
 

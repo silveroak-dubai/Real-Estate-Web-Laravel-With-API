@@ -9,8 +9,8 @@
                 <form id="store_or_update_form" method="POST">
                     @csrf
                     <input type="hidden" id="update_id" name="update_id">
-                    <x-form.inputbox labelName="Name" name="name" placeholder="Enter department"/>
-                    <x-form.inputbox labelName="Slug" name="slug" placeholder="Enter slug" required="required"/>
+                    <x-form.inputbox labelName="Name" name="name" placeholder="Enter department" required="required"/>
+                    <x-form.inputbox labelName="Slug" name="slug" placeholder="Enter slug" required="required" optional="The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens."/>
                     <x-form.selectbox labelName="Status" name="status" required="required">
                         @foreach (STATUS as $key=>$value)
                         <option value="{{ $key }}">{{ $value }}</option>
