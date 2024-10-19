@@ -430,6 +430,7 @@
             });
         });
 
+        // menu with item save
         $(document).on('click','#saveMenu',function(){
             var menuid = $('input#menu_id').val();
             var location = $('input[name="location"]:checked').val();
@@ -487,7 +488,7 @@
             })
         }
 
-
+        // delete menu
         function deleteMenu(menu_id) {
             Swal.fire({
                 title: 'Are you sure to delete menu?',
@@ -534,7 +535,6 @@
     function updateSerializedOutput() {
         var serialized = $('#menuitems').nestable('serialize');
         $("#serialize_output").text(JSON.stringify(serialized));
-        console.log(JSON.stringify(serialized)); // You can send this to your backend if needed
     }
 </script>
 @endpush
