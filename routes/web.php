@@ -1,24 +1,25 @@
 <?php
 
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\FAQController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\MapController;
-use App\Http\Controllers\Menu\MenuController;
-use App\Http\Controllers\Menu\MenuItemController;
-use App\Http\Controllers\OurBankController;
-use App\Http\Controllers\OurPartnerController;
-use App\Http\Controllers\OurTeam\DepartmentController;
-use App\Http\Controllers\OurTeam\OurTeamController;
-use App\Http\Controllers\OurTeam\TeamLanguageController;
-use App\Http\Controllers\OurTeam\TeamSpecializedController;
-use App\Http\Controllers\Post\CategoryController;
-use App\Http\Controllers\Post\PostController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TestimonialController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FAQController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\OurBankController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Menu\MenuController;
+use App\Http\Controllers\Post\PostController;
+use App\Http\Controllers\OurPartnerController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\Menu\MenuItemController;
+use App\Http\Controllers\Post\CategoryController;
+use App\Http\Controllers\OurTeam\OurTeamController;
+use App\Http\Controllers\OurTeam\DepartmentController;
+use App\Http\Controllers\OurTeam\TeamLanguageController;
+use App\Http\Controllers\OurTeam\TeamSpecializedController;
 
 
 
@@ -172,6 +173,13 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
     });
 
 
+    // Media Routes
+    Route::name('medias.')->prefix('medias/')->group(function(){
+        Route::get('list',[MediaController::class, 'index'])->name('index');
+        Route::post('render',[MediaController::class, 'mediaRender'])->name('render');
+        Route::post('store',[MediaController::class, 'store'])->name('store');
+        Route::post('delete',[MediaController::class, 'delete'])->name('delete');
+    });
 
 
     // Slug Generate Route

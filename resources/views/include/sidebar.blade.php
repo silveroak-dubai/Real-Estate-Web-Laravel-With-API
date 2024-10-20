@@ -55,6 +55,16 @@
             </li>
             @endpermission
 
+            @permission('user-access')
+            <li class="{{ request()->is('medias*') ? 'mm-active' : '' }}">
+                <a href="{{ route('app.medias.index') }}">
+                    <div class="parent-icon"><i class="fa fa-camera"></i>
+                    </div>
+                    <div class="menu-title">Media</div>
+                </a>
+            </li>
+            @endpermission
+
             @permission('our-bank-access')
             <li class="{{ request()->is('our-banks*') ? 'mm-active' : '' }}">
                 <a href="{{ route('app.our-banks.index') }}">
