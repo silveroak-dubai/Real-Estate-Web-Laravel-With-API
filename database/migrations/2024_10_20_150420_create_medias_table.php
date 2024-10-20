@@ -20,6 +20,7 @@ class CreateMediasTable extends Migration
             $table->text('path');
             $table->string('extension',6);
             $table->string('size',10);
+            $table->unsignedBigInteger('file_size');
             $table->timestamps();
         });
     }

@@ -93,3 +93,11 @@ if(!function_exists('api_image_path')){
         return url('/').'/uploads/'.$folder;
     }
 }
+
+if(!function_exists('convertBytesToMB')){
+    function convertBytesToMB($bytes,$decimals = 2) {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return round($bytes / pow(1024, $factor), $decimals) . ' ' . $units[$factor];
+    }
+}

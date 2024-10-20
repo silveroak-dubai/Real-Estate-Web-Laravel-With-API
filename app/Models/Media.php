@@ -24,6 +24,7 @@ class Media extends Model
         'name',
         'path',
         'extension',
-        'size'
+        'size',
+        'file_size'
     ];
 }

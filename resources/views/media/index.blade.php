@@ -1,5 +1,5 @@
-@extends('layouts.new_app')
-@section('site_title', $site_title)
+@extends('layouts.app')
+@section('title', $siteTitle)
 @push('styles')
     <style>
         .media-grid {
@@ -66,14 +66,13 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h4 class="box-title">{{ $title }}</h4>
-                    <div class="box-tools pull-right">
+            <div class="card">
+                <div class="card-header with-border">
+                    <h4 class="card-title mb-0 d-flex align-items-center justify-content-between"><span>Total Filesize: <strong id="total_file_size"></strong></span>
                         <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="showFormModal('Upload File', 'Save')"><i class="fa fa-plus fa-sm"></i> Upload File</button>
-                    </div>
+                    </h4>
                 </div>
-                <div class="box-body position-relative">
+                <div class="card-body position-relative">
                     <div class="preloader-media text-center"><span></span></div>
                     <div class="media-grid">
 
@@ -177,8 +176,10 @@
                     $('.preloader-media span').removeClass('spinner-border text-light');
                 },
                 success: function (response) {
-                    $('.box-body .media-grid').html('');
-                    $('.box-body .media-grid').append(response);
+                    $('.card-body .media-grid').html('');
+                    $('#total_file_size').html('');
+                    $('#total_file_size').append(response.size);
+                    $('.card-body .media-grid').append(response.view);
                 },
                 error: function (xhr, ajaxOption, thrownError) {
                     console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);

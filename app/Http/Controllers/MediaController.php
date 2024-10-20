@@ -5,21 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Traits\UploadAble;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
 {
     use UploadAble;
 
-    private function convertBytesToMB($bytes,$decimals = 2) {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        $factor = floor((strlen($bytes) - 1) / 3);
-        return round($bytes / pow(1024, $factor), $decimals) . ' ' . $units[$factor];
-    }
-
     public function index(){
-
-
         $breadcrumb = ['Media'=>''];
         $this->set_page_data('Media','Media');
         return view('media.index',compact('breadcrumb'));
@@ -28,15 +21,17 @@ class MediaController extends Controller
     public function mediaRender(Request $request){
         if ($request->ajax()) {
             $medias = Media::latest()->get();
+            $maxSize = DB::table('medias')->sum('file_size');
+            $maxSize = convertBytesToMB($maxSize);
             $view = view('media.render',compact('medias'))->render();
-            return response()->json($view);
+            return response()->json(['view'=>$view,'size'=>$maxSize]);
         }
     }
 
     public function store(Request $request){
         if($request->ajax()){
             $validator = Validator::make($request->all(),[
-                'files'=>['required','array','max:5120']
+                'files.*'=>['required','mimes:png,jpg,jpeg,gif,mp4,pdf','max:5120']
             ]);
 
             if($validator->fails()){
@@ -48,14 +43,15 @@ class MediaController extends Controller
                 $uploadedFileData = [];
 
                 foreach ($uploadedFiles as $file) {
-                    $size = $this->convertBytesToMB($file->getSize());
+                    $fileSize = $file->getSize();
                     $filePath = $this->upload_file($file,'media/');
                     $uploadedFileData[] = [
                         'user_id'    => auth()->user()->id,
                         'name'       => $file->getClientOriginalName(),
                         'path'       => $filePath,
                         'extension'  => $file->getClientOriginalExtension(),
-                        'size'       => $size,
+                        'size'       => convertBytesToMB($fileSize),
+                        'file_size'  => $fileSize,
                         'created_at' => now()
                     ];
                 }

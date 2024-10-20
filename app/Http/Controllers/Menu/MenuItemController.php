@@ -37,7 +37,26 @@ class MenuItemController extends Controller
                     MenuItem::insert($data);
                     return $this->response_json('success','Menu items added.');
                 }else if($menu && $menu->content != ''){
+                    $olddata = json_decode($menu->content, true);
+                    $categories = Category::whereIn('id', $ids)->get(['id', 'name', 'slug']);
 
+                    foreach ($categories as $category) {
+                        $data = [
+                            'title'   => $category->name,
+                            'slug'    => $category->slug,
+                            'type'    => 'category',
+                            'menu_id' => $menuId,
+                        ];
+
+                        $menuItem = MenuItem::create($data);
+                        $array = ['id' => $menuItem->id];
+                        $olddata[] = $array;
+                    }
+
+                    $updatedContent = json_encode($olddata);
+                    $menu->update(['content' => $updatedContent]);
+
+                    return $this->response_json('success','Menu items added.');
                 }else{
                     return $this->response_json('error','Menu item cannot saved!');
                 }
@@ -115,7 +134,26 @@ class MenuItemController extends Controller
                 MenuItem::insert($data);
                 return $this->response_json('success','Menu items added.');
             }else if($menu && $menu->content != ''){
+                $olddata = json_decode($menu->content, true);
+                $departments = Department::whereIn('id', $ids)->get(['id', 'name', 'slug']);
 
+                foreach ($departments as $department) {
+                    $data = [
+                        'title'   => $department->name,
+                        'slug'    => $department->slug,
+                        'type'    => 'department',
+                        'menu_id' => $menuId,
+                    ];
+
+                    $menuItem = MenuItem::create($data);
+                    $array = ['id' => $menuItem->id];
+                    $olddata[] = $array;
+                }
+
+                $updatedContent = json_encode($olddata);
+                $menu->update(['content' => $updatedContent]);
+
+                return $this->response_json('success','Menu items added.');
             }else{
                 return $this->response_json('error','Something went wrong!');
             }
