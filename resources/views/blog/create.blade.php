@@ -1,7 +1,17 @@
 @extends('layouts.app')
 @section('title',$siteTitle)
 @push('styles')
-
+  <style>
+    .modal-body ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(97px, 1fr));
+        gap: 10px;
+    }
+    .modal-body ul li{
+        cursor: pointer;  
+        width: 100px;
+    }
+  </style>
 @endpush
 
 @section('content')
@@ -81,20 +91,78 @@
                 </div>
                 <div class="card-body">
                     <div>
-                    <div id="feature_image"></div>
+                        <div id="feature_image"></div>
                     </div>
                     <x-form.inputbox name="alt_text" groupClass="mt-3 mb-0" placeholder="Enter alt text for feature image"/>
+
+
+                    <a href="#" id="media_btn">
+                        Choose image
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </form>
+
+<div class="modal fade" id="media_popup" tabindex="-1" aria-labelledby="modal-aria" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content rounded-0">
+            <div class="modal-header py-2">
+                <h5 class="modal-title" id="modal-aria">Media</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="media-popup-data">
+
+            </div>
+            <div class="modal-footer py-1">
+                <button type="button" class="btn btn-sm btn-primary">Insert</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 
 @push('scripts')
 <script src="{{ asset('js/spartan-multi-image-picker-min.js') }}"></script>
 
 <script>
+    var media_popup_modal;
+    media_popup_modal = new bootstrap.Modal(document.getElementById('media_popup'),{
+        keyboard: false,
+        backdrop: 'static'
+    });
+
+    $(document).on('click','#media_btn',function(e){
+        e.preventDefault();
+        media_popup_modal.show();
+        media_popup_files();
+    });
+
+    function media_popup_files(){
+        $.ajax({
+            type: "POST",
+            url: "{{ route('app.medias.popup-files') }}",
+            data: {_token:_token},
+            dataType: "JSON",
+            beforeSend: function(){
+                $('.preloader-media span').addClass('spinner-border text-light');
+            },
+            complete: function(){
+                $('.preloader-media span').removeClass('spinner-border text-light');
+            },
+            success: function (response) {
+                $('#media-popup-data').html('');
+                $('#media-popup-data').append(response);
+            },
+            error: function (xhr, ajaxOption, thrownError) {
+                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+            }
+        });
+    }
+
     $(document).on('keyup keypress','#title',function(){
         var input_value = $(this).val();
         var value = input_value.toLowerCase().trim();
@@ -172,5 +240,7 @@
             }
         });
     });
+
+
 </script>
 @endpush

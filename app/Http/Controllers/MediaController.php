@@ -77,4 +77,12 @@ class MediaController extends Controller
             }
         }
     }
+
+    public function popupFile(Request $request){
+        if ($request->ajax()) {
+            $medias = Media::latest()->get();
+            $view = view('media.popup',compact('medias'))->render();
+            return response()->json($view);
+        }
+    }
 }

@@ -179,6 +179,8 @@ Route::name('app.')->middleware(['auth','is_active'])->group(function(){
         Route::post('render',[MediaController::class, 'mediaRender'])->name('render');
         Route::post('store',[MediaController::class, 'store'])->name('store');
         Route::post('delete',[MediaController::class, 'delete'])->name('delete');
+
+        Route::post('popup/files',[MediaController::class, 'popupFile'])->name('popup-files');
     });
 
 
