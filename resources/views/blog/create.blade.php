@@ -2,14 +2,14 @@
 @section('title',$siteTitle)
 @push('styles')
   <style>
-    .modal-body ul {
+    .modal-body #grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(97px, 1fr));
         gap: 10px;
     }
-    .modal-body ul li{
-        cursor: pointer;  
-        width: 100px;
+    .modal-body #grid .image{
+        cursor: pointer;
+        height: 100px;
     }
   </style>
 @endpush
@@ -93,10 +93,23 @@
                     <div>
                         <div id="feature_image"></div>
                     </div>
-                    <x-form.inputbox name="alt_text" groupClass="mt-3 mb-0" placeholder="Enter alt text for feature image"/>
 
+                    <a href="#" id="feature_image_btn">
+                        Choose image
+                    </a>
+                </div>
+            </div>
 
-                    <a href="#" id="media_btn">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0 required">Gallery images</h4>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div id="gallery_images"></div>
+                    </div>
+
+                    <a href="#" id="gallery_images_btn">
                         Choose image
                     </a>
                 </div>
@@ -112,11 +125,12 @@
                 <h5 class="modal-title" id="modal-aria">Media</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="media-popup-data">
-
+            <div class="modal-body">
+                <div class="preloader-media text-center"><span></span></div>
+                <div id="media-popup-data"></div>
             </div>
             <div class="modal-footer py-1">
-                <button type="button" class="btn btn-sm btn-primary">Insert</button>
+                <button type="button" class="btn btn-sm btn-primary" id="insertImages">Insert</button>
             </div>
         </div>
     </div>
@@ -135,7 +149,7 @@
         backdrop: 'static'
     });
 
-    $(document).on('click','#media_btn',function(e){
+    $(document).on('click','#gallery_images_btn',function(e){
         e.preventDefault();
         media_popup_modal.show();
         media_popup_files();
@@ -163,6 +177,48 @@
         });
     }
 
+    $(document).on('click', '.image', function() {
+        $(this).toggleClass('selected'); // Add 'selected' class for styling
+    });
+
+
+    $('#insertImages').on('click', function() {
+        const selectedImages = $('.image.selected img').map(function() {
+            return $(this).attr('src');
+        }).get();
+
+        selectedImages.forEach(src => {
+            $('#gallery_images').append(`<img src="${src}" style="width: 100px; height: 100px;" class="img-thumbnail">`);
+        });
+
+        media_popup_modal.hide();
+    });
+
+
+    $(document).on('click','#feature_image_btn',function(e){
+        e.preventDefault();
+        media_popup_modal.show();
+        media_popup_files();
+    });
+
+
+    $('#insertImages').on('click', function() {
+        const selectedImage = $('.image.selected img:first').attr('src');
+        $('#feature_image').html('');
+        $('#feature_image').append(`<img src="${selectedImage}" style="width: 100px; height: 100px;" class="img-thumbnail">`);
+        media_popup_modal.hide();
+    });
+
+
+
+
+
+
+
+
+
+
+
     $(document).on('keyup keypress','#title',function(){
         var input_value = $(this).val();
         var value = input_value.toLowerCase().trim();
@@ -172,28 +228,6 @@
         // Replace spaces with hyphens
         var name = str.split(' ').join('-');
         $('#slug').val(name);
-    });
-
-    $('#feature_image').spartanMultiImagePicker({
-        fieldName: 'feature_image',
-        maxCount: 1,
-        rowHeight: '200px',
-        groupClassName: 'col-md-12 com-sm-12 com-xs-12 mb-0',
-        maxFileSize: '',
-        dropFileLabel: 'Drop Here',
-        allowExt: 'png|jpg|jpeg',
-        onExtensionErr: function(index, file){
-            Swal.fire({icon:'error',title:'Oops...',text: 'Only png,jpg,jpeg file format allowed!'});
-        },
-        onSizeErr : function(index, file){
-			console.log(index, file,  'file size too big');
-			Swal.fire({icon:'error',title:'Oops...',text: 'file size too big!'});
-		}
-    });
-
-    $('input[name="feature_image"]').prop('required',true);
-    $('.remove-files').on('click', function(){
-        $(this).parents('.col-md-12').remove();
     });
 
     flatpickr('#published_date',{

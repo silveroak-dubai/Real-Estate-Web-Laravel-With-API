@@ -1,8 +1,8 @@
 
-<ul class="list-unstyled p-0 m-0">
+<div id="grid" class="list-unstyled p-0 m-0">
     @foreach ($medias as $value)
-    <li id="select-media" class="border rounded" data-id="{{ $value->id }}" data-src="{{ asset(STORAGE_PATH).'/media/'.$value->path }}">
-    <img width="100%" height="100%" class="rounded" src="{{ asset(STORAGE_PATH).'/media/'.$value->path }}" alt="{{ $value->name }}">
-    </li>
+    <div class="image border rounded" style="width: 100%; height: 100px;" data-id="{{ $value->id }}">
+        <img src="{{ asset(STORAGE_PATH).'/media/'.$value->path }}" width="100%" height="100%" alt="Image">
+    </div>
     @endforeach
-</ul>
+</div>
