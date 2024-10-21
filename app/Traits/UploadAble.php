@@ -22,17 +22,18 @@ trait UploadAble
      */
     public function upload_file(UploadedFile $file, $folder = null,  $file_name = null, $disk = 'public')
     {
-        if (!Storage::directories($disk.'/'.$folder)) {
-			Storage::makeDirectory($disk.'/'.$folder,0777, true); //if directory not exist then make the directory
+        if (!Storage::disk($disk)->exists($folder)) {
+            Storage::disk($disk)->makeDirectory($folder, 0777, true);
         }
 
-        $filenameWithExt = $file->getClientOriginalName(); // Get filename with extension like index.jpg
-        $filename        = pathinfo($filenameWithExt, PATHINFO_FILENAME); // Get just filename  like index
-        $extension       = $file->getClientOriginalExtension(); // Get just extension like .jpg
+        $filenameWithExt = $file->getClientOriginalName();
+        $filename        = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension       = strtolower($file->getClientOriginalExtension());
 
         $fileNameToStore = !is_null($file_name) ?
-        str_replace(' ', '-', $file_name).'.'.$extension :
-        str_replace(' ', '-', $filename).'-'.rand(111111,999999).'.'.$extension; //Filename to store  like index1545gfh5465.jpg
+            str()->slug($file_name,'-') . '.' . $extension :
+            str()->slug($filename,'-') . '-' . time() . '.' . $extension;
+
         $file->storeAs($folder,$fileNameToStore,$disk); //store file in targetted folder
         return $fileNameToStore;
     }
